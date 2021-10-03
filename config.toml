@@ -1,7 +1,9 @@
 baseurl = "/"
 languageCode = "en-us"
+title = "Góc của Aperture"
 theme = "terminal"
 paginate = 5
+custom_css = ["css/main.css"]
 
 [params]
   # dir name of your main content (default is `content/posts`).
@@ -21,14 +23,14 @@ paginate = 5
   fullWidthTheme = false
 
   # center theme with default width
-  centerTheme = false
+  centerTheme = true
 
   # set a custom favicon (default is a `themeColor` square)
   # favicon = "favicon.ico"
 
   # set post to show the last updated
   # If you use git, you can set `enableGitInfo` to `true` and then post will automatically get the last updated
-  showLastUpdated = false
+  showLastUpdated = true
   # Provide a string as a prefix for the last update date. By default, it looks like this: 2020-xx-xx [Updated: 2020-xx-xx] :: Author
   # updatedDatePrefix = "Updated"
 
@@ -36,37 +38,26 @@ paginate = 5
   # it's set to `true` by default
   # oneHeadingSize = false
 
-[params.twitter]
-  # set Twitter handles for Twitter cards
-  # see https://developer.twitter.com/en/docs/tweets/optimize-with-cards/guides/getting-started#card-and-content-attribution
-  # do not include @
-  creator = ""
-  site = ""
-
 [languages]
   [languages.en]
     languageName = "English"
-    title = "Terminal"
-    subtitle = "A simple, retro theme for Hugo"
+    title = "Góc của Aperture"
+    subtitle = "Nơi ghi chép kinh nghiệm (đôi khi là cả suy nghĩ) của tôi"
     owner = ""
     keywords = ""
     copyright = ""
-    menuMore = "Show more"
-    readMore = "Read more"
-    readOtherPosts = "Read other posts"
-    missingContentMessage = "Page not found..."
-    missingBackButtonLabel = "Back to home page"
+    menuMore = "Xem thêm"
+    readMore = "Đọc tiếp"
+    readOtherPosts = "Xem tiếp"
+    missingContentMessage = "Không tìm thấy trang..."
+    missingBackButtonLabel = "Về trang chủ"
 
     [languages.en.params.logo]
-      logoText = "Terminal"
+      logoText = "Góc của Aperture"
       logoHomeLink = "/"
 
     [languages.en.menu]
       [[languages.en.menu.main]]
         identifier = "about"
-        name = "About"
+        name = "Thông tin"
         url = "/about"
-      [[languages.en.menu.main]]
-        identifier = "showcase"
-        name = "Showcase"
-        url = "/showcase"

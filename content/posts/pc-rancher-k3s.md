@@ -1,22 +1,21 @@
 ---
 title: "Tạo một cluster Kubernetes đơn giản trên PC, sử dụng k3s và Rancher 2.5"
 date: 2021-10-04T00:48:26+07:00
-draft: true
 ---
-
-## Đặt vấn đề:
 
 Kubernetes gần đây đã trở thành một công nghệ nổi tiếng. Không chỉ gắn liên với việc quản lý các cluster lớn, rất nhiều framework hay các stack công nghệ bây giờ đều hỗ trợ k8s (điển hình nhất là kubeflow, nginx). Việc học k8s gần như không còn là môt lựa chọn mà trở thành một yêu cầu quan trọng cho nhiều công việc. Những ai đã/đang sử dụng k8s đều phải công nhận đây là một công nghệ rất mạnh và mềm dẻo, nhưng kèm theo đó là một vài nhược điểm cố hữu: Rất khó sử dụng! Với những dev sử dụng máy tính thông thường, việc điều khiển một cluster k8s thực sự là một cực hình do phải điều khiển nó thông quan kubectl - một chương trình cli có quá nhiều thứ phải nhớ. Ngoài ra để deploy bất kì thứ gì lên đó, chúng ta phải viết một cái file yml dài ngoằng khó hiểu, liệt kê đầy đủ tất cả những gì cần phải có để một chương trình có thể chạy. Và tất nhiên k8s mặc định hoàn toàn không có giao diện. Kubernetes Dashboard (UI chính thức của k8s) cuối cùng vẫn bắt bạn phải viết yml. Rất nhiều config lưu trong k8s không thể lưu chính xác, và kết quả bạn lại phải viết thêm yml để phục vụ các config đó. Vậy nên yêu cầu của chúng ta khi deploy một cluster k8s ở máy bàn cá nhân cần phải thoả mãn các tiêu chí sau:
 
-*   Có giao diện, dễ sử dụng
-*   Hiệu năng phải cao
-*   Không viết YML khi cần thiết
+   * Có giao diện, dễ sử dụng
+   * Hiệu năng phải cao
+   * Không viết YML khi cần thiết
 
-## Tìm đường để giải quyết vấn đề:
+# Tìm đường để giải quyết vấn đề:
 
 Để đáp ứng nhu cầu thứ nhất và thứ ba, chúng ta sẽ sử dụng Rancher - một phần mềm tạo ra một giao diện điều khiển cho k8s rất dễ sử dụng. Nhưng ở nhu cầu thứ 2, chúng ta cần liệt kê ra một vài ứng cử viên:
 
-![image](https://64.media.tumblr.com/cda8d40d9e3d13ed6907eb68021e295b/1d4062b521d6dee3-e3/s540x810/c6a421fe01e699d2babd7466a2e945edb7b00422.png)
+---
+
+{{<image src="https://64.media.tumblr.com/cda8d40d9e3d13ed6907eb68021e295b/1d4062b521d6dee3-e3/s540x810/c6a421fe01e699d2babd7466a2e945edb7b00422.png" alt="MicroK8s" position="center" style="padding-top: 1em; width: 300px;">}}
 
 ## microk8s
 
@@ -36,7 +35,9 @@ Nhược điểm: 
 
 Nếu bạn đã làm quen được với microk8s, tôi nghĩ bạn có thể tự cài đặt Rancher trên này được rồi.
 
-![image](https://64.media.tumblr.com/7ec7f76ccd06eeb660d7259e352a7139/1d4062b521d6dee3-3d/s540x810/6e819c7eaf034881af92e9fdc5429beb356fd8a0.png)
+---
+
+{{<image src="https://64.media.tumblr.com/7ec7f76ccd06eeb660d7259e352a7139/1d4062b521d6dee3-3d/s540x810/6e819c7eaf034881af92e9fdc5429beb356fd8a0.png" alt="minikube" position="center" style="padding-top: 2em; width: 300px;">}}
 
 ## minikube
 
@@ -57,7 +58,9 @@ Nhược điểm:
 
 Vậy nên theo tôi thì minikube không tối ưu để chạy thực tế vì thời gian setup tưởng nhanh mà đổi lại hiệu suất có thể không như ý muốn.
 
-![image](https://64.media.tumblr.com/344d71c978037162fd6bff6195ab8cb1/1d4062b521d6dee3-9c/s540x810/1dbbc8b8600d0404a895ca8e25e64f9bea5a171e.png)
+---
+
+{{<image src="https://64.media.tumblr.com/344d71c978037162fd6bff6195ab8cb1/1d4062b521d6dee3-9c/s540x810/1dbbc8b8600d0404a895ca8e25e64f9bea5a171e.png" alt="kubeadm" position="center" style="padding-top: 2em; width: 300px;">}}
 
 ## kubeadm
 
@@ -75,7 +78,9 @@ Nhược điểm:
 
 Tóm lại, kubeadm rất tốt, nhưng hoàn toàn không phù hợp với ai không phải là DevOps hay SysAdmin (mà kể cả 2 đối tượng trên không chắc đã sử dụng được kubeadm)
 
-![image](https://64.media.tumblr.com/73706a3d1285b5d142bed47c7e673059/1d4062b521d6dee3-02/s540x810/831f6af1ff940001c2fee90c8714fbe93acb55e8.png)
+---
+
+{{<image src="https://64.media.tumblr.com/73706a3d1285b5d142bed47c7e673059/1d4062b521d6dee3-02/s540x810/831f6af1ff940001c2fee90c8714fbe93acb55e8.png" alt="k3s" position="center" style="padding-top: 2em; width: 300px;">}}
 
 ## k3s
 
@@ -93,14 +98,14 @@ Nhược điểm
 
 Ở trên là các lựa chọn k8s distro mà tôi thấy là hợp lý nhất. Trong hướng dẫn này, tôi sẽ lựa chọn k3s vì nó phù hợp với yêu cầu của tôi. Mọi người có thể chọn các distro khác nếu muốn.
 
-## Cài đặt k8s và Rancher
+# Cài đặt k8s và Rancher
 
 Lưu ý: Mặc định k3s sẽ sử dụng traefik để làm ingress, nhưng tôi sẽ sử dụng nginx vì tôi sử dụng nó quen hơn.
 Trong hướng dẫn này, tôi sẽ coi như máy của bạn chưa cài bất kì phần mềm gì liên quan đến k8s. Vậy nên nếu bạn đang sử dụng phần mềm nào đó để điểu khiển cluster k8s (ví dụ như kubectl), hãy để ý tơi các mục 2, 3 của hướng dẫn vì nó sẽ GHI ĐÈ lên file config hiện có, khiến bạn có thể mất quyền truy cập vào server đang điều khiển hiện tại.
 
 1. Cài đặt k3s và helm:
 
-```
+```bash
 curl -sfL https://get.k3s.io | sh -s - server --no-deploy traefik
 sudo snap install helm --classic
 ```
@@ -111,19 +116,19 @@ Trong ví dụ này tôi sử dụng snapcraft để tải helm. Bạn có thể
 
 LƯU Ý: Hành động này sẽ ghi đè lên file config cùng tên hiện tại, hãy để tâm!
 
-```
+```bash
 sudo cp /etc/rancher/k3s/k3s.yaml ~/.kube/local_config
 ```
 
 Để đảm bảo user của bạn có thể sử dụng được file config này, chạy lệnh sau:
 
-```
+```bash
 sudo chown $USER: ~/.kube/local_config
 ```
 
 Để kiểm tra độ sẵn sàng của cluster, sử dụng các lệnh sau:
 
-```
+```bash
 sudo k3s kubectl get nodes
 sudo k3s kubectl get pods --all-namespaces
 ```
@@ -131,22 +136,22 @@ sudo k3s kubectl get pods --all-namespaces
 3. Thêm config vào file .bashrc để có thể dùng kubectl:
 
 Thêm dòng sau vào file config .bashrc:
-```
+```bash
 export KUBECONFIG=~/.kube/local_config
 ```
 Sau đó chạy lệnh dưới này để update môi trường
-```
+```bash
 source ~/.bashrc
 ```
 
 Nhưng nếu bạn chỉ muốn sử dụng nó tạm thời, chạy lệnh sau mỗi khi mở một session terminal/SSH mới:
-```
+```bash
 export KUBECONFIG=~/.kube/local_config
 ```
 
 4. Thêm các repository cần thiết vào Helm:
 
-```
+```bash
 helm repo add rancher-latest https://releases.rancher.com/server-charts/latest
 helm repo add jetstack https://charts.jetstack.io
 helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
@@ -156,7 +161,7 @@ helm repo update
 
 5. Tạo các namespace cần thiết cho Rancher:
 
-```
+```bash
 kubectl create namespace cattle-system
 kubectl create namespace cert-manager
 kubectl create namespace ingress-nginx
@@ -164,7 +169,7 @@ kubectl create namespace ingress-nginx
 
 6. Cài đặt cert-manager:
 
-```
+```bash
 kubectl apply -f https://github.com/jetstack/cert-manager/releases/download/v1.0.4/cert-manager.crds.yaml
 helm install \
   cert-manager jetstack/cert-manager \
@@ -173,19 +178,19 @@ helm install \
 ```
 
 Kiểm tra tình trạng của cert-manager thông qua lệnh sau:
-```
+```bash
 kubectl get pods --namespace cert-manager
 ```
 
 7. Cài đặt ingress-nginx cho k8s:
-```
+```bash
 helm install \
   ingress-nginx ingress-nginx/ingress-nginx \
   --namespace ingress-nginx
 ```
 
 Kiểm tra tình trạng của ingress bằng lệnh sau:
-```
+```bash
 kubectl get pods --namespace ingress-nginx
 ```
 
@@ -196,7 +201,7 @@ LƯU Ý: cần phải có một domain để cho Rancher hoạt động.  Vì v�
 * Cách 1: Có domain thật:
 Lúc này còn gì tuyệt vời hơn khi bạn có thể tạo certificate TLS/HTTPS chuẩn chỉ thông qua ACME của Let's Encrypt. Bạn có thể dùng câu lện dưới đây, thay mục domain của bạn thành domain mà bạn muốn. Nhưng nếu bạn không thích dùng tên miền của mình để host rancher, bạn có thể chuyển sang cách 2.
 
-```
+```bash
 helm install rancher rancher-latest/rancher \
   --namespace cattle-system \
   --set hostname={domain của bạn} \
@@ -208,12 +213,12 @@ helm install rancher rancher-latest/rancher \
 Bây giờ bạn không thể xác thực một certificate sử dụng ACME của Let's Encrypt được nữa. Chỉ còn cách sử dụng một certificate fake trên một domain local. Chúng ta không thể sử dụng trực tiếp tên miền localhost để host rancher được, cách tốt nhất là dùng một domain giả define trong file hosts.
 
 Thêm dòng sau vào trong file hosts:
-```
+```bash
 127.0.0.1 rancher.local
 ```
 
 Cuối cùng sử dụng lệnh sau để cài rancher sử dụng certificate fake của Rancher:
-```
+```bash
 helm install rancher rancher-latest/rancher \
   --namespace cattle-system \
   --set hostname=rancher.local \
@@ -222,7 +227,7 @@ helm install rancher rancher-latest/rancher \
 
 Sau khi chạy 1 trong 2 cách, chạy lệnh sau để check rancher đã deploy xong hay chưa. 
 
-```
+```bash
 kubectl -n cattle-system rollout status deploy/rancher
 ```
 

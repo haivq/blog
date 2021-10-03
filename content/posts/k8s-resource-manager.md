@@ -2,12 +2,10 @@
 title: "Quản lý tài nguyên cho cluster Kubernetes"
 date: 2021-10-04T00:46:21+07:00
 ---
-# <a name="opening" id="opening"></a> Đặt vấn đề
+
 Một trong những thiếu sót khi sử dụng k8s trong môi trường production là không thiết đặt giới hạn tài nguyên cho hệ thống. Khi bạn không giới hạn tài nguyên cho các pod trong k8s, không sớm thì muộn sẽ có một thời điểm server của bạn sẽ hết sạch tài nguyên (điển hình là hết CPU và RAM). Việc này rất dễ xảy ra chạy các workload nặng trên nhiều node có cấu hình khác nhau. Cuối cùng server của bạn sẽ crash, hoặc là chạy rất chậm, khiến hệ thống trở nên kém ổn định, thậm chí là mất mát dữ liệu, gây tổn thất về uy tín và tiền bạc. Vậy một trong những việc đầu tiên khi một đưa bất kì thứ gì lên k8s là phải thiết đặt tài nguyên cho nó.
 
-[[MORE]]
-
-# <a name="podrequestlimit" id="podrequestlimit"></a> Ý tưởng về cấp phát và giới hạn tài nguyên
+# Ý tưởng về cấp phát và giới hạn tài nguyên
 
 Mặc định k8s chỉ có thể kiểm soát tài nguyên về CPU và RAM của hệ thống. Component chịu trách nhiệm kiểm soát tài nguyên và deploy pod lên các node được gọi là `kube-scheduler`. Có hai thuộc tính quan trọng để cấp phát và giới hạn tài nguyên được định nghĩa lúc bạn tạo workload:
 
@@ -61,7 +59,7 @@ Qua 2 ví dụ trên, cần phải lưu ý hai điều sau:
  3. Tính chất tài nguyên CPU và RAM là khác nhau. Nếu pod của bạn vượt quá lượng tài nguyên CPU, k8s có thể "hãm" pod của bạn lại và không cho nó vượt quá giới hạn. Nhưng tài nguyên về bộ nhớ không thể bị giới hạn như vậy. Ngay khi pod của bạn vượt quá tài nguyên RAM cho phép, k8s sẽ kill luôn pod đó. Vậy nên cần chú ý về yêu cầu bộ nhớ của workload để tránh trường hợp pod bị kill ngoài ý muốn.
  4. Việc deploy pod vào các node còn phải tùy việc server đó còn bao nhiêu tài nguyên (khá hiển nhiên nhưng vẫn phải đề cập). Giả sử một node có 4 vCore và 16GiB RAM nhưng đã bị nhiều pod chiếm dụng mất 3 vCore thì khi bạn request lượng tài nguyên `request: 2500mCPU, 8GiB RAM` thì pod của bạn cũng sẽ không bao giờ được deploy lên đó.
 
-# <a name="killdeploymechanism" id="killdeploymechanism"></a> Cơ chế deploy và kill của `kube-scheduler`
+# Cơ chế deploy và kill của `kube-scheduler`
 
 Nếu bạn tạo một cluster k8s từ các công cụ như k3s, kubeadm hay từ các bên cung cấp nền tảng như AKS (của Azure), EKS (của Amazon) thì mặc định cluster đó sẽ sử dụng `kube-scheduler` để kiểm soát việc quản lý tài nguyên và deploy pod. Việc deploy hay kill pod của `kube-scheduler` đều hoạt động theo hai bước: **Lọc** và **Chấm điểm**.
 
@@ -80,7 +78,7 @@ Còn trường hợp k8s cần kill pod để thu hồi lại tài nguyên:
 
 Việc **Lọc** và **Chấm điểm** sẽ được định đoạt bằng một trong hai quy cách: [Thông qua các quy chế đã quy định (Policies)](https://kubernetes.io/docs/reference/scheduling/policies/) hoặc [thông qua các profile quy chế (Profiles)](https://kubernetes.io/docs/reference/scheduling/config/#profiles) nhưng trong phạm vi bài viết này, chúng ta sẽ không đề cập kĩ đến hai quy cách phức tạp trên mà sẽ xoáy vào cơ chế tài nguyên CPU và RAM.
 
-# <a name="resourcequota" id="resourcequota"></a> Phân chia tài nguyên của cluster cho các namespace
+# Phân chia tài nguyên của cluster cho các namespace
 
 Việc phân chia tài nguyên cho namespace (Resource Quota) được coi là **TỐI QUAN TRỌNG** đối với bất kì một người làm hệ thống nào. Thường một hệ thống sử dụng k8s sẽ không chỉ dành cho một mình DevOps hay SysAdmin sử dụng, mà sẽ được chia ra cho mỗi team (hiện tại đang trong một project) nắm một hoặc một vài namespace. Họ hoàn toàn có thể cung cấp quá ít tài nguyên cho workload để pod có thể hoạt động, hoặc đặt tài nguyên giới hạn quá cao khiến chúng chiếm hết tài nguyên hệ thống, vân vân. Tất cả đều sẽ dẫn đến một kết cục cuối cùng: sập server. Vậy nên với góc độ là người làm hệ thống, bạn cần phải phân chia tài nguyên của các namespace lại để đảm bảo server không bị quá tải. Khi họ vượt quá lượng tài nguyên yêu cầu, các pod nằm trong namespace sẽ bị kill nhưng sẽ không ảnh hưởng 
 
