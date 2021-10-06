@@ -87,21 +87,20 @@ Tóm lại, kubeadm rất tốt, nhưng hoàn toàn không phù hợp với ai k
 Công cụ được phát hành bởi chính Rancher. Đây là một bản k8s được rút gọn đi rất nhiều thứ, rất nhẹ và thậm chí có thể chạy ổn trên các con Pi. Dù vậy nhưng nó vẫn đạt các yêu cầu tính năng mà k8s yêu cầu.
 
 Ưu điểm:
+
    * Cài đặt rất nhanh
-   * Nhẹ, đơn giản
-   * Mở rộng ra nhiều máy dễ hơn nhiều so với kubeadm
+   * Rất nhẹ, không tốn tài nguyên khi vận hành
    * Không chạy trên máy ảo
 
 Nhược điểm
+   * Một vài thành phần trong k8s bị cắt bỏ (như `etcd`, cloud storage)
 
-   * Có thể thiếu một số tính năng của k8s
-
-Ở trên là các lựa chọn k8s distro mà tôi thấy là hợp lý nhất. Trong hướng dẫn này, tôi sẽ lựa chọn k3s vì nó phù hợp với yêu cầu của tôi. Mọi người có thể chọn các distro khác nếu muốn.
+Trong hướng dẫn này, tôi sẽ lựa chọn k3s vì nó phù hợp với yêu cầu của tôi: nhẹ, cài đặt nhanh, hiệu năng cao. Mọi người có thể chọn các distro khác nếu muốn.
 
 # Cài đặt k8s và Rancher
 
-Lưu ý: Mặc định k3s sẽ sử dụng traefik để làm ingress, nhưng tôi sẽ sử dụng nginx vì tôi sử dụng nó quen hơn.
-Trong hướng dẫn này, tôi sẽ coi như máy của bạn chưa cài bất kì phần mềm gì liên quan đến k8s. Vậy nên nếu bạn đang sử dụng phần mềm nào đó để điểu khiển cluster k8s (ví dụ như kubectl), hãy để ý tơi các mục 2, 3 của hướng dẫn vì nó sẽ GHI ĐÈ lên file config hiện có, khiến bạn có thể mất quyền truy cập vào server đang điều khiển hiện tại.
+> Mặc định k3s sẽ sử dụng traefik để làm ingress, nhưng tôi sẽ sử dụng `nginx` do thói quen.
+> Bài viết này giả định tình huống máy của bạn chưa cài bất kì phần mềm nào liên quan đến k8s. Vậy nên nếu bạn đang sử dụng phần mềm nào (ví dụ như `kubectl`), hãy để ý tới các mục 2, 3 của hướng dẫn vì nó sẽ GHI ĐÈ lên file config hiện có, có thể khiến bạn có thể mất quyền truy cập vào server đang điều khiển hiện tại.
 
 1. Cài đặt k3s và helm:
 
@@ -114,7 +113,7 @@ Trong ví dụ này tôi sử dụng snapcraft để tải helm. Bạn có thể
 
 2. Copy file config của kubernetes:
 
-LƯU Ý: Hành động này sẽ ghi đè lên file config cùng tên hiện tại, hãy để tâm!
+> LƯU Ý: Hành động này sẽ ghi đè lên file config cùng tên hiện tại, hãy để tâm!
 
 ```bash
 sudo cp /etc/rancher/k3s/k3s.yaml ~/.kube/local_config
@@ -138,13 +137,11 @@ sudo k3s kubectl get pods --all-namespaces
 Thêm dòng sau vào file config .bashrc:
 ```bash
 export KUBECONFIG=~/.kube/local_config
-```
-Sau đó chạy lệnh dưới này để update môi trường
-```bash
+# Lệnh dưới này để update môi trường
 source ~/.bashrc
 ```
 
-Nhưng nếu bạn chỉ muốn sử dụng nó tạm thời, chạy lệnh sau mỗi khi mở một session terminal/SSH mới:
+Nhưng nếu bạn chỉ muốn sử dụng nó tạm thời, chỉ cần chạy lệnh sau mỗi khi mở một session terminal/SSH mới:
 ```bash
 export KUBECONFIG=~/.kube/local_config
 ```
