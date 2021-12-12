@@ -1,6 +1,7 @@
 ---
 title: "Làm thế nào để chống chọi với cô đơn"
 date: 2021-10-13T04:32:52+07:00
+draft: true
 ---
 
 Một trong những bộ phim sitcom mà tôi yêu thích trong nhiều năm qua là **How I met your mother**. Một trong số đó chính là nhạc phẩm ["How to fight loneliness"](https://www.youtube.com/watch?v=7CAYFIpi89k) của Wilco. Bài hát này rất hay về giai điệu, lời bài hát thậm chí còn hay hơn nữa nếu bạn thực sự đang cô đơn trong một thời gian dài, đang vô cùng tổn thương vì nó nhưng luôn giấu diếm mọi người để tránh bị thương hại. Chạm ngưỡng 24 tuổi, tôi chưa bao giờ thấy có bài hát nào lại chạm tới trái tim và thấm vào da thịt nào như bài hát này. Dưới đây là dịch nghĩa từng lời của bài hát mà tôi ghi ra đây, coi như một ngưỡng đánh dấu thời kì tồi tệ nhất của cuộc khủng hoảng một phần tư cuộc đời:
