@@ -142,9 +142,9 @@ Ta có thể thấy bất cập của mô hình này như sau:
 Đây là các kinh nghiệm tôi rút ra được. Mong ai đó đọc được bài viết này sẽ thấy bài viết có hữu ích và tối ưu được lượng tiền sử dụng trên AWS
 
 # Nguồn tham khảo
-[AWS Lambda execution environment - AWS Document](https://docs.aws.amazon.com/lambda/latest/dg/runtimes-context.html#runtimes-lifecycle-ib])
-[Memory and computing power ](https://docs.aws.amazon.com/lambda/latest/operatorguide/computing-power.html)
-[Operating Lambda: Performance optimization – Part 1 - AWS Compute Blog](https://aws.amazon.com/blogs/compute/operating-lambda-performance-optimization-part-1/)
-[Operating Lambda: Performance optimization – Part 2 - AWS Compute Blog](https://aws.amazon.com/blogs/compute/operating-lambda-performance-optimization-part-2/)
-[Can Lambda and RDS Play Nicely Together? - Thundra Blog](https://blog.thundra.io/can-lambda-and-rds-play-nicely-together)
-[Reduce Cost and Increase Security with Amazon VPC Endpoints](https://aws.amazon.com/blogs/architecture/reduce-cost-and-increase-security-with-amazon-vpc-endpoints/)
+- [AWS Lambda execution environment - AWS Document](https://docs.aws.amazon.com/lambda/latest/dg/runtimes-context.html#runtimes-lifecycle-ib])
+- [Memory and computing power ](https://docs.aws.amazon.com/lambda/latest/operatorguide/computing-power.html)
+- [Operating Lambda: Performance optimization – Part 1 - AWS Compute Blog](https://aws.amazon.com/blogs/compute/operating-lambda-performance-optimization-part-1/)
+- [Operating Lambda: Performance optimization – Part 2 - AWS Compute Blog](https://aws.amazon.com/blogs/compute/operating-lambda-performance-optimization-part-2/)
+- [Can Lambda and RDS Play Nicely Together? - Thundra Blog](https://blog.thundra.io/can-lambda-and-rds-play-nicely-together)
+- [Reduce Cost and Increase Security with Amazon VPC Endpoints](https://aws.amazon.com/blogs/architecture/reduce-cost-and-increase-security-with-amazon-vpc-endpoints/)
