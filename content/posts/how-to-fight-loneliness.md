@@ -1,6 +1,7 @@
 ---
 title: "Làm thế nào để chống chọi với cô đơn"
 date: 2021-10-13T04:32:52+07:00
+author: "Aperture"
 draft: true
 ---
 

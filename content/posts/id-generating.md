@@ -15,8 +15,8 @@ Một trong những việc quan trọng nhất khi lưu dữ liệu xuống bấ
 Nhưng để một cách đặt tên được gọi là tốt để làm UID trong CSDL nên có thêm các yếu tố sau:
 
 4. Quy tắc nên sinh ra UID dạng có thể sắp xếp được, do các RDBMS thường sử dụng cấu trúc dữ liệu dạng cây BTREE, đưa thành dạng sắp xếp được sẽ đảm bảo tốc độ đọc và ghi luôn cao. Trong trường hợp khác, ID sắp xếp được sẽ khiến việc query đơn giản hơn ta thường truy vấn dữ liệu theo chiều thời gian tăng dần
-5. Quy tắc nên sinh ra UID đơn điệu tăng, tức là UID sau sinh ra luôn được so sánh lớn hơn UID trước, việc này làm cho quá trình truy vấn, sắp xếp đơn giản hơn
-6. UID sinh ra hoàn toàn độc lập đến dữ liệu mà nó đại diện, đảm bảo tính bảo mật cho dữ liệu, đặc biệt nếu UID dạng số học và tăng dần, điều này sẽ khiến đối thủ crawl sạch dữ liệu của bạn về
+5. Quy tắc nên sinh ra UID đơn điệu tăng, tức là UID sau sinh ra luôn được so sánh lớn hơn UID trước, việc này làm cho quá trình truy vấn, sắp xếp đơn giản hơn. Hơn nữa, việc để ID dạng tăng dần được sẽ giúp cho việc truy vấn và dàn đều dữ liệu trong một cluster CSDL dễ hơn (nhờ cơ chế replicating và sharding dựa vào ID của các CSDL hỗ trợ chúng như Mongo, Cassandra hay MySQL)
+6. ID sinh ra hoàn toàn độc lập đến dữ liệu mà nó đại diện, đảm bảo tính bảo mật cho dữ liệu, tránh để đối thủ hiểu ra cách vận hành để lấy dữ liệu của bạn về
 
 Tóm lại việc sinh ra một UID hoàn hảo phải đảm bảo 3 yếu tố: không trùng lặp, đơn giản và an toàn. Tất nhiên, không có một *viên đạn bạc* nào có thể giải quyết tất cả 5 vấn đề trên, trong các trường hợp cụ thể ta có thẻ bỏ qua một vài yếu tố ở trên mà vẫn đảm bảo rằng hệ thống của chúng ta không lâm nguy. Dưới đây là một vài phương pháp sinh UID nổi tiếng và cách sử dụng chúng **theo ý kiến của tôi** là hợp lý nhất
 
@@ -68,7 +68,7 @@ Khởi đầu từ một project năm 2010 từ sinh ID của Twitter, phục v�
 
 Lấy ví dụ như Snowflake của Discord sẽ như sau:
 
-![Discord Snowflake](/uuid-generating/discord-snowflake.png)
+![Discord Snowflake](/id-generating/discord-snowflake.png)
 
 Như ở trên từ bit 21 - 0 sẽ chia tiếp ra làm 3 phần:
 - bit 21 - 17: ID của máy
@@ -77,7 +77,7 @@ Như ở trên từ bit 21 - 0 sẽ chia tiếp ra làm 3 phần:
 
 Hoặc như Snowflake của Baidu:
 
-![Baidu Snowflake](/uuid-generating/baidu-snowflake.png)
+![Baidu Snowflake](/id-generating/baidu-snowflake.png)
 
 Baidu implement bit 21 - 0 theo một cách khác:
 - bit 21 - 13: ID của máy sinh Snowflake
