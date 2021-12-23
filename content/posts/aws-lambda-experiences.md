@@ -32,7 +32,7 @@ Thông qua các thành phần trên, tôi có thể liệt kê sơ qua các tài
 
 Để minh hoạ (bao gồm cả thiết kế mạng), tôi có hình sau:
 
-![Design topology](/aws-lambda-experiences/design-topology.jpg)
+[![Design topology](/aws-lambda-experiences/design-topology.jpg)](/aws-lambda-experiences/design-topology.drawio)
 
 Về cơ bản, thiết kế như trên (không bao gồm các tài nguyên nằm ngoài AWS) đảm bảo gần như đầy đủ các yêu cầu của một API server với chi phí tương đối rẻ 
 
@@ -40,7 +40,7 @@ Về cơ bản, thiết kế như trên (không bao gồm các tài nguyên nằ
 
 Dưới đây là biểu đồ trạng thái sơ lược flow chạy Lambda khi được invoke (ví dụ như API Gateway invoke lambda):
 
-![Lambda Execution FLow](/aws-lambda-experiences/lambda-execution-flow.jpg)
+[![Lambda Execution FLow](/aws-lambda-experiences/lambda-execution-flow.jpg)](/aws-lambda-experiences/lambda-execution-flow.drawio)
 
 Với những ai chưa biết, thay vì tạo mới một runtime cho mỗi lần request, AWS sẽ tạo ra một môi trường chạy code và giữ nó sống (hoặc gọi là `warm`) một lúc và tắt nó đi khi không có request tới nó nữa trong một khoảng thời gian đợi (ta không quyết định được khoảng thời gian đợi này). Sau khi khởi tạo, các đối tượng không nằm trong các function/method (như các global variables trong code hay kể cả trong các layer) sẽ vẫn sống chứ không bị giải phóng như các biến nằm trong các function.
 
@@ -126,16 +126,16 @@ Thay vì số lượng connection luôn cao và có thể bị burst lên chạm
 
 Chắc hẳn bạn cũng để ý rằng, một khi Lambda đã nhập vào VPC (để dùng các tài nguyên chỉ nằm trong VPC), không thể truy cập các dịch vụ như S3, Secrets Manager được nữa do các dịch vụ này không nằm cùng dải mạng của VPC. Để khắc phục vấn đề này, ta cần cho phép VPC truy cập ra ngoài internet. Vô hình chung, việc đầu tiên của người thiết kế sẽ là config sao cho Lambda nằm trong dải mạng public và cho nó connect ra ngoài internet, vừa để phục vụ yêu cầu ra internet của function (nếu cần), vừa có thể access các dịch vụ của Lambda. ví dụ như topology dưới đây mô tả flow để truy cập các tài nguyên dịch vụ của AWS nếu bạn config để Lambda có thể connect ra ngoài internet:
 
-![Bad network topology](/aws-lambda-experiences/bad-network-topology.jpg)
+[![Bad network topology](/aws-lambda-experiences/bad-network-topology.jpg)](/aws-lambda-experiences/bad-network-topology.drawio)
 
 Ta có thể thấy bất cập của mô hình này như sau:
 
 - Truy cập tài nguyên yêu cầu Lambda phải gọi ra ngoài internet rồi sau đó gọi ngược lại vào mạng AWS, gây ra độ trễ khá cao
-- Lambda phải được đặt trong dải mạng public để ra internet gây đội giá thành vận hành lên khá cao, do ta cần phải tạo NAT Gateway, Internet Gateway và trả tiền trafic ra ngoài internet
+- Lambda phải được đặt trong dải mạng public để ra internet gây đội giá thành vận hành lên khá cao, do ta cần phải tạo NAT Gateway, Internet Gateway và trả tiền traffic ra ngoài internet
 
 Để giải quyết vấn đề này, ta cần phải tạo các VPC endpoint để truy cập tài nguyên của AWS mà vẫn đảm bảo Lambda được đặt trong dải mạng private mà không bị đội giá thành và tốc độ nhanh hơn, như ở hình dưới đây:
 
-![Good network topology](/aws-lambda-experiences/good-network-topology.jpg)
+[![Good network topology](/aws-lambda-experiences/good-network-topology.jpg)](/aws-lambda-experiences/good-network-topology.drawio)
 
 Để config endpoint, [xem hướng dẫn này](https://aws.amazon.com/blogs/aws/new-access-resources-in-a-vpc-from-your-lambda-functions/)
 
@@ -144,9 +144,9 @@ Ta có thể thấy bất cập của mô hình này như sau:
 Đây là các kinh nghiệm tôi rút ra được. Mong ai đó đọc được bài viết này sẽ thấy bài viết có hữu ích và tối ưu được lượng tiền sử dụng trên AWS
 
 # Nguồn tham khảo
-- [AWS Lambda execution environment - AWS Document](https://docs.aws.amazon.com/lambda/latest/dg/runtimes-context.html#runtimes-lifecycle-ib])
-- [Memory and computing power ](https://docs.aws.amazon.com/lambda/latest/operatorguide/computing-power.html)
+- [AWS Lambda execution environment - AWS Lambda Document](https://docs.aws.amazon.com/lambda/latest/dg/runtimes-context.html#runtimes-lifecycle-ib])
+- [Memory and computing power - AWS Lambda Document](https://docs.aws.amazon.com/lambda/latest/operatorguide/computing-power.html)
 - [Operating Lambda: Performance optimization – Part 1 - AWS Compute Blog](https://aws.amazon.com/blogs/compute/operating-lambda-performance-optimization-part-1/)
 - [Operating Lambda: Performance optimization – Part 2 - AWS Compute Blog](https://aws.amazon.com/blogs/compute/operating-lambda-performance-optimization-part-2/)
 - [Can Lambda and RDS Play Nicely Together? - Thundra Blog](https://blog.thundra.io/can-lambda-and-rds-play-nicely-together)
-- [Reduce Cost and Increase Security with Amazon VPC Endpoints](https://aws.amazon.com/blogs/architecture/reduce-cost-and-increase-security-with-amazon-vpc-endpoints/)
+- [Reduce Cost and Increase Security with Amazon VPC Endpoints - AWS Architecture Blog](https://aws.amazon.com/blogs/architecture/reduce-cost-and-increase-security-with-amazon-vpc-endpoints/)
