@@ -4,6 +4,8 @@ date: 2021-10-04T00:46:21+07:00
 author: "Aperture"
 ---
 
+# Đặt vẫn đề
+
 Một trong những thiếu sót khi sử dụng k8s trong môi trường production là không thiết đặt giới hạn tài nguyên cho hệ thống. Khi bạn không giới hạn tài nguyên cho các pod trong k8s, không sớm thì muộn sẽ có một thời điểm server của bạn sẽ hết sạch tài nguyên (điển hình là hết CPU và RAM). Việc này rất dễ xảy ra chạy các workload nặng trên nhiều node có cấu hình khác nhau. Cuối cùng server của bạn sẽ crash, hoặc là chạy rất chậm, khiến hệ thống trở nên kém ổn định, thậm chí là mất mát dữ liệu, gây tổn thất về uy tín và tiền bạc. Vậy một trong những việc đầu tiên khi một đưa bất kì thứ gì lên k8s là phải thiết đặt tài nguyên cho nó.
 
 # Ý tưởng về cấp phát và giới hạn tài nguyên
@@ -17,7 +19,7 @@ Mặc định k8s chỉ có thể kiểm soát tài nguyên về CPU và RAM c�
  - Limits: Giới hạn lượng tài nguyên mà một pod trong workload sẽ được sử dụng
 	 - Ví dụ: `limits: 1000mCPU, 2GiB RAM` mang ý nghĩa rằng bạn chỉ có thể dùng tối đa 1 CPU và 2GiB RAM.
 
-Để thiết đặt chúng khi tạo một deployment, đây là YML ví dụ tạo deployment `ubuntu`:
+Để thiết đặt chúng khi tạo một deployment, đây là YML ví dụ tạo deployment `ubuntu` (chú ý phần `resources` trong file YML):
 
 ```yml
 apiVersion: apps/v1
@@ -54,11 +56,10 @@ spec:
 Bạn để ý ở mục `spec.template.spec.containers[0].resource`, sẽ thấy có hai setting là limits và requests. Đây chính là nơi thay đổi về lượng tài nguyên đảm bảo và giới hạn.
 
 Qua 2 ví dụ trên, cần phải lưu ý hai điều sau:
-
- 1. k8s hoàn toàn có thể deploy pod của bạn vào một node mà lượng tài nguyên còn lại ít hơn lượng tài nguyên giới hạn. Ví dụ k8s sẽ có thể deploy workload `request: 100 mCPU, 256MiB RAM`, `limits: 1000mCPU, 2GiB RAM` vào một server chỉ còn trống 700 mCPU và 1 GiB RAM. Vậy nên nếu nếu workload của bạn yêu cầu nhiều tài nguyên hơn thì bạn cần chú ý cấp phát thêm tài nguyên cho chúng, vì trong trường hợp xấu, một pod dùng quá số lượng tài nguyên request mà node đã hết tài nguyên, node sẽ crash và buộc k8s phải kill một số pod khác hoặc tệ hơn là cả node đó sẽ không thể nào truy cập được nữa. Cơ chế kill pod đòi lại tài nguyên của k8s sẽ được đề cập ở mục dưới.
- 2. Kể cả khi bạn không dùng thì một pod cũng đã k8s đã tính pod của bạn đã chiếm dụng lượng tài nguyên bằng với lượng tài nguyên yêu cầu.
- 3. Tính chất tài nguyên CPU và RAM là khác nhau. Nếu pod của bạn vượt quá lượng tài nguyên CPU, k8s có thể "hãm" pod của bạn lại và không cho nó vượt quá giới hạn. Nhưng tài nguyên về bộ nhớ không thể bị giới hạn như vậy. Ngay khi pod của bạn vượt quá tài nguyên RAM cho phép, k8s sẽ kill luôn pod đó. Vậy nên cần chú ý về yêu cầu bộ nhớ của workload để tránh trường hợp pod bị kill ngoài ý muốn.
- 4. Việc deploy pod vào các node còn phải tùy việc server đó còn bao nhiêu tài nguyên (khá hiển nhiên nhưng vẫn phải đề cập). Giả sử một node có 4 vCore và 16GiB RAM nhưng đã bị nhiều pod chiếm dụng mất 3 vCore thì khi bạn request lượng tài nguyên `request: 2500mCPU, 8GiB RAM` thì pod của bạn cũng sẽ không bao giờ được deploy lên đó.
+1. k8s hoàn toàn có thể deploy pod của bạn vào một node mà lượng tài nguyên còn lại ít hơn lượng tài nguyên giới hạn. Ví dụ k8s sẽ có thể deploy workload `request: 100 mCPU, 256MiB RAM`, `limits: 1000mCPU, 2GiB RAM` vào một server chỉ còn trống 700 mCPU và 1 GiB RAM. Vậy nên nếu nếu workload của bạn yêu cầu nhiều tài nguyên hơn thì bạn cần chú ý cấp phát thêm tài nguyên cho chúng, vì trong trường hợp xấu, một pod dùng quá số lượng tài nguyên request mà node đã hết tài nguyên, node sẽ crash và buộc k8s phải kill một số pod khác hoặc tệ hơn là cả node đó sẽ không thể nào truy cập được nữa. Cơ chế kill pod đòi lại tài nguyên của k8s sẽ được đề cập ở mục dưới.
+2. Kể cả khi bạn không dùng thì một pod cũng đã k8s đã tính pod của bạn đã chiếm dụng lượng tài nguyên bằng với lượng tài nguyên yêu cầu.
+3. Tính chất tài nguyên CPU và RAM là khác nhau. Nếu pod của bạn vượt quá lượng tài nguyên CPU, k8s có thể "hãm" pod của bạn lại và không cho nó vượt quá giới hạn. Nhưng tài nguyên về bộ nhớ không thể bị giới hạn như vậy. Ngay khi pod của bạn vượt quá tài nguyên RAM cho phép, k8s sẽ kill luôn pod đó. Vậy nên cần chú ý về yêu cầu bộ nhớ của workload để tránh trường hợp pod bị kill ngoài ý muốn.
+4. Việc deploy pod vào các node còn phải tùy việc server đó còn bao nhiêu tài nguyên (khá hiển nhiên nhưng vẫn phải đề cập). Giả sử một node có 4 vCore và 16GiB RAM nhưng đã bị nhiều pod chiếm dụng mất 3 vCore thì khi bạn request lượng tài nguyên `request: 2500mCPU, 8GiB RAM` thì pod của bạn cũng sẽ không bao giờ được deploy lên đó.
 
 # Cơ chế deploy và kill của `kube-scheduler`
 
@@ -99,7 +100,7 @@ Mong rằng thông qua bài viết này, mọi người có thể hiểu đượ
 
 Các tài liệu tham khảo:
 
-- Setting Resource Requests and Limits in Kubernetes - [https://www.youtube.com/watch?v=xjpHggHKm78](https://www.youtube.com/watch?v=xjpHggHKm78)
-- Kubernetes Scheduler - [https://kubernetes.io/docs/concepts/scheduling-eviction/kube-scheduler/](http://bit.ly/3cmy1HN)
-- Pod Priority and Preemption - [https://kubernetes.io/docs/concepts/configuration/pod-priority-preemption/](http://bit.ly/3ptSLko)
-- Resource Quotas - [https://kubernetes.io/docs/concepts/policy/resource-quotas/](http://bit.ly/3cnltQc)
+- [Setting Resource Requests and Limits in Kubernetes](https://www.youtube.com/watch?v=xjpHggHKm78)
+- [Kubernetes Scheduler](https://kubernetes.io/docs/concepts/scheduling-eviction/kube-scheduler/)
+- [Pod Priority and Preemption ](https://kubernetes.io/docs/concepts/configuration/pod-priority-preemption/)
+- [Resource Quotas](https://kubernetes.io/docs/concepts/policy/resource-quotas/)

@@ -4,6 +4,8 @@ date: "2021-12-11T15:29:17+07:00"
 author: "Aperture"
 ---
 
+# Mở đầu
+
 Một trong những xu hướng mà tôi nắm bắt được khi sang làm DevOps ở Maxfowtech chính là công nghệ Serverless. Project đầu tiên mà tôi nhận được chính là migrate hệ thống từ sử dụng server vật lý cổ điển lên sử dụng AWS Lambda. Đây là một trải nghiệm vô cùng thú vị khi tôi có cơ hội rất tốt để có thêm một mindset mới để thiết kế một hệ thống dựa hoàn toàn vào một nhà cung cấp hạ tầng và không phải lo lắng về những lỗi về server cổ điển như trước. Tất nhiên, không có bữa trưa nào là miễn phí, việc chuyển giao không chỉ đơn giản là port các method trong code cũ thành các function và cứ thế mà nó chạy, tôi đã tốn khá nhiều thời gian để re-engineer lại hệ thống và dưới đây là một vài kinh nghiệm tôi thu thập được trong quá trình chuyển giao
 
 # Thiết kế một API thuần sử dụng các dịch vụ của AWS

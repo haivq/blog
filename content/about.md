@@ -1,9 +1,10 @@
 ---
 title: "Thông tin thêm"
 date: 2021-10-04T00:46:21+07:00
+author: "Aperture"
 ---
 
-> Đây là nơi ghi chép kinh nghiệm (đôi khi là cả suy nghĩ) và trải nghiệm của tôi. Nó được tạo ra để thoả mãn chính tôi.
+> Đây là nơi ghi chép kinh nghiệm (đôi khi là cả suy nghĩ) và trải nghiệm của tôi
 
 ## Thông tin tuyển dụng:
 
@@ -12,7 +13,7 @@ date: 2021-10-04T00:46:21+07:00
 
 ## Thông tin liên lạc:
 
-> Tôi khá khó để liên lạc, nếu bạn muốn liên lạc nghiêm túc nào nghiêm túc xin hãy gửi email
+> Tôi không hay theo dõi các mạng xã hội để liên lạc, nếu bạn muốn liên lạc xin hãy gửi email hoặc gửi tin nhắn Discord
 
    - [Facebook](https://www.facebook.com/haivq.prometheus)
    - [Discord](https://discord.com/users/393792609547714592)
