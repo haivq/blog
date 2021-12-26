@@ -1,4 +1,5 @@
-baseurl = "/"
+baseurl = "https://blog.haivq.com/"
+author = "Aperture"
 languageCode = "en-us"
 title = "Blog của Aperture"
 theme = "terminal"
