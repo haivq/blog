@@ -1,6 +1,6 @@
 baseurl = "/"
 languageCode = "en-us"
-title = "Góc của Aperture"
+title = "Blog của Aperture"
 theme = "terminal"
 paginate = 5
 
