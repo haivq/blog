@@ -45,7 +45,7 @@ Khá nhiều nhược điểm chết người so với số lượng ưu điểm
 
 # Sử dụng UUIDv1-5
 
-Một lựa chọn rất phổ biến khác được sử dụng để làm ID của dữ liệu. Ý tưởng của UUID rất đơn giản, đầu vào là một khối dữ liệu và đầu ra là một chuỗi số 128 bit. Tính chất của UUIDv1-4 chính là sự ngẫu nhiên, các UUID gần như không có ràng buộc gì đến nhau (thực ra cũng không chính xác lắm nếu nói như vậy do ở UUIDv1 và v2 dùng các yếu tố như địa chỉ MAC, IP của máy để làm entropy tạo ra ID, nhưng ý tôi nói ở đây là khi kể cả chung một nguồn, các ID sinh ra không thể kiểm tra được quan hệ giữa chúng). Do độ thông dụng và nổi tiếng của UUID, tôi không cần phải nhắc thêm nhiều nữa, mà để cập đến thuật toán sinh UUID sẽ rất dài dòng. Vậy nên ở dưới đây tôi sẽ nêu ra các ưu điểm và nhược điểm của nó:
+Một lựa chọn rất phổ biến khác được sử dụng để làm ID của dữ liệu. Ý tưởng của UUID rất đơn giản, đầu vào là một khối dữ liệu và đầu ra là một chuỗi số 128 bit. Tính chất đặc trưng của UUIDv1-5 chính là sự ngẫu nhiên và hỗn loạn, nói cách khác là các UUID không có ràng buộc gì đến nhau (thực ra cũng không chính xác lắm nếu nói như vậy do ở UUIDv1 và v2 dùng các yếu tố như địa chỉ MAC, IP của máy để làm entropy tạo ra ID, nhưng ý tôi nói ở đây là khi kể cả chung một nguồn, các ID sinh ra không thể kiểm tra được quan hệ giữa chúng). Do độ thông dụng và nổi tiếng của UUID, tôi không cần phải nhắc thêm nhiều nữa, mà để cập đến thuật toán sinh UUID sẽ rất dài dòng. Vậy nên ở dưới đây tôi sẽ nêu ra các ưu điểm và nhược điểm của nó:
 
 Ưu điểm:
 - Thư viện sinh UUD được implement ở tất cả các ngôn ngữ
