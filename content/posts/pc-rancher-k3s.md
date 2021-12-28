@@ -12,7 +12,7 @@ Kubernetes gần đây đã trở thành một công nghệ nổi tiếng. Khôn
 
 # Tìm đường để giải quyết vấn đề:
 
-Để đáp ứng nhu cầu thứ nhất và thứ ba, chúng ta sẽ sử dụng Rancher - một phần mềm tạo ra một giao diện điều khiển cho k8s rất dễ sử dụng. Nhưng ở nhu cầu thứ 2, chúng ta cần liệt kê ra một vài ứng cử viên:
+Để đáp ứng nhu cầu thứ nhất và thứ ba, chúng ta sẽ sử dụng Rancher - một phần mềm tạo ra một giao diện điều khiển cho k8s rất dễ sử dụng. Nhưng ở nhu cầu thứ 2, chúng ta cần liệt kê ra một vài ứng cử viên:
 
 ---
 
@@ -20,7 +20,7 @@ Kubernetes gần đây đã trở thành một công nghệ nổi tiếng. Khôn
 
 ## microk8s
 
-Một phiên bản k8s được xuất bản và hỗ trợ bởi Canonical (Hãng phát triển Ubuntu). Bạn có thể đã gặp dòng chữ microk8s khá nhiều lần trong dòng “message of the day” lúc ssh vào bất kì server Ubuntu nào. Ta sẽ phân tích một vài ưu điểm và nhược điểm của nó:
+Một phiên bản k8s được xuất bản và hỗ trợ bởi Canonical (Hãng phát triển Ubuntu). Bạn có thể đã gặp dòng chữ microk8s khá nhiều lần trong dòng “message of the day” lúc ssh vào bất kì server Ubuntu nào. Ta sẽ phân tích một vài ưu điểm và nhược điểm của nó:
 
 Ưu điểm:
    * Cài đặt đơn giản
@@ -29,7 +29,7 @@ Một phiên bản k8s được xuất bản và hỗ trợ bởi Canonical (Hã
    * Các tính năng của k8s có thể bật/tắt theo nhu cầu, dưới dạng plugin
    * Không chạy trên máy ảo
 
-Nhược điểm: 
+Nhược điểm:
 
    * Tắt đi bật lại rất lâu và rất dễ lỗi (nhất khi tắt máy đi bật lại), kết quả xấu nhất là bạn không thể kết nối vào k8s và kết quả là phải xoá đi cài lại
    * Tối ưu tốt cho Ubuntu nhưng chưa chắc đã tối ưu tốt cho các OS còn lại
@@ -65,7 +65,7 @@ Vậy nên theo tôi thì minikube không tối ưu để chạy thực tế vì
 
 ## kubeadm
 
-Công cụ được phát hành bởi chính k8s, dùng để tạo cluster k8s. Đây là cách khó nhất để tạo một cluster k8s, và cũng là chương trình duy nhất giúp bạn tạo ra một cluster k8s đúng theo sơ đồ thiết kế mà k8s đã đề ra. 
+Công cụ được phát hành bởi chính k8s, dùng để tạo cluster k8s. Đây là cách khó nhất để tạo một cluster k8s, và cũng là chương trình duy nhất giúp bạn tạo ra một cluster k8s đúng theo sơ đồ thiết kế mà k8s đã đề ra.
 
 Ưu điểm:
 
