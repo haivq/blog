@@ -13,9 +13,13 @@ date: "2021-11-23T13:57:17+07:00"
 Để đảm bảo mã hóa dữ liệu, ta cần phải setup certificate từ ở server Origin. Việc này xử lý 2 vấn đề như sau:
   - Không có bug SSL không hợp lệ, lỗi này xảy ra khi Cloudflare request https đến server không có SSL
   - Đảm bảo End-to-End Encryption, tức giả sử nếu có người trace được IP origin server (thường là IP của load balancer) thì cũng không biết data gửi là gì.
-  
+
+Minh hoạ sẽ như sau:
+
+![Full encryption](/self-signed-cert-cloudflare/full-enc.png)
+
 Để setup, ta cần phải setup như sau:
-  * Setup certificate ở cloudflare (bước này cloudflare đã tự xử lý)
+  * Setup một certificate hợp lệ ở cloudflare (bước này cloudflare đã tự xử lý)
   * Ở server Origin, cài đặt self-signed certificate chỉ để đảm bảo tính bảo mật
 
 # Thực hiện
@@ -50,24 +54,24 @@ Dựa vào thông tin trên để thay đổi subject khi cần. Chúng ta có t
 
 Ta cần add certificate vào Ingress, thông qua mục certificate trong Secret
 
-[[https://rancher.com/docs/rancher/v2.5/en/k8s-in-rancher/certificates/|Encrypting HTTP Communication]]
+[Encrypting HTTP Communication](https://rancher.com/docs/rancher/v2.5/en/k8s-in-rancher/certificates/)
 
 ### Apache
 
 Setup thông qua file Virtual Host
 
-[[https://httpd.apache.org/docs/2.4/ssl/ssl_howto.html|SSL/TLS Strong Encryption: How-To]]
+[SSL/TLS Strong Encryption: How-To](https://httpd.apache.org/docs/2.4/ssl/ssl_howto.html)
 
-[[https://www.ssls.com/knowledgebase/how-to-install-an-ssl-certificate-on-apache/|How to install an SSL Certificate on Apache]]
+[How to install an SSL Certificate on Apache](https://www.ssls.com/knowledgebase/how-to-install-an-ssl-certificate-on-apache/)
 
 ### NGINX
 
 Setup thông qua `server` config
 
-[[https://docs.nginx.com/nginx/admin-guide/security-controls/terminating-ssl-http/|NGINX SSL Termination]]
+[NGINX SSL Termination](https://docs.nginx.com/nginx/admin-guide/security-controls/terminating-ssl-http/)
 
 3. Setup End-to-End Encryption trên Cloudflare
 
 Setup Full encryption:
 
-[[https://support.cloudflare.com/hc/en-us/articles/200170416-End-to-end-HTTPS-with-Cloudflare-Part-3-SSL-options#h_845b3d60-9a03-4db0-8de6-20edc5b11057|End-to-end HTTPS with Cloudflare - Part 3: SSL options]]
+[End-to-end HTTPS with Cloudflare - Part 3: SSL options](https://support.cloudflare.com/hc/en-us/articles/200170416-End-to-end-HTTPS-with-Cloudflare-Part-3-SSL-options#h_845b3d60-9a03-4db0-8de6-20edc5b11057)
