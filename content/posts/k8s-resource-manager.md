@@ -1,7 +1,6 @@
 ---
 title: "Quản lý tài nguyên cho cluster Kubernetes"
 date: 2021-10-04T00:46:21+07:00
-author: "Aperture"
 ---
 
 # Đặt vẫn đề

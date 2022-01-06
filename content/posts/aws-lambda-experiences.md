@@ -1,7 +1,6 @@
 ---
 title: "Một vài kinh nghiệm của tôi khi sử dụng AWS Lambda"
 date: "2021-12-11T15:29:17+07:00"
-author: "Aperture"
 ---
 
 # Mở đầu
