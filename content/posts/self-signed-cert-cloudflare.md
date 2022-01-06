@@ -1,5 +1,6 @@
 ---
 title: "Cài đặt Self-Signed SSL để đảm bảo bảo mật connect tới Cloudflare"
+author: "Aperture"
 date: "2021-11-23T13:57:17+07:00"
 ---
 
@@ -28,7 +29,7 @@ Yêu cầu:
   * Một máy tính chạy Linux, UNIX hoặc macOS đã cài đặt OpenSSL
   * SSH 
 
-1. Tạo self-signed certificate
+## 1. Tạo self-signed certificate
 
 Dùng command sau để tạo Certificate, Private key:
 
@@ -48,7 +49,7 @@ Giải thích phần Subject: Bình thường khi tạo certificate, xuất hi�
 
 Dựa vào thông tin trên để thay đổi subject khi cần. Chúng ta có thể bỏ qua phần subject này cũng được, lúc tạo certificate nếu bị hỏi chỉ cần enter để bỏ qua là được
 
-2. Setup certificate lên server
+## 2. Setup certificate lên server
 
 ### Rancher/Kubernetes
 
@@ -70,7 +71,7 @@ Setup thông qua `server` config
 
 [NGINX SSL Termination](https://docs.nginx.com/nginx/admin-guide/security-controls/terminating-ssl-http/)
 
-3. Setup End-to-End Encryption trên Cloudflare
+## 3. Setup End-to-End Encryption trên Cloudflare
 
 Setup Full encryption:
 

@@ -1,5 +1,6 @@
 ---
 title: "Tạo một cluster Kubernetes đơn giản trên PC, sử dụng k3s và Rancher 2.5"
+author: "Aperture"
 date: 2021-10-04T00:48:26+07:00
 ---
 

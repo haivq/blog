@@ -1,5 +1,6 @@
 ---
 title: "Các phương pháp đặt ID trong CSDL"
+author: "Aperture"
 date: 2021-12-16T15:21:33+07:00
 ---
 
