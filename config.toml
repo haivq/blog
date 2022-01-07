@@ -11,10 +11,10 @@ paginate = 5
   contentTypeName = "posts"
 
   # ["orange", "blue", "red", "green", "pink"]
-  themeColor = "red"
+  themeColor = "orange"
 
   # if you set this to 0, only submenu trigger will be visible
-  showMenuItems = 2
+  showMenuItems = 3
 
   # show selector to switch language
   showLanguageSelector = false
@@ -62,3 +62,11 @@ paginate = 5
         identifier = "about"
         name = "Thông tin"
         url = "/about"
+      [[languages.en.menu.main]]
+        identifier = "thoughts"
+        name = "Suy nghĩ của tôi"
+        url = "https://thoughts.haivq.com"
+      [[languages.en.menu.main]]
+        identifier = "rss"
+        name = "RSS"
+        url = "/index.xml"
