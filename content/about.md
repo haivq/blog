@@ -4,10 +4,6 @@ date: 2021-10-04T00:46:21+07:00
 author: "Aperture"
 ---
 
-## Nội dung khác:
-
-   - [Suy nghĩ của tôi](https://thoughts.haivq.com)
-
 ## Thông tin tuyển dụng:
 
    - [Sơ yếu lý lịch](https://docs.google.com/document/d/e/2PACX-1vT9r_vbh9GNn4Eg-ZrTcxoCinM-ea7usu52WyxKSIOv8mkqvDi9x1uFw_uF3gtxSozZlbBMdS8jP6iY/pub)
