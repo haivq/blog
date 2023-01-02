@@ -54,9 +54,9 @@ Một lựa chọn rất phổ biến khác được sử dụng để làm ID c
 
 Nhược điểm:
 - Các ID không có sắp xếp theo thứ tự, do đó không thể truy vấn sắp xếp theo thời gian một cách đơn giản
-- Kích thước rất lớn (128 bit), lưu trữ rất tốn dung lượng và việc truy vấn sẽ tốn thời gian với những truy vấn nhiều kết quả
+- Kích thước rất lớn (128 bit), lưu trữ khá tốn dung lượng
  
-Do nhược điểm trên, UUIDv1-5 không phù hợp để làm ID cho các bản ghi cần phải sắp xếp theo thời gian, hay cho các bài toán phải insert một lượng lớn dữ liệu trong một thời gian ngắn, ví dụ như hệ thống chat, hệ thống logging, khi mỗi một dòng log, dòng chat là một record trong CSDL, số lượng record cần được lấy ra rất lớn và cần phải được sắp xếp theo thứ tự thời gian. Vì vậy, UUID chỉ phù hợp khi làm ID định danh cho các đối tượng không phải thường xuyên truy vấn sắp xếp, có lưu lượng insert không quá cao và thường được gọi đích danh bằng ID, ví dụ như User ID
+Do nhược điểm trên, UUIDv1-5 không phù hợp để làm ID cho các bản ghi cần phải sắp xếp theo thời gian, hay cho các bài toán phải insert một lượng lớn dữ liệu trong một thời gian ngắn, ví dụ như hệ thống chat, khi mỗ dòng chat là một record trong CSDL, số lượng record cần được lấy ra rất lớn và cần phải được sắp xếp theo thứ tự thời gian. Vì vậy, UUID, theo tôi, sẽ phù hợp khi làm ID định danh cho các đối tượng thường được gọi đích danh bằng ID, ví dụ như User ID, và việc sắp xếp không phải yếu tố tiên quyết.
 
 # Sử dụng ID dạng Snowflake
 
@@ -93,8 +93,7 @@ Baidu implement bit 21 - 0 theo một cách khác:
 
 Nhược điểm:
 - Để đạt hiệu năng cao, thuật toán sinh Snowflake ID sẽ rất phức tạp (xem [UidGenerator](https://github.com/baidu/uid-generator/blob/master/README.md) của Baidu và xem cách họ tìm cách để sinh Snowflake ID vượt thời gian), còn thuật toán Snowflake ID cổ điển (như Twitter) sẽ khá chậm
-- Nhiều phương pháp implement (như đề xuất của Twitter) sẽ yêu cầu phải có một server riêng để sinh ID, việc lấy ID sẽ thông qua RPC, và điều này có thể ảnh hưởng tới hiệu năng
-- Kích thước không thực sự lớn, như cách implement của Baidu, với mỗi worker, mỗi milli giây chỉ sinh được tối đa 8191 ID (chưa kể đến độ trễ giữa thời gian sinh các ID), trong trường hợp tệ xảy ra, bạn có thể phải đợi ở milli giây hay thậm chí là giây tiếp theo, việc này sẽ ảnh hưởng lớn tới hệ thống thời gian thực, như hệ thống chat
+- Nhiều phương pháp implement (như đề xuất của Twitter) sẽ yêu cầu phải có một server riêng để sinh ID, việc lấy ID sẽ thông qua RPC, và điều này có thể ảnh hưởng tới hiệu năng, tạo single point failure cho hệ thống microservice
 
 Mặc dù không đảm bảo được tính đơn giản, và tốc độ sinh sẽ phụ thuộc lớn vào cách implements, Snowflake ID vẫn được sử dụng bởi tính chất tối ưu của nó khi sắp xếp. Đặc biệt nếu bạn có một loạt node CSDL, Snowflake ID sẽ khiến việc sharding và truy vẫn liên server sẽ đơn giản hơn nhiều vì nó hoàn toàn tuyến tính tăng dần. Đây là lựa chọn phù hợp cho các hệ thống yêu cầu lấy dữ liệu theo thời gian nói chung, ví dụ như hệ thống chat (như WeChat, Discord) hay hệ thống log
 
