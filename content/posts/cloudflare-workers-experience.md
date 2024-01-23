@@ -1,5 +1,5 @@
 ---
-title: "Trải nghiệm thiết kế web server sử dụng giải pháp của Cloudflare + On-premise"
+title: "Trải nghiệm thiết kế web server sử dụng giải pháp của Cloudflare"
 author: "Aperture"
 date: "2024-01-23T14:14:00+07:00"
 ---
