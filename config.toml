@@ -40,12 +40,12 @@ paginate = 5
   # oneHeadingSize = false
 
 [languages]
-  [languages.en]
+  [languages.en.params]
     languageName = "English"
     title = "Góc của Aperture"
     subtitle = "Nơi ghi chép kinh nghiệm (đôi khi là cả suy nghĩ) của tôi"
     owner = "Aperture Prometheus"
-    keywords = ""
+    keywords = "devops,coding,resume,thoughts"
     copyright = "Aperture Prometheus"
     menuMore = "Xem thêm"
     readMore = "Đọc tiếp"
@@ -70,3 +70,6 @@ paginate = 5
         identifier = "rss"
         name = "RSS"
         url = "/index.xml"
+
+[markup.goldmark.renderer]
+  unsafe = true
