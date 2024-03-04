@@ -24,11 +24,15 @@ Sau một thời gian dài, rất dài làm việc với AWS, Azure, Oracle Clou
 * Tương đối dễ sử dụng và vận hành: Tốn quá nhiều thời gian để xây dựng một hạ tầng, khắc phục sự cố cho nó thì cũng chẳng còn thời gian đâu để phát triển thêm tính năng với một đội ít người
 * Đủ khoảng thở để phát triển: Không ai muốn code plugin cho WordPress cả, cũng chẳng ai muốn dùng những công nghệ cũ kĩ như Drupal hay Joomla, hoặc những thứ khổng lồ như Magento làm gì cho nhọc công.
 
-Dựa vào nhưng tiêu chí ở trên, tôi có hai giải pháp như sau:
+Bài toán của tôi còn gặp phải những trở ngại sau:
+* Cần nơi lưu trữ các asset có dung lượng lớn
+* Serve các file có dung lượng lớn đó tới khách hàng với chi phí băng thông rẻ và nhanh
 
-- AWS Lambda + API Gateway + RDS/Dynamo + S3: Giải pháp thường thấy bởi bất kì những người từ già trẻ lớn bé biết đến cloud service.
-- Cloudflare Workers + Pages + D1 + R2: Giải pháp mới đưa ra của Cloudflare, gần tương tự với giải pháp của AWS.
-- Heroku: Giải pháp sử dụng một web và nhiều background worker khá hay của Salesforces
+Dựa vào nhưng tiêu chí ở trên, tôi có ba giải pháp như sau:
+
+- AWS Lambda + API Gateway + RDS/Dynamo + S3 + CloudFront: Giải pháp thường thấy bởi bất kì những người từ già trẻ lớn bé biết đến cloud service.
+- Cloudflare Workers + Pages + D1 + R2 + Cloudflare CDN: Giải pháp mới đưa ra của Cloudflare, gần tương tự với giải pháp của AWS.
+- Heroku + CDN khác: Giải pháp sử dụng một web và nhiều background worker khá hay của Salesforces
 
 Dưới đây là bảng so sánh các tính năng giữa các giải pháp
 
@@ -38,14 +42,14 @@ Dưới đây là bảng so sánh các tính năng giữa các giải pháp
 | Cloudflare | - Giá rẻ như bùn<br>- Scale rất tốt với cold start thấp<br>- Hỗ trợ native một số framework fullstack như SvelteKit, NuxtJS                                                                                                            | - Chỉ hỗ trợ native JS/TS, muốn dùng ngôn ngữ khác phải compile ra WASM (rất khó và trúc trắc)<br>- Nền tảng Workers chạy trong sandbox Google V8 nên rất nhiều giới hạn về bộ nhớ, năng lực tính toán và tính năng thua xa AWS Lambda<br>- Các giải pháp xung quanh Workers (như Queues, KV và D1) khá khó dùng và có nhiều hạn chế<br>- Việc connect tới các dịch vụ sử dụng TCP gần như không hỗ trợ |
 | Heroku     | - Thân thiện với người dùng, nhiều add-ons có sẵn<br>- Hỗ trợ nhiều ngôn ngữ, đặc biệt là cho phép dùng Docker                                                                                                                         | - Giá vẫn còn đắt (để có option 1GB RAM cần tới 50$ 1 tháng)<br>- Không có region nào ngoài US và EU M<br>- Tiền add-ons tính vào thì đắt cũng chẳng kém AWS                                                                                                                                                                                                                                                                                                    |
 
-Tất nhiên, dù có nhiều nhược điểm nhưng vấn đề tiền bạc đã chiến thắng tất cả, tôi lựa chọn Cloudflare Workers. Giải pháp mà tôi lựa chọn là fullstack SvelteKit deploy trên Cloudflare Pages + Cloudflare Workers làm backend, D1 + KV làm database và R2 làm nơi lưu trữ dữ liệu.
+Tất nhiên, dù có nhiều nhược điểm nhưng vấn đề tiền bạc đã chiến thắng tất cả, tôi lựa chọn Cloudflare Workers. Giải pháp mà tôi lựa chọn là fullstack SvelteKit deploy trên Cloudflare Pages + Cloudflare Workers làm backend, D1 + KV làm database và R2 làm nơi lưu trữ dữ liệu. Ngoài ra, việc trữ dữ liệu ở R2 cũng free tiền băng thông egress ra ngoài internet, tiết kiệm kha khá tiền CDN.
 
 # Những vấn đề gặp phải khi thiết kế
 
 Tất nhiên, đã chọn CF Workers là xác định đối mặt với những nhược điểm của nó, và dưới đây là những vấn đề tôi gặp phải khi sử dụng giải pháp của Cloudflare
 
 ## Chỉ support JS/TS native, các ngôn ngữ khác phải build ra WASM
-Việc này không hề thân thiện một chút nào với bất kì ai, do khi build ra như vậy khiến việc debug/testing gặp rất nhiều trở ngại. Hơn nữa không phải ngôn ngữ nào cũng có thể build ra WASM, mà chỉ có các ngôn ngữ compile mới có thể dùng được. Mặc dù theo lý thuyết ta có thể code hoặc compile các thư viện viết bằng Rust, C/C++ để tự tạo các thư viện mà trong môi trường Cloudflare Workers không có, nhưng TẠI SAO???
+Việc này không hề thân thiện một chút nào với nhiều người, do khi build ra như vậy khiến việc debug/testing gặp rất nhiều trở ngại. Hơn nữa không phải ngôn ngữ nào cũng có thể build ra WASM, mà chỉ có các ngôn ngữ compile mới có thể dùng được. Mặc dù theo lý thuyết ta có thể code hoặc compile các thư viện viết bằng Rust, C/C++ để tự tạo các thư viện mà trong môi trường Cloudflare Workers không có, nhưng so với việc sử dụng Lambda thì CF Workers kém thân thiện hơn rất nhiều.
 
 ## Cloudflare D1 thực chất là SQLite và migration trên đó thực sự là thảm hoạ
 
@@ -57,22 +61,26 @@ Dù sao thì SQLite vẫn là DB chỉ dùng trong một node và dù có implem
 
 Cùi ở đây có hai điểm:
 
-1. Môi trường chạy khá yếu, 128M RAM với 10ms CPU time (nếu trả 5$ để có thêm 40ms CPU time nữa) là tương đối ít. Nếu phải sử dụng Workers Unbound cho cả project thì lại phí. Do đó các tác vụ liên quan đến mã hoá/giải mã dữ liệu sẽ không đủ RAM và CPU time để chạy.
-2. API WebCrypto hoá khá nhiều giới hạn, đặc biệt password hasing chỉ có PBKDF2 là support bởi Cloudflare Workers, và việc implements chúng vào code cũng không dễ dàng gì, [và đây là một ví dụ](https://timtaubert.de/blog/2015/05/implementing-a-pbkdf2-based-password-storage-scheme-for-firefox-os/)
+~~1. Môi trường chạy khá yếu, 128M RAM với 10ms CPU time (nếu trả 5$ để có thêm 40ms CPU time nữa) là tương đối ít. Nếu phải sử dụng Workers Unbound cho cả project thì lại phí. Do đó các tác vụ liên quan đến mã hoá/giải mã dữ liệu sẽ không đủ RAM và CPU time để chạy.~~
+1. Luận cứ trên không còn đúng nữa do Cloudflare đã thay đổi phương thức hoạt động của Workers vào 2024/03/01, giờ ta có 30 triệu ms CPU time và mỗi fetch worker có thể sử dụng tối đa 30s CPU time (nếu sử dụng Cron Trigger thì còn được dùng tới 15 phút CPU time). Nhưng câu chuyện 128M RAM thì vẫn còn. Nếu bạn sử dụng global var để lưu thông tin giữa các request, thì khi lưu quá nhiều thì worker của bạn vẫn sẽ lăn ra chết. Vậy nên vấn đề thời gian của Workers không còn đáng lo, mà chủ yếu là vấn đề memory, nếu là về memory thì đây là bệnh chung của tất cả các nền tảng serverless.
+2. API WebCrypto hoá khá nhiều giới hạn, đặc biệt password hasing chỉ có PBKDF2 là support bởi Cloudflare Workers, và việc implements chúng vào code cũng không dễ dàng gì, [và đây là một ví dụ](https://timtaubert.de/blog/2015/05/implementing-a-pbkdf2-based-password-storage-scheme-for-firefox-os/), nhân tiện tôi cũng đang sử dụng phương pháp này để mã hoá password, tất nhiên là đã thêm salt và pepper để an toàn hơn.
 
-Vậy nên nếu để sử dụng các thuật toán mã hoá BCrypt hay Argon2, bắt buộc phải gọi ra một service ngoài, ví dụ như một function Lambda hoặc Unbound worker đề offload việc sang, tạo thêm một infrastructure dependency không đáng có, khiến việc maintain hệ thống trở nên khó hơn. Hơn nữa kể cả khi đã chạy PBKDF2, việc hashing vẫn có nguy cơ hết RAM/CPU giữa chừng, gây ra khó chịu nhất định.
+~~Vậy nên nếu để sử dụng các thuật toán mã hoá BCrypt hay Argon2, bắt buộc phải gọi ra một service ngoài, ví dụ như một function Lambda hoặc Unbound worker đề offload việc sang, tạo thêm một infrastructure dependency không đáng có, khiến việc maintain hệ thống trở nên khó hơn. Hơn nữa kể cả khi đã chạy PBKDF2, việc hashing vẫn có nguy cơ hết RAM/CPU giữa chừng, gây ra khó chịu nhất định.~~
+Vậy luận điểm đã nêu trước kia chỉ còn là vấn đề về RAM. Có nhiều CPU time thì ta hoàn toàn có thể sử dụng Argon2 hoặc BCrypt nếu muốn, vì trong thực tế số lượng request dùng đến password hashing không nhiều, chủ yếu dùng lúc tạo tài khoản và login. Nhưng để không phải install nhiều thư viện và bật `node_compat` thì tôi vẫn sử dụng PBKDF2.
+
 
 ## Logging khá rối rắm
 
-Khi bạn không tốn 5$ một tháng cho Cloudflare, tất cả những gì bạn có thể làm là dùng `wrangler tail` để xem log của Workers. Ngay cả khi sử dụng Cloudflare Logpush, mọi thứ chợt trở nên phức tạp phát khiếp so với việc mở AWS CloudWatch để xem log, [xem document này để thấy độ phức tạp](https://developers.cloudflare.com/logs/get-started/enable-destinations/elastic/)
+Khi bạn không tốn 5$ một tháng cho Cloudflare, tất cả những gì bạn có thể làm là dùng `wrangler tail` để xem log của Workers, không như Lambda có sẵn CloudWatch. Ngay cả khi đã tốn tiền để sử dụng Cloudflare Logpush, mọi thứ chợt trở nên phức tạp hơn so với việc mở AWS CloudWatch để xem log, [xem document này để thấy độ phức tạp](https://developers.cloudflare.com/logs/get-started/enable-destinations/elastic/). Trong bài toán thực tế, tôi sử dụng New Relic để xem log do được free khá nhiều (thực ra vì setup lưu vào Elastic mất thời gian quá nên đưa vào New Relic cho tiện).
 
 ## Không thể dùng nhiều package của NodeJS
 
-Kể cả có bật `node_compat` lên thì vẫn sẽ có khả năng code của bạn sẽ không thể sử dụng kha khá các thư viện của NodeJS, phần vì không thể implements hết các API của NodeJS, phần vì giới hạn 1M file code của Cloudflare, khi webpack có thể tạo file lớn hơn giới hạn.
+Kể cả có bật `node_compat` lên thì vẫn sẽ có khả năng code của bạn sẽ không thể sử dụng kha khá các thư viện của NodeJS, phần vì không thể implements hết các API của NodeJS, phần vì giới hạn 1M (10M nếu dùng Cloudflare Paid Plan) file code của Cloudflare, khi webpack có thể tạo file lớn hơn giới hạn.
 
 ## Connect vào database sử dụng TCP khá giới hạn
 
 Sẽ có lúc bạn cần connect vào các database ở ngoài để lấy dữ liệu từ chúng. Hiện tại chỉ có PostgreSQL là được hỗ trợ thông qua Hyperdrive, còn lại chúng ta không thể làm gì để connect vào MySQL, Redis, ngoại trừ việc phải sử dụng các bên có support endpoint HTTPS như Upstash hay PlanetScale và tất nhiên, giá sẽ cao vút nếu bạn bắt đầu phải phục vụ lượng người dùng lớn. 
 
 # Tóm lại
-Ở trên là những trải nghiệm của tôi khi sử dùng CF Workers. Dù nó có nhiều giới hạn, nhưng tiêu chí rẻ đã khiến tôi tin tưởng Cloudflare Workers. Mong là tôi sẽ không bỏ của chạy lấy người giữa như ông bạn [liftosaur](http://liftosaur.com) ở đây mà kịp sống dai và kiên nhẫn để đợi CF worker close beta.
+
+Ở trên là những trải nghiệm của tôi khi sử dùng CF Workers. Dù nó có nhiều giới hạn, nhưng tiêu chí rẻ đã khiến tôi tin tưởng giải pháp của Cloudflare. Mong là tôi sẽ không bỏ của chạy lấy người giữa như ông bạn [liftosaur](http://liftosaur.com) ở đây mà kịp sống dai, kiếm đủ tiền ra lãi và đợi để nền tảng Cloudflare Workers có thêm nhiều tính năng.
