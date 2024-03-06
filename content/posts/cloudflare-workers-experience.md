@@ -6,7 +6,12 @@ date: "2024-01-23T14:14:00+07:00"
 
 # Đặt vấn đề
 
-Sau một thời gian dài, rất dài làm việc với AWS, Azure, Oracle Cloud, tôi chợt nhận ra tất cả những nhà cung cấp trên có một đặc điểm chung: Khá rẻ khi đang dev, giá vẫn còn gồng được được khi bắt đầu serve lượng nhỏ người dùng và khi phải chạy một hệ thống khủng để gánh một lượng lớn khách thì giá phải trả sẽ ở trên trời. Với một người có kinh tế eo hẹp, không được funding vốn từ bất kì đối tượng nào mà phải tự gồng gánh từ hạ tầng đến lương nhân viên, thì việc vỡ nợ trước khi sản phẩm ra tiền là viễn cảnh không hề xa.
+Sau một thời gian dài, rất dài làm việc với AWS, Azure, Oracle Cloud, tôi chợt nhận ra tất cả những nhà cung cấp trên có một đặc điểm chung như sau:
+- Khá rẻ khi đang dev
+- Giá tăng theo cấp số nhân khi bắt đầu có khách sử dụng, do thiết kế phải sử dụng rất nhiều các dịch vụ built in của nền tảng
+- Vẫn còn gồng được được khi bắt đầu serve lượng nhỏ người dùng nhưng khi phải gánh một hệ thống khủng để gánh một lượng lớn khách thì giá sẽ cao vọt lên.
+
+Với một người có kinh tế eo hẹp, không được funding vốn từ bất kì đối tượng nào mà phải tự gồng gánh từ hạ tầng đến lương nhân viên, thì việc vỡ nợ trước khi sản phẩm ra tiền là viễn cảnh không hề xa.
 
 {{< figure 
     src="/cloudflare-workers-experience/9999-up-time-fireship.png"
