@@ -26,18 +26,22 @@ Với một người có kinh tế eo hẹp, không được funding vốn từ 
 
 * Giá rẻ: Tiền hạ tầng nên được cắt giảm để đầu tư vào những thứ khác có ích hơn, ví dụ như đồ để ăn, nước để uống, điện để sạc máy tính và thuốc lá để hút.
 * Công sức vận hành thấp: Nếu phải dành quá 50-60% thời gian trong một ngày chỉ để theo dõi một hạ tầng đang sống hay chết trong khi nhân lực không đủ thì sẽ là quá phí phạm công sức
-* Tương đối dễ sử dụng và vận hành: Tốn quá nhiều thời gian để xây dựng một hạ tầng, khắc phục sự cố cho nó thì cũng chẳng còn thời gian đâu để phát triển thêm tính năng với một đội ít người
-* Đủ khoảng thở để phát triển: Không ai muốn code plugin cho WordPress cả, cũng chẳng ai muốn dùng những công nghệ cũ kĩ như Drupal hay Joomla, hoặc những thứ khổng lồ như Magento làm gì cho nhọc công.
+* Tương đối dễ sử dụng và vận hành: Tốn quá nhiều thời gian để xây dựng một hạ tầng, khắc phục sự cố cho nó thì cũng chẳng còn thời gian đâu để phát triển thêm tính năng với một đội ít người. Hơn nữa một công cụ/nền tảng phức tạp trong sử dụng sẽ yêu người có trình độ cao, do đó cần tuyển ai cũng có trình độ cao để sử dụng/vận hành.
+* Đủ khoảng thở để phát triển: Nền tảng này phải đủ mở để về sau thêm được nhiều tính năng của mình mà không phải bị cản trở bởi nền tảng quá nhiều. Không ai muốn code plugin cho WordPress cả, cũng chẳng ai muốn dùng những công nghệ cũ kĩ như Drupal hay Joomla, hoặc những thứ khổng lồ như Magento làm gì cho nhọc công.
 
-Bài toán của tôi còn gặp phải những trở ngại sau:
-* Cần nơi lưu trữ các asset có dung lượng lớn
-* Serve các file có dung lượng lớn đó tới khách hàng với chi phí băng thông rẻ và nhanh
+Bài toán của tôi còn có những yêu cầu sau:
+
+* Cần nơi lưu trữ các blob có dung lượng lớn, khoảng 10% trong đó là hot access
+* Serve các blob có dung lượng lớn đó tới khách hàng
 
 Dựa vào nhưng tiêu chí ở trên, tôi có ba giải pháp như sau:
 
 - AWS Lambda + API Gateway + RDS/Dynamo + S3 + CloudFront: Giải pháp thường thấy bởi bất kì những người từ già trẻ lớn bé biết đến cloud service.
 - Cloudflare Workers + Pages + D1 + R2 + Cloudflare CDN: Giải pháp mới đưa ra của Cloudflare, gần tương tự với giải pháp của AWS.
-- Heroku + CDN khác: Giải pháp sử dụng một web và nhiều background worker khá hay của Salesforces
+- Heroku + S3 Compatible Storage + CDN khác: Giải pháp sử dụng một web và nhiều background worker khá hay của Salesforces
+- On-prem/VM + S3 Compatible Storage + CDN khác: Sử dụng runtime là máy ảo của AWS hoặc các provider nhỏ hơn. Giải pháp tự dựng 100%, làm chủ tất cả các công nghệ, tự dựng stack công nghệ của riêng mình
+
+> Ở đây có thể các bạn thắc mắc rằng tại sao lại không dùng CDN Cloudflare cùng với các giải pháp khác, thì nên lưu ý rằng trong [Điều khoản sử dụng CDN của Cloudflare](https://www.cloudflare.com/en-gb/service-specific-terms-application-services/), việc serve các nội dung không phải HTML qua mạng của Cloudflare là vi phạm chính sách của họ, trừ khi bạn serve các nội dung đó từ các dịch vụ của chính Cloudflare (như R2, Images hay Pages). Trừ khi bạn dùng gói Enterprise, còn đâu thì việc cache một lượng blob lớn lên CDN của Cloudflare có thể dẫn đến kết quả tài khoản của bạn bị terminate. 
 
 Dưới đây là bảng so sánh các tính năng giữa các giải pháp
 
@@ -46,8 +50,11 @@ Dưới đây là bảng so sánh các tính năng giữa các giải pháp
 | AWS        | - Nền tảng rất phổ biến, nhiều người dùng và được chứng thực bởi nhiều khách hàng<br>- Được thiết kế để scale<br>- Nhiều khoảng thở để phát triển ứng dụng, vì AWS Lambda sử dụng môi trường Linux và hỗ trợ native rất nhiều ngôn ngữ | - Giá thành không hề rẻ, ngoài phải trả tiền cho các sản phẩm sử dụng, ta phải trả các khoản phí không tên khác như tiền băng thông, tiền VPC, vân vân                                                                                                                                                                                                                                                  |
 | Cloudflare | - Giá rẻ như bùn<br>- Scale rất tốt với cold start thấp<br>- Hỗ trợ native một số framework fullstack như SvelteKit, NuxtJS                                                                                                            | - Chỉ hỗ trợ native JS/TS, muốn dùng ngôn ngữ khác phải compile ra WASM (rất khó và trúc trắc)<br>- Nền tảng Workers chạy trong sandbox Google V8 nên rất nhiều giới hạn về bộ nhớ, năng lực tính toán và tính năng thua xa AWS Lambda<br>- Các giải pháp xung quanh Workers (như Queues, KV và D1) khá khó dùng và có nhiều hạn chế<br>- Việc connect tới các dịch vụ sử dụng TCP gần như không hỗ trợ |
 | Heroku     | - Thân thiện với người dùng, nhiều add-ons có sẵn<br>- Hỗ trợ nhiều ngôn ngữ, đặc biệt là cho phép dùng Docker                                                                                                                         | - Giá vẫn còn đắt (để có option 1GB RAM cần tới 50$ 1 tháng)<br>- Không có region nào ngoài US và EU M<br>- Tiền add-ons tính vào thì đắt cũng chẳng kém AWS                                                                                                                                                                                                                                                                                                    |
+| On-prem   | - Làm chủ toàn bộ hoàn toàn về công nghệ<br>- | - Tất cả những vấn đề như quản lý server, scaling, trục trặc hạ tầng sẽ do mình lo lắng toàn bộ<br>- Công sức để engineer ra toàn bộ stack công nghệ, sử dụng tối ưu máy móc không hề dễ dàng<br>- Chi phí cũng không giảm hơn nhiều nếu không tối ưu được mức sử dụng |
 
-Tất nhiên, dù có nhiều nhược điểm nhưng vấn đề tiền bạc đã chiến thắng tất cả, tôi lựa chọn Cloudflare Workers. Giải pháp mà tôi lựa chọn là fullstack SvelteKit deploy trên Cloudflare Pages + Cloudflare Workers làm backend, D1 + KV làm database và R2 làm nơi lưu trữ dữ liệu. Ngoài ra, việc trữ dữ liệu ở R2 cũng free tiền băng thông egress ra ngoài internet, tiết kiệm kha khá tiền CDN.
+
+
+Dù có nhiều nhược điểm nhưng vấn đề kinh tế đã chiến thắng tất cả, tôi lựa chọn Cloudflare Workers. Giải pháp mà tôi lựa chọn là fullstack SvelteKit deploy trên Cloudflare Pages + Cloudflare Workers làm backend, D1 + KV làm database và R2 làm nơi lưu trữ dữ liệu. Ngoài ra, việc trữ dữ liệu ở R2 cũng free tiền băng thông egress ra ngoài internet, tiết kiệm kha khá tiền CDN.
 
 # Những vấn đề gặp phải khi thiết kế
 
