@@ -2,6 +2,43 @@
 title: "Trải nghiệm thiết kế web server sử dụng giải pháp của Cloudflare"
 author: "Aperture"
 date: "2024-01-23T14:14:00+07:00"
+categories:
+    - cloudflare
+    - serverless
+    - cloudflare workers
+    - cloudflare pages
+    - svelte
+    - sveltekit
+tags:
+    - cloudflare
+    - cloudflare workers
+    - cloudflare pages
+    - cf
+    - cf workers
+    - cf pages
+    - d1
+    - cloudflare d1
+    - cf d1
+    - kv
+    - cloudflare kv
+    - cf kv
+    - r2
+    - cloudflare r2
+    - cf r2
+    - cf cdn
+    - cloudflare cf
+    - wrangler
+    - cloudflare wrangler
+    - cdn
+    - system design
+    - edge computing
+    - serverless
+    - svelte
+    - sveltekit
+    - optimization
+    - experience
+    - scaling
+    - cloud
 ---
 
 # Đặt vấn đề

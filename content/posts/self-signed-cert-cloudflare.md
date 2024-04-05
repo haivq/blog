@@ -2,6 +2,21 @@
 title: "Cài đặt Self-Signed SSL để đảm bảo bảo mật connect tới Cloudflare"
 author: "Aperture"
 date: "2021-11-23T13:57:17+07:00"
+categories:
+    - cloudflare
+    - cdn
+    - ssl/tls
+tags:
+    - cloudflare
+    - cdn
+    - cf
+    - cf cdn
+    - cloudflare cdn
+    - ssl
+    - self-signed
+    - encryption
+    - openssl
+    - tls
 ---
 
 # Giải thích

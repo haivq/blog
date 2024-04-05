@@ -2,6 +2,25 @@
 title: "Một vài kinh nghiệm của tôi khi sử dụng AWS Lambda"
 author: "Aperture"
 date: "2021-12-11T15:29:17+07:00"
+categories:
+    - aws
+    - lambda
+    - serverless
+tags:
+    - aws
+    - aws lambda
+    - amazon web service
+    - lambda aws
+    - lambda
+    - serverless
+    - system design
+    - optimization
+    - experience
+    - scaling
+    - rds
+    - amazon rds
+    - dynamodb
+    - cloud
 ---
 
 # Mở đầu

@@ -2,6 +2,17 @@
 title: "Các phương pháp đặt ID trong CSDL"
 author: "Aperture"
 date: 2021-12-16T15:21:33+07:00
+tags:
+    - id
+    - database
+tags:
+    - id
+    - id generating
+    - snowflake
+    - uuid
+    - ulid
+    - database sorting
+    - experience
 ---
 
 # Đặt vấn đề

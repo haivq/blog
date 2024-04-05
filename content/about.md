@@ -2,6 +2,15 @@
 title: "Thông tin thêm"
 date: 2021-10-04T00:46:21+07:00
 author: "Aperture"
+categories:
+    - about
+    - info
+    - contact
+tags:
+    - about
+    - info
+    - cv
+    - contact
 ---
 
 ## Thông tin tuyển dụng:

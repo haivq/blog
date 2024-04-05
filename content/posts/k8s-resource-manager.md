@@ -2,6 +2,20 @@
 title: "Quản lý tài nguyên cho cluster Kubernetes"
 author: "Aperture"
 date: 2021-10-04T00:46:21+07:00
+categories:
+    - docker
+    - kubernetes
+tags:
+    - k8s
+    - docker
+    - kubernetes
+    - resource management
+    - kube-scheduler
+    - database sorting
+    - experience
+    - kubectl
+    - dev
+    - development
 ---
 
 # Đặt vẫn đề
