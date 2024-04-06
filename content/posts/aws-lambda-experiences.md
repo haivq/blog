@@ -6,21 +6,15 @@ categories:
     - aws
     - lambda
     - serverless
+    - system design
 tags:
     - aws
-    - aws lambda
-    - amazon web service
-    - lambda aws
     - lambda
     - serverless
     - system design
     - optimization
     - experience
     - scaling
-    - rds
-    - amazon rds
-    - dynamodb
-    - cloud
 ---
 
 # Mở đầu

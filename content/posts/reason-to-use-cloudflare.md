@@ -8,12 +8,8 @@ categories:
     - ddos
 tags:
     - cloudflare
-    - cf
     - cloudflare cdn
-    - cf cdn
-    - cdn
     - load balancer
-    - load balancing
     - ddos
 ---
 Hiện tại như thiết kế điển hình của các hệ thống nằm trên AWS, Azure, ta đều có Load Balancer đứng trước chúng, không cho phép traffic chảy trực tiếp vào server. Như vậy, các server nằm phía sau tương đối an toàn khỏi các cuộc tấn công liên quan đến viêc lộ địa chỉ IP của server. Nhưng việc sử dụng Cloudflare sẽ giúp được các vấn đề sau đây:

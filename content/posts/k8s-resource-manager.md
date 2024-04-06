@@ -10,8 +10,6 @@ tags:
     - docker
     - kubernetes
     - resource management
-    - kube-scheduler
-    - database sorting
     - experience
     - kubectl
     - dev

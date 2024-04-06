@@ -14,13 +14,8 @@ tags:
    - kubernetes
    - docker
    - self hosted
-   - nginx
-   - ingress
-   - ingress-nginx
-   - cert-manager
    - pc
    - development
-   - dev
 ---
 
 Kubernetes gần đây đã trở thành một công nghệ nổi tiếng. Không chỉ gắn liên với việc quản lý các cluster lớn, rất nhiều framework hay các stack công nghệ bây giờ đều hỗ trợ k8s (điển hình nhất là kubeflow, nginx). Việc học k8s gần như không còn là môt lựa chọn mà trở thành một yêu cầu quan trọng cho nhiều công việc. Những ai đã/đang sử dụng k8s đều phải công nhận đây là một công nghệ rất mạnh và mềm dẻo, nhưng kèm theo đó là một vài nhược điểm cố hữu: Rất khó sử dụng! Với những dev sử dụng máy tính thông thường, việc điều khiển một cluster k8s thực sự là một cực hình do phải điều khiển nó thông quan kubectl - một chương trình cli có quá nhiều thứ phải nhớ. Ngoài ra để deploy bất kì thứ gì lên đó, chúng ta phải viết một cái file yml dài ngoằng khó hiểu, liệt kê đầy đủ tất cả những gì cần phải có để một chương trình có thể chạy. Và tất nhiên k8s mặc định hoàn toàn không có giao diện. Kubernetes Dashboard (UI chính thức của k8s) cuối cùng vẫn bắt bạn phải viết yml. Rất nhiều config lưu trong k8s không thể lưu chính xác, và kết quả bạn lại phải viết thêm yml để phục vụ các config đó. Vậy nên yêu cầu của chúng ta khi deploy một cluster k8s ở máy bàn cá nhân cần phải thoả mãn các tiêu chí sau:

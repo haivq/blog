@@ -8,9 +8,6 @@ categories:
     - ssl/tls
 tags:
     - cloudflare
-    - cdn
-    - cf
-    - cf cdn
     - cloudflare cdn
     - ssl
     - self-signed
