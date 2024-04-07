@@ -7,8 +7,6 @@ categories:
     - serverless
     - cloudflare workers
     - cloudflare pages
-    - svelte
-    - sveltekit
 tags:
     - cloudflare
     - cloudflare workers
