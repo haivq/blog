@@ -30,7 +30,7 @@ Công việc này bao gồm 3 phần:
 2. Update các layer library có sẵn từ Python 3.8 lên 3.10
 3. Update các function và để bên tester làm việc
 
-Việc review các breaking change xảy ra khá suôn sẻ, vì phần lớn các update từ 3.8 đến 3.10 chủ yếu là thêm tính năng chứ không có thay đổi lớn gì về cú pháp. Các thư viện có cải tiến mà tôi hay dùng là `concurrent.futures` cũng không có breaking change nào cả. Việc update phần lớn các layer library cũng đơn giản, ngay cả thư viện hay gặp vấn đề nhất là `cffi` cũng chạy luôn không phải sửa gì cả, nhờ vậy phần lớn các layer đều migrate lên Python 3.10 khá nhanh chóng và chạy không có vấn đề gì. Tôi đã nghĩ mọi thứ như vậy là ổn, cho đến khi gặp phải vấn đề nan giải: Cho NumPy, SciPy và Pandas chạy được cùng với nhau.
+Việc review các breaking change xảy ra khá suôn sẻ, vì phần lớn các update từ 3.8 đến 3.10 chủ yếu là thêm tính năng chứ không có thay đổi lớn gì về cú pháp. Các thư viện có cải tiến mà tôi hay dùng là `concurrent.futures` cũng không có breaking change nào cả. Việc update phần lớn các layer library cũng đơn giản, ngay cả thư viện hay gặp vấn đề nhất là `cffi` cũng chạy luôn một cách thần kfi, nhờ vậy phần lớn các layer đều migrate lên Python 3.10 khá nhanh chóng và chạy không có vấn đề gì. Tôi đã nghĩ mọi thứ như vậy là ổn, cho đến khi gặp phải vấn đề nan giải: Cho NumPy, SciPy và Pandas chạy được cùng với nhau.
 
 # Vấn đề kích thước với NumPy, SciPy và Pandas
 
