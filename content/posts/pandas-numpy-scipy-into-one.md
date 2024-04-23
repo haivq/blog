@@ -34,7 +34,7 @@ Việc review các breaking change xảy ra khá suôn sẻ, vì phần lớn c�
 
 # Vấn đề kích thước với NumPy, SciPy và Pandas
 
-Nghiệp vụ mà tôi gặp phải yêu cầu phải có cả 3 thư viện SciPy, NumPy và Pandas. Nếu bạn dùng SciPy, NumPy và Pandas thì cũng hiểu các thư viện này khi tải về rất nặng. Ngoài code ra, các thư viện trên còn chứa cả thư viện phụ trợ kèm theo, các thư viện `.so` đã build ra (`OpenBLAS` và `GFortran` cho NumPy và SciPy, mỗi thư viện dùng một phiên bản) nên tổng cả thư mục này có kích thước lên tới 278M, trong khi AWS Lambda chỉ cho phép tổng TẤT CẢ các layer lại trong một function là 250M, tức là tôi đã quá 28M so với giới hạn, đấy là chưa kể cần các layer khác cho code và các thư viện khác.
+Nghiệp vụ mà tôi gặp phải yêu cầu phải có cả 3 thư viện SciPy, NumPy và Pandas. Nếu bạn dùng SciPy, NumPy và Pandas thì cũng hiểu các thư viện này khi tải về rất nặng. Ngoài code ra, các thư viện trên còn chứa cả thư viện phụ trợ kèm theo, các thư viện `.so` đã build ra (`OpenBLAS` và `GFortran` cho NumPy và SciPy, mỗi thư viện dùng một phiên bản) nên tổng cả thư mục này có kích thước lên tới 278M, trong khi AWS Lambda chỉ cho phép tổng TẤT CẢ các layer lại trong một function là 250M, tức là tôi đã quá 28M so với giới hạn, đấy là chưa kể phải chừa chỗ cho các layer khác.
 
 Ở runtime Python 3.8, AWS cung cấp sẵn 2 layer sau:
 
