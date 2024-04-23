@@ -50,7 +50,8 @@ rm -r python/numpy*/
 
 Vậy là layer mới này chỉ chứa mỗi Pandas và các dependency khác của nó nên nhỏ hơn, chỉ còn khoảng 70M. Khi dùng thì chọn cả layer này vào cùng với `AWSLambda-Python38-SciPy1x`, thì cả kết quả ta được 1 function có đầy đủ Pandas, SciPy và NumPy cùng một chỗ. Như ở trên theo lý thuyết thì không thể, nhưng có lẽ bản build custom của AWS đã tối ưu việc import 2 thư viện `OpenBLAS` và `GFortran` của SciPy và NumPy, nên tiết kiệm được khoảng 25M.
 
-Nhưng khi lên runtime Python 3.10, AWS chỉ cung cấp một layer `AWSSDKPandas-Python310` chỉ chứa mỗi Pandas và NumPy mà không cung cấp layer nào chứa SciPy cả, mà như ở trên, việc tạo layer chứa cả 3 thư viện là quá cỡ, mà tạo mỗi layer chứa mỗi Pandas không là không thể do không có layer mặc định nào chứa SciPy và NumPy. Trong bài toán của tôi, thì ngoài 3 thư viện trên thì cần phải trống khoảng 15-20M nữa để cài các thư viện cần thiết khác. Vậy mục tiêu của tôi là phải tạo layer có kích thước <230M.
+Nhưng khi lên runtime Python 3.10, AWS chỉ cung cấp một layer `AWSSDKPandas-Python310` chứa Pandas và NumPy mà không cung cấp layer nào chứa SciPy như 3.8 cả. Vậy là tôi đứng giữa ngã ba đường, tạo layer chứa cả 3 thì nặng nhét không vừa, mà tạo layer chứa mỗi Pandas thì vô nghĩa vì làm gì có layer nào như `AWSLambda-Python38-SciPy1x` mà exploit. Trong bài toán của tôi, thì ngoài 3 thư viện trên thì cần phải trống khoảng 15-20M nữa để dành cho các layer khác. Phúc bất trung lai hoạ vô đơn chí, tôi vừa phải nhét 3 cái thư viện to đùng vào 1 layer mà vừa phải đảm bảo tạo ra cái layer có kích thước < 230M.
+
 Để giải quyết vấn đề này, tôi đưa ra 5 phương án:
 
 |   | Phương án                                                                                                                               | Vấn đề gặp phải                                                                                                                                                                                                                                                                                                                                                                                                                  |
@@ -61,7 +62,7 @@ Nhưng khi lên runtime Python 3.10, AWS chỉ cung cấp một layer `AWSSDKPan
 | 4 | Build lấy một bản NumPy, Pandas và SciPy riêng và optimize các thư viện OpenBLAS, GFortran cho họ                                       | Việc build khá khó và tốn nhiều thời gian, không hề có hướng dẫn gì trên mạng.                                                                                                                                                                                                                                                                                                                                                   |
 | 5 | Xoá bớt code trong các thư viện đi cho nhỏ hơn 250M (MA QUỶ 💀💀💀)                                                                     | Không rõ bên trong có những gì an toàn để xoá.                                                                                                                                                                                                                                                                                                                                                                                   |
 
-Ở trên kia, tôi thấy phương án 4 và 5 là hợp lý nhất.
+Ở trên kia, tôi thấy phương án 4 hợp lý nhất.
 
 # Con đường dẫn tới phương án ma quỷ
 
@@ -84,7 +85,7 @@ Không chỉ dừng lại ở SciPy, tôi thấy NumPy cũng có các directory 
 
 Cuối cùng, để tiết kiệm hết mức, tôi xoá hết các directory `dist-info` đi và cũng không tạo bytecode sau khi build để tiết kiệm dung lượng hơn nữa.
 
-Kết quả, tôi thu được một layer có kích thước vỏn vẹn chỉ còn 192M, tức là tới 80M là thư mục `tests` không dùng đến. Vậy là tôi đã vượt chỉ tiêu tận hơn 30M.
+Kết quả, tôi thu được một layer có kích thước vỏn vẹn chỉ còn 192M, tức là tới tiết kiệm được tới 80M không dùng đến. Vậy là tôi đã vượt chỉ tiêu tận hơn 30M.
 
 {{< figure 
     src="/pandas-numpy-scipy-into-one/final-size.png"
