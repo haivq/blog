@@ -120,6 +120,6 @@ Như vậy là tôi đã hoàn thành việc giảm kích thước layer. Và sa
 # Tổng kết
 Như vậy là thông qua việc inspect thư viện Python đã install, tôi đã tiết kiệm rất nhiều bộ nhớ khi đưa chúng vào layer. Điều này làm tôi nhớ tới câu chuyện của NaughtyDog khi làm Crash Bandicoot, khi Andy Gavin đã tìm cách xoá bớt thư viện C của Sony đi để giải phóng RAM trên máy PS1 để họ có thể load được nhiều nội dung hơn trong game.
 
-{{< youtube izxXGuVL21o >}}
+{{< youtube id=izxXGuVL21o title="Cách Crash Bandicoot Hack Playstation 1" >}}
 
-> Lưu ý: Đây là Bad Practice khi can thiệp trực tiếp vào source code của thư viện, sẽ dễ gây ra lỗi khi không tìm hiểu kĩ. Nếu có thể bạn hãy dùng cách khác thay vì phương pháo ma quỷ này 💀💀💀
+> Lưu ý: Đây là Bad Practice khi can thiệp trực tiếp vào source code của thư viện, sẽ dễ gây ra lỗi khi không tìm hiểu kĩ. Nếu có thể bạn hãy dùng cách khác thay vì phương pháp ma quỷ này 💀💀💀
