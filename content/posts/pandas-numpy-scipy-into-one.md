@@ -68,7 +68,7 @@ Nhưng khi lên runtime Python 3.10, AWS chỉ cung cấp một layer `AWSSDKPan
 
 Sau khi vật lộn với việc build NumPy, Pandas và SciPy, đối phó với thư viện BLAS và GFortran của Amazon Linux, tôi vẫn không tìm được ra cách build kèm static link các thư viện đó mà không vượt quá kích thước 230M ở trên. 
 
-Sau rất nhiều bao Sài Gòn bạc thì tôi tìm ra một ý tưởng clean up repo SciPy trên GitHub Issue của repo [keithrozario/Klayers](https://github.com/keithrozario/Klayers):
+Sau rất nhiều bao Sài Gòn bạc thì tôi tìm ra một ý tưởng clean up repo SciPy trên GitHub Issue của repo [keithrozario/Klayers](https://github.com/keithrozario/Klayers/issues/360#issuecomment-1893493985):
 
 {{< figure 
     src="/pandas-numpy-scipy-into-one/github-issue.png"
