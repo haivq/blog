@@ -1,10 +1,13 @@
 baseurl = "https://blog.haivq.com/"
-author = "Aperture"
-languageCode = "en-us"
-title = "Blog của Aperture"
+
+title = "Góc của Aperture"
+
 theme = "terminal"
 paginate = 5
 enableRobotsTXT = true
+
+languageCode = "vi-VN"
+defaultContentLanguage = "vi"
 
 [params]
   # dir name of your main content (default is `content/posts`).
@@ -41,12 +44,12 @@ enableRobotsTXT = true
   # oneHeadingSize = false
 
 [languages]
-  [languages.en.params]
-    languageName = "English"
+  [languages.vi.params]
+    languageName = "Tiếng Việt"
     title = "Góc của Aperture"
     subtitle = "Nơi ghi chép kinh nghiệm (đôi khi là cả suy nghĩ) của tôi"
     owner = "Aperture Prometheus"
-    keywords = "devops,coding,resume,thoughts"
+    keywords = "devops,coding,resume,experience"
     copyright = "Aperture Prometheus"
     menuMore = "Xem thêm"
     readMore = "Đọc tiếp"
@@ -57,23 +60,26 @@ enableRobotsTXT = true
     missingBackButtonLabel = "Về trang chủ"
     minuteReadingTime = "phút đọc"
 
-    [languages.en.params.logo]
+    [languages.vi.params.logo]
       logoText = "Góc của Aperture"
       logoHomeLink = "/"
-
-    [languages.en.menu]
-      [[languages.en.menu.main]]
-        identifier = "about"
-        name = "Thông tin"
-        url = "/about"
-      [[languages.en.menu.main]]
-        identifier = "thoughts"
-        name = "Suy nghĩ của tôi"
-        url = "https://thoughts.haivq.com"
-      [[languages.en.menu.main]]
+    [languages.vi.author]
+      name = "Aperture"
+      email = "me@haivq.com"
+    [languages.vi.menu]
+      [[languages.vi.menu.main]]
         identifier = "rss"
         name = "RSS"
         url = "/index.xml"
+      [[languages.vi.menu.main]]
+        identifier = "about"
+        name = "Thông tin"
+        url = "/about"
+      [[languages.vi.menu.main]]
+        identifier = "thoughts"
+        name = "Suy nghĩ của tôi"
+        url = "https://thoughts.haivq.com"
+      
 
 [markup.goldmark.renderer]
   unsafe = true
