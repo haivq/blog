@@ -66,9 +66,9 @@ Nhưng khi lên runtime Python 3.10, AWS chỉ cung cấp một layer `AWSSDKPan
 
 # Con đường dẫn tới phương án ma quỷ
 
-Sau khi vật lộn với việc build NumPy, Pandas và SciPy, đối phó với thư viện BLAS và GFortran của Amazon Linux, tôi vẫn không tìm được ra cách build kèm static link các thư viện đó mà không vượt quá kích thước 230M ở trên. 
+Sau khi vật lộn với việc build NumPy, Pandas và SciPy, đối phó với thư viện BLAS và GFortran của Amazon Linux, tôi vẫn không tìm được ra cách build kèm static link các thư viện đó mà không vượt quá kích thước 230M ở trên. Và chẳng có con AI nào đưa ra một phương án ra gì để giải thoát tôi khỏi vấn đề nan giải này.
 
-Sau rất nhiều bao Sài Gòn bạc thì tôi tìm ra một ý tưởng clean up repo SciPy trên GitHub Issue của repo [keithrozario/Klayers](https://github.com/keithrozario/Klayers/issues/360#issuecomment-1893493985):
+Sau rất nhiều bao Sài Gòn bạc và đào xới các thể loại GitHub Issues, StackOverflow và Google thì tôi tìm ra một ý tưởng clean up repo SciPy trên GitHub Issue của repo [keithrozario/Klayers](https://github.com/keithrozario/Klayers/issues/360#issuecomment-1893493985):
 
 {{< figure 
     src="/pandas-numpy-scipy-into-one/github-issue.png"
@@ -81,7 +81,7 @@ Sau rất nhiều bao Sài Gòn bạc thì tôi tìm ra một ý tưởng clean 
 
 Như đề cập, thì tôi có thể xoá bay xoá biến thư mục `tests` trong các folder con và các file `scipy/misc/*.dat` trong SciPy. Sau một hồi điều tra trong code của SciPy, thì có vẻ thư mục `tests` này chỉ được dùng trong lúc test khi build xong. Còn các file `.dat` là các file dataset mẫu của SciPy, `ascent.dat` là file chứa ảnh 8bit grayscale, `ecg.dat` để chứa dữ liệu điện tâm đồ mẫu, còn `face.dat` là chứa ảnh của gấu mèo. Thực tế là library `scipy.misc` này đã bị deprecate từ bản `v1.10.0`, nhưng thế quái nào nó vẫn ở đây để làm nặng cái library này.
 
-Không chỉ dừng lại ở SciPy, tôi thấy NumPy cũng có các directory `tests` như vậy, kích thước cũng khủng không kém. Nên tôi cũng xoá sạch các directory test đó đi luôn.
+Không chỉ dừng lại ở SciPy, tôi thấy NumPy cũng có các directory `tests` như vậy, kích thước cũng khủng không kém. Nên tôi cũng xoá sạch các directory test đó đi luôn. Có vẻ do dùng chung `mesos` làm build backend nên có chung một kết quả như vậy.
 
 Cuối cùng, để tiết kiệm hết mức, tôi xoá hết các directory `dist-info` đi và cũng không tạo bytecode sau khi build để tiết kiệm dung lượng hơn nữa.
 
@@ -117,6 +117,21 @@ find . | grep -E "scipy\misc\*.dat$" | xargs rm -rf
 ```
 
 Như vậy là tôi đã hoàn thành việc giảm kích thước layer. Và sau khi test trên lambda thì nó THỰC SỰ ĐÃ CHẠY. Có lẽ đây là phương pháp ma quỷ nhất mà tôi từng biết để nhồi nhét thư viện vào trong layer lambda.
+
+# Lý do lịch sử về việc xuất hiện thư mục `tests` trong thư viện SciPy/NumPy
+
+Để giải thích cho lý do vì sao thư mục `tests` lại được nhét vào trong thư viện SciPy/NumPy, anh bạn [rgommers](https://github.com/rgommers) người Hà Lan đã đưa [giải thích](https://github.com/keithrozario/Klayers/issues/360#issuecomment-2076527549):
+
+{{< figure 
+    src="/pandas-numpy-scipy-into-one/explanation.png"
+    alt="Lý do thư mục `tests` được đưa vào trong thư viện"
+    title="Lý do thư mục `tests` được đưa vào trong thư viện"
+    caption="Lý do thư mục `tests` được đưa vào trong thư viện"
+    attr="keithrozario/Klayers"
+    attrlink="https://github.com/keithrozario/Klayers/issues/360#issuecomment-2076527549"
+    link="https://github.com/keithrozario/Klayers/issues/360#issuecomment-2076527549">}}
+
+Tóm tắt ngắn gọn lại, là ngày xưa nhiều người build NumPy/SciPy lại từ đầu, khi build xong họ phải chạy `numpy.test()` để kiểm tra xem có lỗi lầm khù khoằm gì xảy ra hay không. Vì bây giờ can thiệp bất kì điều gì trong NumPy đều rất nguy hiểm, dễ có lỗi xảy ra (vì giờ cái project to quá rồi), nên thôi đành kệ thư mục `tests` đó vậy.
 
 # Tổng kết
 Như vậy là thông qua việc inspect thư viện Python đã install, tôi đã tiết kiệm rất nhiều bộ nhớ khi đưa chúng vào layer. Điều này làm tôi nhớ tới câu chuyện của NaughtyDog khi làm Crash Bandicoot, khi Andy Gavin đã tìm cách xoá bớt thư viện C của Sony đi để giải phóng RAM trên máy PS1 để họ có thể load được nhiều nội dung hơn trong game.
