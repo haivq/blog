@@ -16,7 +16,7 @@ tags:
     - tls
 ---
 
-> Lưu ý: Phương pháp này không hoàn toàn ngăn chặn Man-in-the-Middle attack nếu hacker can thiệp được vào tầng network, do Cloudflare không verify độ uy tín của certificate nên hacker có thể sniffing request bằng cách cung cấp certificate của riêng hắn. Để đảm bảo At Rest Encryption hoạt động một cách chính xác, tham khảo document này: [Full (strict) - SSL/TLS encryption modes](https://developers.cloudflare.com/ssl/origin-configuration/ssl-modes/full-strict/). Như vậy Cloudflare chỉ thực hiện request đến server nếu như server đó sử dụng certificate của mà Cloudflare cho là an toàn, bao gồm các certificate có CA yêu cầu việc issue khó khăn hoặc cerficate được sign bởi Cloudflare.
+> Lưu ý: Phương pháp này không hoàn toàn ngăn chặn Man-in-the-Middle attack nếu hacker can thiệp được vào tầng network, do Cloudflare không verify độ uy tín của certificate nên hacker có thể sniffing request bằng cách cung cấp certificate của riêng hắn rồi proxy ngược vào server. Để đảm bảo At Rest Encryption hoạt động một cách chính xác, tham khảo document này: [Full (strict) - SSL/TLS encryption modes](https://developers.cloudflare.com/ssl/origin-configuration/ssl-modes/full-strict/). Như vậy Cloudflare chỉ thực hiện request đến server nếu như server đó sử dụng certificate của mà Cloudflare cho là an toàn, bao gồm các certificate có CA yêu cầu việc issue khó khăn hoặc cerficate được sign bởi Cloudflare.
 
 # Giải thích
 
