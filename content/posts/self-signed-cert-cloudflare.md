@@ -26,7 +26,7 @@ tags:
   * Mã hóa dữ liệu từ Cloudflare gọi đến server origin
 
 Để đảm bảo mã hóa dữ liệu, ta cần phải setup certificate từ ở server Origin. Việc này xử lý 2 vấn đề như sau:
-  - Không có bug SSL không hợp lệ, lỗi này xảy ra khi Cloudflare request https đến server không có SSL
+  - Không có lỗi SSL không hợp lệ (525: SSL Handshake failed), lỗi này xảy ra khi Cloudflare request https đến server không có SSL
   - Đảm bảo At Rest Encryption, tức giả sử nếu có người sniffing request giữa Cloudflare và origin server (thường là IP của load balancer) thì cũng không biết data gửi là gì.
 
 Minh hoạ sẽ như sau:
