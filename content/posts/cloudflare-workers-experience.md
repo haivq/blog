@@ -39,6 +39,7 @@ Với một người có kinh tế eo hẹp, không được funding vốn từ 
 
 {{< figure 
     src="/cloudflare-workers-experience/9999-up-time-fireship.png"
+    position="center"
     alt="Khi bạn cố gắng xây hệ thống có uptime cao trên AWS"
     title="Khi bạn cố gắng xây hệ thống có uptime cao trên AWS"
     caption="Khi bạn cố gắng xây hệ thống có uptime cao trên AWS"

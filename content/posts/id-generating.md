@@ -79,7 +79,15 @@ Khởi đầu từ một project năm 2010 từ sinh ID của Twitter, phục v�
 
 Lấy ví dụ như Snowflake của Discord sẽ như sau:
 
-![Discord Snowflake](/id-generating/discord-snowflake.png)
+{{< figure 
+    src="/id-generating/discord-snowflake.png"
+    position="center"
+    alt="Discord Snowflake"
+    title="Discord Snowflake"
+    caption="Discord Snowflake"
+    attr="Discord Development Portal"
+    attrlink="https://discord.com/developers/docs/reference#convert-snowflake-to-datetime"
+    link="https://discord.com/developers/docs/reference#convert-snowflake-to-datetime">}}
 
 Như ở trên từ bit 21 - 0 sẽ chia tiếp ra làm 3 phần:
 - bit 21 - 17: ID của máy
@@ -88,7 +96,15 @@ Như ở trên từ bit 21 - 0 sẽ chia tiếp ra làm 3 phần:
 
 Hoặc như Snowflake của Baidu:
 
-![Baidu Snowflake](/id-generating/baidu-snowflake.png)
+{{< figure 
+    src="/id-generating/baidu-snowflake.png"
+    position="center"
+    alt="Baidu Snowflake"
+    title="Baidu Snowflake"
+    caption="Baidu Snowflake"
+    attr="Baidu uid-generator"
+    attrlink="https://github.com/baidu/uid-generator"
+    link="https://github.com/baidu/uid-generator">}}
 
 Baidu implement bit 21 - 0 theo một cách khác:
 - bit 21 - 13: ID của máy sinh Snowflake

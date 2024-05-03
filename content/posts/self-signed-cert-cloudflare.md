@@ -16,6 +16,8 @@ tags:
     - tls
 ---
 
+> Lưu ý: Phương pháp này không hoàn toàn ngăn chặn Man-in-the-Middle attack nếu hacker can thiệp được vào tầng network, do Cloudflare không verify độ uy tín của certificate nên hacker có thể sniffing request bằng cách cung cấp certificate của riêng hắn. Để đảm bảo At Rest Encryption hoạt động một cách chính xác, tham khảo document này: [Full (strict) - SSL/TLS encryption modes](https://developers.cloudflare.com/ssl/origin-configuration/ssl-modes/full-strict/). Như vậy Cloudflare chỉ thực hiện request đến server nếu như server đó sử dụng certificate của mà Cloudflare cho là an toàn, bao gồm các certificate có CA yêu cầu việc issue khó khăn hoặc cerficate được sign bởi Cloudflare.
+
 # Giải thích
 
 Để đảm bảo bảo mật ổn định nhất từ người dùng đến server, cần thực hiện các bước sau:
@@ -25,11 +27,19 @@ tags:
 
 Để đảm bảo mã hóa dữ liệu, ta cần phải setup certificate từ ở server Origin. Việc này xử lý 2 vấn đề như sau:
   - Không có bug SSL không hợp lệ, lỗi này xảy ra khi Cloudflare request https đến server không có SSL
-  - Đảm bảo End-to-End Encryption, tức giả sử nếu có người trace được IP origin server (thường là IP của load balancer) thì cũng không biết data gửi là gì.
+  - Đảm bảo At Rest Encryption, tức giả sử nếu có người sniffing request giữa Cloudflare và origin server (thường là IP của load balancer) thì cũng không biết data gửi là gì.
 
 Minh hoạ sẽ như sau:
 
-![Full encryption](/self-signed-cert-cloudflare/full-enc.png)
+{{< figure 
+    src="/self-signed-cert-cloudflare/full-enc.png"
+    position="center"
+    alt="Full encryption"
+    title="Full encryption"
+    caption="Full encryption"
+    attr="Full encryption"
+    attrlink="https://developers.cloudflare.com/ssl/origin-configuration/ssl-modes/full/"
+    link="https://developers.cloudflare.com/ssl/origin-configuration/ssl-modes/full/">}}
 
 Để setup, ta cần phải setup như sau:
   * Setup một certificate hợp lệ ở cloudflare (bước này cloudflare đã tự xử lý)

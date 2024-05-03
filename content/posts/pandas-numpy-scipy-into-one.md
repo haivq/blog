@@ -72,6 +72,7 @@ Sau rất nhiều bao Sài Gòn bạc và đào xới các thể loại GitHub I
 
 {{< figure 
     src="/pandas-numpy-scipy-into-one/github-issue.png"
+    position="center"
     alt="Ý tưởng clean up repo SciPy trên GitHub Issue"
     title="Ý tưởng clean up repo SciPy trên GitHub Issue"
     caption="Ý tưởng clean up repo SciPy trên GitHub Issue"
@@ -89,6 +90,7 @@ Kết quả, tôi thu được một layer có kích thước vỏn vẹn chỉ 
 
 {{< figure 
     src="/pandas-numpy-scipy-into-one/final-size.png"
+    position="center"
     alt="Kết quả sau khi cleanup"
     title="Kết quả sau khi cleanup"
     caption="Kết quả sau khi cleanup"
@@ -124,6 +126,7 @@ Như vậy là tôi đã hoàn thành việc giảm kích thước layer. Và sa
 
 {{< figure 
     src="/pandas-numpy-scipy-into-one/explanation.png"
+    position="center"
     alt="Lý do thư mục `tests` được đưa vào trong thư viện"
     title="Lý do thư mục `tests` được đưa vào trong thư viện"
     caption="Lý do thư mục `tests` được đưa vào trong thư viện"

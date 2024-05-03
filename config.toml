@@ -9,6 +9,8 @@ enableRobotsTXT = true
 languageCode = "vi-VN"
 defaultContentLanguage = "vi"
 
+enableGitInfo = true
+
 [params]
   # dir name of your main content (default is `content/posts`).
   # the list of set content will show up on your index page (baseurl).
@@ -34,11 +36,12 @@ defaultContentLanguage = "vi"
 
   # set post to show the last updated
   # If you use git, you can set `enableGitInfo` to `true` and then post will automatically get the last updated
-  enableGitInfo = false
-  showLastUpdated = false
+  showLastUpdated = true
   # Provide a string as a prefix for the last update date. By default, it looks like this: 2020-xx-xx [Updated: 2020-xx-xx] :: Author
   updatedDatePrefix = "Cập nhật"
 
+  readingTime = true
+  autoCover = true
   # set all headings to their default size (depending on browser settings)
   # it's set to `true` by default
   # oneHeadingSize = false
@@ -47,7 +50,7 @@ defaultContentLanguage = "vi"
   [languages.vi.params]
     languageName = "Tiếng Việt"
     title = "Góc của Aperture"
-    subtitle = "Nơi ghi chép kinh nghiệm (đôi khi là cả suy nghĩ) của tôi"
+    subtitle = "Nơi ghi chép kinh nghiệm làm việc của tôi"
     owner = "Aperture Prometheus"
     keywords = "devops,coding,resume,experience"
     copyright = "Aperture Prometheus"
@@ -59,6 +62,7 @@ defaultContentLanguage = "vi"
     missingContentMessage = "Không tìm thấy trang..."
     missingBackButtonLabel = "Về trang chủ"
     minuteReadingTime = "phút đọc"
+    words = "chữ"
 
     [languages.vi.params.logo]
       logoText = "Góc của Aperture"

@@ -30,7 +30,16 @@ Kubernetes gần đây đã trở thành một công nghệ nổi tiếng. Khôn
 
 ---
 
-{{<image src="https://64.media.tumblr.com/cda8d40d9e3d13ed6907eb68021e295b/1d4062b521d6dee3-e3/s540x810/c6a421fe01e699d2babd7466a2e945edb7b00422.png" alt="MicroK8s" position="center" style="padding-top: 1em; width: 300px;">}}
+{{< figure 
+    src="https://64.media.tumblr.com/cda8d40d9e3d13ed6907eb68021e295b/1d4062b521d6dee3-e3/s540x810/c6a421fe01e699d2babd7466a2e945edb7b00422.png"
+    style="width:300px"
+    position="center"
+    alt="MicroK8s"
+    title="MicroK8s"
+    caption="MicroK8s"
+    attr="MicroK8s"
+    attrlink="https://microk8s.io"
+    link="https://microk8s.io" >}}
 
 ## microk8s
 
@@ -52,7 +61,16 @@ Nếu bạn đã làm quen được với microk8s, tôi nghĩ bạn có thể t
 
 ---
 
-{{<image src="https://64.media.tumblr.com/7ec7f76ccd06eeb660d7259e352a7139/1d4062b521d6dee3-3d/s540x810/6e819c7eaf034881af92e9fdc5429beb356fd8a0.png" alt="minikube" position="center" style="padding-top: 2em; width: 300px;">}}
+{{< figure 
+    src="https://64.media.tumblr.com/7ec7f76ccd06eeb660d7259e352a7139/1d4062b521d6dee3-3d/s540x810/6e819c7eaf034881af92e9fdc5429beb356fd8a0.png"
+    style="width:300px"
+    position="center"
+    alt="minikube"
+    title="minikube"
+    caption="minikube"
+    attr="minikube"
+    attrlink="https://minikube.sigs.k8s.io/docs/"
+    link="https://minikube.sigs.k8s.io/docs/" >}}
 
 ## minikube
 
@@ -75,7 +93,16 @@ Vậy nên theo tôi thì minikube không tối ưu để chạy thực tế vì
 
 ---
 
-{{<image src="https://64.media.tumblr.com/344d71c978037162fd6bff6195ab8cb1/1d4062b521d6dee3-9c/s540x810/1dbbc8b8600d0404a895ca8e25e64f9bea5a171e.png" alt="kubeadm" position="center" style="padding-top: 2em; width: 300px;">}}
+{{< figure 
+    src="https://64.media.tumblr.com/344d71c978037162fd6bff6195ab8cb1/1d4062b521d6dee3-9c/s540x810/1dbbc8b8600d0404a895ca8e25e64f9bea5a171e.png"
+    style="width:300px"
+    position="center"
+    alt="kubeadm"
+    title="kubeadm"
+    caption="kubeadm"
+    attr="kubeadm"
+    attrlink="https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/"
+    link="https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/" >}}
 
 ## kubeadm
 
@@ -95,7 +122,16 @@ Tóm lại, kubeadm rất tốt, nhưng hoàn toàn không phù hợp với ai k
 
 ---
 
-{{<image src="https://64.media.tumblr.com/73706a3d1285b5d142bed47c7e673059/1d4062b521d6dee3-02/s540x810/831f6af1ff940001c2fee90c8714fbe93acb55e8.png" alt="k3s" position="center" style="padding-top: 2em; width: 300px;">}}
+{{< figure 
+    src="https://64.media.tumblr.com/73706a3d1285b5d142bed47c7e673059/1d4062b521d6dee3-02/s540x810/831f6af1ff940001c2fee90c8714fbe93acb55e8.png"
+    position="center"
+    style="width:300px"
+    alt="k3s"
+    title="k3s"
+    caption="k3s"
+    attr="k3s"
+    attrlink="https://k3s.io"
+    link="https://k3s.io" >}}
 
 ## k3s
 

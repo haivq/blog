@@ -2,7 +2,6 @@
 title: "Một vài kinh nghiệm của tôi khi sử dụng AWS Lambda"
 author: "Aperture"
 date: "2021-12-11T15:29:17+07:00"
-lastmod: "2024-05-03T12:10:00+07:00"
 categories:
     - aws
     - lambda
@@ -48,6 +47,7 @@ Thông qua các thành phần trên, tôi có thể liệt kê sơ qua các tài
 
 {{< figure 
     src="/aws-lambda-experiences/design-topology.jpg"
+    position="center"
     alt="Topology hệ thống"
     title="Topology hệ thống"
     caption="Topology hệ thống"
@@ -63,6 +63,7 @@ Dưới đây là biểu đồ trạng thái sơ lược flow chạy Lambda khi 
 
 {{< figure 
     src="/aws-lambda-experiences/lambda-execution-flow.jpg"
+    position="center"
     alt="Lambda Execution Flow"
     title="Lambda Execution Flow"
     caption="Lambda Execution Flow"
@@ -157,10 +158,9 @@ Vậy, ta cần phải đưa ra giải pháp cho vấn đề này như sau:
 
 Như ở công ty hiện tại, tôi kết hợp cả hai phương án trên để tối ưu connection vào DB, và kết quả tương đối mĩ mãn:
 
-![Database Connection](/aws-lambda-experiences/database-connection.png)
-
 {{< figure 
     src="/aws-lambda-experiences/database-connection.png"
+    position="center"
     alt="Database Connection Giảm"
     title="Database Connection Giảm"
     caption="Database Connection Giảm"
@@ -175,6 +175,7 @@ Chắc hẳn bạn cũng để ý rằng, một khi Lambda đã nhập vào VPC 
 
 {{< figure 
     src="/aws-lambda-experiences/bad-network-topology.jpg"
+    position="center"
     alt="Ví dụ về network topology chưa tốt"
     title="Ví dụ về network topology chưa tốt"
     caption="Ví dụ về network topology chưa tốt"
@@ -190,6 +191,7 @@ Ta có thể thấy bất cập của mô hình này như sau:
 
 {{< figure 
     src="/aws-lambda-experiences/good-network-topology.jpg"
+    position="center"
     alt="Ví dụ về network topology ổn"
     title="Ví dụ về network topology ổn"
     caption="Ví dụ về network topology ổn"
