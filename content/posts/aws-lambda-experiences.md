@@ -46,7 +46,7 @@ Thông qua các thành phần trên, tôi có thể liệt kê sơ qua các tài
 Để minh hoạ (bao gồm cả thiết kế mạng), tôi có hình sau:
 
 {{< figure 
-    src="/aws-lambda-experiences/design-topology.jpg"
+    src="/posts/aws-lambda-experiences/design-topology.jpg"
     position="center"
     alt="Topology hệ thống"
     title="Topology hệ thống"
@@ -62,7 +62,7 @@ Về cơ bản, thiết kế như trên (không bao gồm các tài nguyên nằ
 Dưới đây là biểu đồ trạng thái sơ lược flow chạy Lambda khi được invoke (ví dụ như API Gateway invoke lambda):
 
 {{< figure 
-    src="/aws-lambda-experiences/lambda-execution-flow.jpg"
+    src="/posts/aws-lambda-experiences/lambda-execution-flow.jpg"
     position="center"
     alt="Lambda Execution Flow"
     title="Lambda Execution Flow"
@@ -159,7 +159,7 @@ Vậy, ta cần phải đưa ra giải pháp cho vấn đề này như sau:
 Như ở công ty hiện tại, tôi kết hợp cả hai phương án trên để tối ưu connection vào DB, và kết quả tương đối mĩ mãn:
 
 {{< figure 
-    src="/aws-lambda-experiences/database-connection.png"
+    src="/posts/aws-lambda-experiences/database-connection.png"
     position="center"
     alt="Database Connection Giảm"
     title="Database Connection Giảm"
@@ -174,7 +174,7 @@ Thay vì số lượng connection luôn cao và có thể bị burst lên chạm
 Chắc hẳn bạn cũng để ý rằng, một khi Lambda đã nhập vào VPC (để dùng các tài nguyên chỉ nằm trong VPC), không thể truy cập các dịch vụ như S3, Secrets Manager được nữa do các dịch vụ này không nằm cùng dải mạng của VPC. Để khắc phục vấn đề này, ta cần cho phép VPC truy cập ra ngoài internet. Vô hình chung, việc đầu tiên của người thiết kế sẽ là config sao cho Lambda nằm trong dải mạng public và cho nó connect ra ngoài internet, vừa để phục vụ yêu cầu ra internet của function (nếu cần), vừa có thể access các dịch vụ của Lambda. ví dụ như topology dưới đây mô tả flow để truy cập các tài nguyên dịch vụ của AWS nếu bạn config để Lambda có thể connect ra ngoài internet:
 
 {{< figure 
-    src="/aws-lambda-experiences/bad-network-topology.jpg"
+    src="/posts/aws-lambda-experiences/bad-network-topology.jpg"
     position="center"
     alt="Ví dụ về network topology chưa tốt"
     title="Ví dụ về network topology chưa tốt"
@@ -190,7 +190,7 @@ Ta có thể thấy bất cập của mô hình này như sau:
 Để giải quyết vấn đề này, ta cần phải tạo các VPC endpoint để truy cập tài nguyên của AWS mà vẫn đảm bảo Lambda được đặt trong dải mạng private mà không bị đội giá thành và tốc độ nhanh hơn, như ở hình dưới đây:
 
 {{< figure 
-    src="/aws-lambda-experiences/good-network-topology.jpg"
+    src="/posts/aws-lambda-experiences/good-network-topology.jpg"
     position="center"
     alt="Ví dụ về network topology ổn"
     title="Ví dụ về network topology ổn"

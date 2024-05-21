@@ -80,7 +80,7 @@ Khởi đầu từ một project năm 2010 từ sinh ID của Twitter, phục v�
 Lấy ví dụ như Snowflake của Discord sẽ như sau:
 
 {{< figure 
-    src="/id-generating/discord-snowflake.png"
+    src="/posts/id-generating/discord-snowflake.png"
     position="center"
     alt="Discord Snowflake"
     title="Discord Snowflake"
@@ -97,7 +97,7 @@ Như ở trên từ bit 21 - 0 sẽ chia tiếp ra làm 3 phần:
 Hoặc như Snowflake của Baidu:
 
 {{< figure 
-    src="/id-generating/baidu-snowflake.png"
+    src="/posts/id-generating/baidu-snowflake.png"
     position="center"
     alt="Baidu Snowflake"
     title="Baidu Snowflake"

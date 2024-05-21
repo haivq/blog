@@ -32,7 +32,7 @@ tags:
 Minh hoạ sẽ như sau:
 
 {{< figure 
-    src="/self-signed-cert-cloudflare/full-enc.png"
+    src="/posts/self-signed-cert-cloudflare/full-enc.png"
     position="center"
     alt="Full encryption"
     title="Full encryption"

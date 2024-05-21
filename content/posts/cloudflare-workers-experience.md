@@ -38,7 +38,7 @@ Sau một thời gian dài, rất dài làm việc với AWS, Azure, Oracle Clou
 Với một người có kinh tế eo hẹp, không được funding vốn từ bất kì đối tượng nào mà phải tự gồng gánh từ hạ tầng đến lương nhân viên, thì việc vỡ nợ trước khi sản phẩm ra tiền là viễn cảnh không hề xa.
 
 {{< figure 
-    src="/cloudflare-workers-experience/9999-up-time-fireship.png"
+    src="/posts/cloudflare-workers-experience/9999-up-time-fireship.png"
     position="center"
     alt="Khi bạn cố gắng xây hệ thống có uptime cao trên AWS"
     title="Khi bạn cố gắng xây hệ thống có uptime cao trên AWS"

@@ -71,7 +71,7 @@ Sau khi vật lộn với việc build NumPy, Pandas và SciPy, đối phó vớ
 Sau rất nhiều bao Sài Gòn bạc và đào xới các thể loại GitHub Issues và StackOverflow thì tôi tìm ra một ý tưởng clean up repo SciPy trên một cái Issue của GitHub repo [keithrozario/Klayers](https://github.com/keithrozario/Klayers/issues/360#issuecomment-1893493985):
 
 {{< figure 
-    src="/pandas-numpy-scipy-into-one/github-issue.png"
+    src="/posts/pandas-numpy-scipy-into-one/github-issue.png"
     position="center"
     alt="Ý tưởng clean up repo SciPy trên GitHub Issue"
     title="Ý tưởng clean up repo SciPy trên GitHub Issue"
@@ -89,7 +89,7 @@ Cuối cùng, để tiết kiệm hết mức, tôi xoá hết các directory `d
 Kết quả, tôi thu được một layer có kích thước vỏn vẹn chỉ còn 192M, tức là tới tiết kiệm được tới 80M không dùng đến. Vậy là tôi đã vượt chỉ tiêu tận hơn 30M.
 
 {{< figure 
-    src="/pandas-numpy-scipy-into-one/final-size.png"
+    src="/posts/pandas-numpy-scipy-into-one/final-size.png"
     position="center"
     alt="Kết quả sau khi cleanup"
     title="Kết quả sau khi cleanup"
@@ -125,7 +125,7 @@ Như vậy là tôi đã hoàn thành việc giảm kích thước layer. Và sa
 Để giải thích cho lý do vì sao thư mục `tests` lại được nhét vào trong thư viện SciPy/NumPy, anh bạn [rgommers](https://github.com/rgommers) người Hà Lan đã đưa [giải thích](https://github.com/keithrozario/Klayers/issues/360#issuecomment-2076527549):
 
 {{< figure 
-    src="/pandas-numpy-scipy-into-one/explanation.png"
+    src="/posts/pandas-numpy-scipy-into-one/explanation.png"
     position="center"
     alt="Lý do thư mục `tests` được đưa vào trong thư viện"
     title="Lý do thư mục `tests` được đưa vào trong thư viện"
