@@ -48,7 +48,7 @@ pip install pandas --target python
 rm -r python/numpy*/
 ```
 
-Vậy là layer mới này chỉ chứa mỗi Pandas và các dependency khác của nó nên nhỏ hơn, chỉ còn khoảng 70M. Khi dùng thì chọn cả layer này vào cùng với `AWSLambda-Python38-SciPy1x`, thì cả kết quả ta được 1 function có đầy đủ Pandas, SciPy và NumPy cùng một chỗ. Như ở trên theo lý thuyết thì không thể, nhưng có lẽ bản build custom của AWS đã tối ưu việc import 2 thư viện `OpenBLAS` và `GFortran` của SciPy và NumPy, nên tiết kiệm được khoảng 25M.
+Vậy là layer mới này chỉ chứa mỗi Pandas và các dependency khác của nó nên nhỏ hơn, chỉ còn khoảng 70M. Khi dùng thì chọn cả layer này vào cùng với `AWSLambda-Python38-SciPy1x`, thì cả kết quả ta được 1 function có đầy đủ Pandas, SciPy và NumPy cùng một chỗ. Như ở trên theo lý thuyết thì không thể, nhưng có lẽ bản build custom của AWS đã tối ưu việc dynamic linking tới các thư viện có sẵn trong môi trường nên đã tiết kiệm được thêm vài chục MB.
 
 Nhưng khi lên runtime Python 3.10, AWS chỉ cung cấp một layer `AWSSDKPandas-Python310` chứa Pandas và NumPy mà không cung cấp layer nào chứa SciPy như 3.8 cả. Vậy là tôi đứng giữa ngã ba đường, tạo layer chứa cả 3 thì nặng nhét không vừa, mà tạo layer chứa mỗi Pandas để dùng với layer SciPy có sẵn như hồi dùng Python 3.8 thì vô nghĩa vì làm gì có layer nào như `AWSLambda-Python38-SciPy1x` mà dùng. Trong bài toán của tôi, thì ngoài 3 thư viện trên thì cần phải trống khoảng 15-20M nữa để dành cho các layer khác. Phúc bất trung lai hoạ vô đơn chí, tôi vừa phải nhét 3 cái thư viện to đùng vào 1 layer mà vừa phải đảm bảo tạo ra cái layer có kích thước < 230M.
 
