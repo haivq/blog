@@ -24,6 +24,6 @@ tags:
 
    - [Facebook](https://www.facebook.com/haivq.prometheus)
    - [Discord](https://discord.com/users/393792609547714592)
-   - [LinkedIn](https://www.linkedin.com/in/haivq-prometheus)
+   - [LinkedIn](https://www.linkedin.com/in/haivq)
    - [Email](mailto:me@haivq.com)
 
