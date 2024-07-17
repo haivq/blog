@@ -230,6 +230,8 @@ Nếu không muốn quản bằng tay, ta có thể quản lý bằng việc s�
 
 Mong rằng bài viết này sẽ giúp bạn giải quyết vấn đề, vì việc này đã tốn mất 1 ngày ngồi tra tài liệu MySQL và đào bới khắp StackOverflow để làm xong.
 
+> Ghi chú: Không có công cụ AI nào đã giúp ích được cho tôi trong quá trình giải quyết vấn đề này
+
 # Nguồn tham khảo
 - [MySQL 8.4 Reference Manual](https://dev.mysql.com/doc/refman/8.4/en/):
     * [15.1.20.5 FOREIGN KEY Constraints](https://dev.mysql.com/doc/refman/8.4/en/create-table-foreign-keys.html#foreign-key-locking) / [Link archive.org](https://web.archive.org/web/20240706020716/https://dev.mysql.com/doc/refman/8.4/en/create-table-foreign-keys.html#foreign-key-locking)
