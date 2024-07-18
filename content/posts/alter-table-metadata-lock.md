@@ -100,7 +100,7 @@ Thực tế còn một phương án cuối là restart lại MySQL, nhưng việ
 
 Vấn đề đầu tiên ta gặp phải, chính là nội dung Query status ở trên: `Waiting for table metadata lock`. Vậy câu query này đang đợi bảng `some table` được lock lại, nhưng có vẻ đang có một operation nào đó chặn việc tạo `metadata lock`.
 
-Để xé lẻ vấn đề ra, ta có gạch đầu dòng sau cần phải thực hiện:
+Để xé lẻ vấn đề ra, ta có 2 gạch đầu dòng sau cần phải thực hiện:
 - `metadata lock` là gì?
 - Việc gì ngăn cản `metadata lock` xảy ra?
 
@@ -174,9 +174,9 @@ Sau khi kill đúng session, cuối cùng tôi đã có thể chạy câu lệnh
 
 # Ngăn ngừa
 
-Như ở trên đã nêu, lý do xảy ra việc `Waiting for table metadata lock` là do transaction chưa được kết thúc khi không sử dụng. Việc để các transaction hanging còn gây tiêu tốn tài nguyên của MySQL, chiếm nhiều bộ nhớ để chứa transaction history và rollback log, chứ không chỉ mỗi gây block các DDL query (vốn hiếm khi xảy ra). Vậy để tránh vấn đề này, cách tôi giải quyết đơn giản là `ROLLBACK` hoặc `COMMIT` sau mỗi lần query DB.
+Như ở trên đã nêu, lý do xảy ra việc `Waiting for table metadata lock` là do transaction chưa được kết thúc khi không sử dụng. Do DB này là DB OLTP nên việc có các transaction lâu tới vài phút như vậy là không ổn. Việc để các transaction hanging còn gây tiêu tốn tài nguyên của MySQL, chiếm nhiều bộ nhớ để chứa những thứ đại loại như transaction history và rollback log, chứ không chỉ mỗi gây block các DDL query (vốn hiếm khi xảy ra). Vậy để tránh vấn đề này, cách tôi giải quyết đơn giản là `ROLLBACK` hoặc `COMMIT` sau mỗi lần query DB. Percona Blog đã có một [bài viết khá hay](https://www.percona.com/blog/small-changes-impact-complex-systems-mysql-example/) về vấn đề này (dù nội dung về MySQL 5.6 đã tương đối cũ nhưng vẫn còn đúng với MySQL 8+ do về bản chất vấn đề vẫn không thay đổi).
 
-Theo kinh nghiệm cua tôi thì dưới đây là 2 cách để quản lý transaction:
+Theo kinh nghiệm của tôi thì dưới đây là 2 cách để quản lý transaction:
 
 ## Quản lý thuần bằng tay
 
@@ -245,3 +245,4 @@ Mong rằng bài viết này sẽ giúp bạn giải quyết vấn đề, vì vi
     * [MySQL 5.6 - table locks even when ALGORITHM=inplace is used](https://stackoverflow.com/questions/54667071/mysql-5-6-table-locks-even-when-algorithm-inplace-is-used) / [Link archive.org](https://web.archive.org/web/20240717161527/https://stackoverflow.com/questions/54667071/mysql-5-6-table-locks-even-when-algorithm-inplace-is-used)
 - [Percona Blog](https://www.percona.com/blog/)
     * [Chasing a Hung MySQL Transaction: InnoDB History Length Strikes Back](https://www.percona.com/blog/chasing-a-hung-transaction-in-mysql-innodb-history-length-strikes-back/) / [Link archive.org](https://web.archive.org/web/20240522170813/https://www.percona.com/blog/chasing-a-hung-transaction-in-mysql-innodb-history-length-strikes-back/)
+    * [How small changes impact complex systems – MySQL example](https://www.percona.com/blog/small-changes-impact-complex-systems-mysql-example/) / [Link archive.org](https://web.archive.org/web/20240718070236/https://www.percona.com/blog/small-changes-impact-complex-systems-mysql-example/)
