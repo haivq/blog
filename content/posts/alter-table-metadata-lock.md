@@ -10,6 +10,7 @@ tags:
     - rds
     - rdbms
     - aws
+    - lambda
     - mysql
     - innodb
     - experience
@@ -230,7 +231,7 @@ Nếu không muốn quản bằng tay, ta có thể quản lý bằng việc s�
 
 Mong rằng bài viết này sẽ giúp bạn giải quyết vấn đề, vì việc này đã tốn mất 1 ngày ngồi tra tài liệu MySQL và đào bới khắp StackOverflow để làm xong.
 
-> Ghi chú: Không có công cụ AI nào đã giúp ích được cho tôi trong quá trình giải quyết vấn đề này
+> Ghi chú: Một lần nữa, ChatGPT hay bất kì công cụ AI nào đều không giúp sức được cho tôi trong quá trình sửa lỗi này. Có thể do tôi sử dụng sai cách nên mong các chuyên gia prompt engineer giúp tôi đưa ra những câu prompt hào sảng để nó chói qua tim mấy cái model LLM mà sinh ra những câu trả lời có thực sự hữu ích (đã thử phương pháp thêm "please" và "làm ơn" sau mỗi câu hỏi nhưng không được).
 
 # Nguồn tham khảo
 - [MySQL 8.4 Reference Manual](https://dev.mysql.com/doc/refman/8.4/en/):
