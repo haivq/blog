@@ -163,7 +163,7 @@ KILL <session_id>
 Nhưng trong RDS, AWS không cho chúng ta chạy lệnh `KILL`, mà cung cấp cho chúng ta procedure để thực hiện việc đó. Tôi đang dùng RDS, nên chạy lệnh sau để kill session:
 
 ```sql
-CALL mysql.mysql.rds_kill(<session_id>);
+CALL mysql.rds_kill(<session_id>);
 ```
 
 Không có đường tắt nào cho bạn để xem nên kill hay nên bỏ qua session nào, vì chẳng có thông tin gì thêm về các session. Ta buộc phải chọc vào `performance_schema` của MySQL để xem query history của transaction. Để làm việc này ta có thể tham khảo [bài viết này của Percona](https://www.percona.com/blog/chasing-a-hung-transaction-in-mysql-innodb-history-length-strikes-back/).
@@ -176,16 +176,44 @@ Sau khi kill đúng session, cuối cùng tôi đã có thể chạy câu lệnh
 
 Như ở trên đã nêu, lý do xảy ra việc `Waiting for table metadata lock` là do transaction chưa được kết thúc khi không sử dụng. Do DB này là DB OLTP nên việc có các transaction lâu tới vài phút như vậy là không ổn. Việc để các transaction hanging còn gây tiêu tốn tài nguyên của MySQL, chiếm nhiều bộ nhớ để chứa những thứ đại loại như transaction history và rollback log, chứ không chỉ mỗi gây block các DDL query (vốn hiếm khi xảy ra). Vậy để tránh vấn đề này, cách tôi giải quyết đơn giản là `ROLLBACK` hoặc `COMMIT` sau mỗi lần query DB. Percona Blog đã có một [bài viết khá hay](https://www.percona.com/blog/small-changes-impact-complex-systems-mysql-example/) về vấn đề này (dù nội dung về MySQL 5.6 đã tương đối cũ nhưng vẫn còn đúng với MySQL 8+ do về bản chất vấn đề vẫn không thay đổi).
 
-Theo kinh nghiệm của tôi thì dưới đây là 2 cách để quản lý transaction:
+Theo kinh nghiệm của tôi thì dưới đây là 2 + 1 cách để quản lý transaction:
 
-## Quản lý thuần bằng tay
+## Quản lý transaction bằng thư viện/công cụ
 
-Như trong trường hợp của tôi sử dụng AWS Lambda và dùng thư viện `PyMySQL`, tôi luôn mặc định `ROLLBACK` các transaction sau khi kết thúc request như ví dụ dưới đây:
+Ngoài việc đóng/mở transaction một cách có trách nhiệm, ta có thể quản lý bằng việc sử dụng Connection Pool có kèm theo quản lý transaction (như HikariCP + JOOQ chẳng hạn) hoặc dùng RDS Proxy để AWS quản lý hộ chúng ta. Sau một khoảng thời gian transaction không có động tĩnh gì, thì ta `ROLLBACK` hoặc `COMMIT`.
+
+## Định kì kill các connection chứa transaction chạy quá lâu
+
+Như mục [Việc gì ngăn cản `metadata lock` xảy ra?](#việc-gì-ngăn-cản-metadata-lock-xảy-ra), ta có thể query ra các transaction đang ngồi lại quá lâu và dễ gây blocking cho CSDL. Giải pháp là `SELECT` các transaction sống lâu hơn 1 khoảng thời gian, rồi kill connection chứa nó đi. 
+
+Một phương pháp _ngây thơ_ để `SELECT` các transaction đang sống quá 45 phút lâu mà tại thời điểm đó đang không làm gì là:
+
+```sql
+SELECT trx_mysql_thread_id, TIMESTAMPDIFF(SECONDtrx_started, NOW()) AS living_seconds
+FROM information_schema.innodb_trx
+WHERE living_seconds > 2700
+  AND trx_operation_state IS NULL
+  AND trx _query IS NULL
+  AND trx_tables_in_use = 0
+```
+
+Sau đó ta có thể sử dụng `KILL <thread_id>` hoặc `CALL mysql.rds_kill(<thread_id>)` để kết thúc connection đang treo CSDL lại. Đưa code trên vào cronjob ta sẽ có 1 job định kì quét các transaction để trống quá lâu.
+
+Nên nhớ rằng phương pháp nay quá đơn giản để giải quyết vấn để transaction lock. Để đưa ra quyết định chính xác hơn nên kill transaction nào, hãy xem [bài viết này của Planet MySQL](https://planet.mysql.com/entry/?id=5988591).
+
+## QUAN TRỌNG NHẤT: Sử dụng transaction có trách nhiệm, luôn kết thúc transaction ngay sau khi không sử dụng nữa
+
+Dù có bao nhiêu phương pháp hay bao nhiêu công cụ đi nữa, tất cả chỉ là phao cứu hộ để giúp chúng ta cầm máu sau khi tự bắn vào chân mình, chứ không phải vì có _thuốc_ rồi rồi thì cứ mở transaction rồi mặc kệ nó sống chết ra sao thì ra. Phòng bệnh thì luôn tốt hơn chữa bệnh, và chữa bệnh lúc nào cũng dễ gây tác dụng phụ hoặc di chứng. Dưới đây là hai vấn đề dễ thấy nhất khi dùng connection pool và kill định kì transaction:
+- Với connection pool, lợi thế chính của nó là multiplexing các query vào với nhau, việc ta làm các câu query ảnh hưởng đến việc multiplexing, ví dụ như `INSERT` vào CSDL xong `SELECT` lại nó ra, khiến Connection Pool phải hold một Connection để xử lý vấn đề này. Việc thao tác với transaction một cách không cẩn thận sẽ dễ khiến tình trạng trên xảy ra. Vấn đề này đã được nêu trong [document của RDS Proxy](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/rds-proxy-managing.html#rds-proxy-pinning).
+- Với việc kill transaction định kì, thực sự việc làm này khá tiêu cực vì nếu có một thực sự có một transaction nào đó có thời gian idle cao, thì rõ ràng phương pháp này không ổn một chút nào.
+
+Vậy nên luôn sử dụng transaction có trách nhiệm, kết thúc nó khi không dùng đến nữa. Như trong trường hợp của tôi sử dụng AWS Lambda và dùng thư viện `PyMySQL`, tôi luôn mặc định `ROLLBACK` các transaction sau khi kết thúc request như ví dụ dưới đây:
 
 ```python
 conn = get_connection() # function kết nối db, giữ connection warm
 def lambda_handler(event, context):
     try:
+        conn.begin()
         with conn.cursor() as cur:
             cur.execute('INSERT SOMETHING HERE')
         # nếu muốn commit kết quả query vào db thì COMMIT ở đây
@@ -205,6 +233,7 @@ def db_rollback():
     def decorating_handler(lambda_handler):
         def wrapper(event, context):
             try:
+                conn.begin()
                 return lambda_handler(event, context)
             finally:
                 if conn.open:
@@ -221,28 +250,29 @@ def lambda_function(event, context):
     return {"statusCode": "200"}
 ```
 
-Ta có thể nhét decorator này vào trong Lambda Layer và tái sử dụng ở nhiều function khác nhau
-
-## Quản lý bằng thư viện/công cụ
-
-Nếu không muốn quản bằng tay, ta có thể quản lý bằng việc sử dụng Connection Pool (như HikariCP chẳng hạn) hoặc dùng RDS Proxy để AWS quản lý hộ chúng ta. Tuỳ vào túi tiền và nhu cầu sử dụng.
+Ta có thể nhét decorator này vào trong Lambda Layer và tái sử dụng ở nhiều function khác nhau để tái sử dụng logic này.
 
 # Kết luận
 
-Mong rằng bài viết này sẽ giúp bạn giải quyết vấn đề, vì việc này đã tốn mất 1 ngày ngồi tra tài liệu MySQL và đào bới khắp StackOverflow để làm xong.
+Việc thay đổi cấu trúc bảng (hay chạy các query DDL nói chung) không phải là một công việc thường xuyên xảy ra, vì hiếm khi một cái CSDL đang chạy ngon lành tự dưng lại lôi ra để phẫu thuật, chỉnh sửa cả. Việc quản lý các transaction càng trở nên quan trọng hơn khi các câu query chồng chéo nhau trên các bảng ở các transaction khác nhau sẽ gây blocking nhau, kéo tụt hiệu năng của cả hệ thống xuống. Để giải quyết các vấn đề về chiến lược, tư duy khi query, thiết kế CSDL thì phải dành cho một người có trình độ cao hơn và kinh nghiệm dày dặn hơn, ví dụ như anh [Trần Quốc Huy](https://www.youtube.com/@tranquochuywecommit) với kênh YouTube rất nhiều kiến thức bổ ích về CSDL ở đây.
 
-> Ghi chú: Một lần nữa, ChatGPT hay bất kì công cụ AI nào đều không giúp sức được cho tôi trong quá trình sửa lỗi này. Có thể do tôi sử dụng sai cách nên mong các chuyên gia prompt engineer giúp tôi đưa ra những câu prompt hào sảng để nó chói qua tim mấy cái model LLM mà sinh ra những câu trả lời có thực sự hữu ích (đã thử phương pháp thêm "please" và "làm ơn" sau mỗi câu hỏi nhưng không được).
+Mong rằng bài viết này sẽ giúp bạn đọc giải quyết vấn đề, vì việc này đã tốn mất 1 ngày ngồi tra tài liệu MySQL và đào bới khắp StackOverflow để làm xong.
+
+> Ghi chú: Một lần nữa, ChatGPT hay bất kì công cụ AI nào đều không giúp sức được cho tôi trong quá trình sửa lỗi này. Có thể do tôi sử dụng sai cách nên mong các chuyên gia _prompt engineer_ giúp tôi đưa ra những câu prompt hào sảng để nó chói qua tim mấy cái model LLM mà sinh ra những câu trả lời có thực sự hữu ích (đã thử phương pháp thêm _"please"_ và _"làm ơn"_ sau mỗi câu hỏi nhưng không được).
 
 # Nguồn tham khảo
 - [MySQL 8.4 Reference Manual](https://dev.mysql.com/doc/refman/8.4/en/):
-    * [15.1.20.5 FOREIGN KEY Constraints](https://dev.mysql.com/doc/refman/8.4/en/create-table-foreign-keys.html#foreign-key-locking) / [Link archive.org](https://web.archive.org/web/20240706020716/https://dev.mysql.com/doc/refman/8.4/en/create-table-foreign-keys.html#foreign-key-locking)
-    * [17.12.1 Online DDL Operations](https://dev.mysql.com/doc/refman/8.4/en/innodb-online-ddl-operations.html#online-ddl-table-operations) / [Link archive.org](https://web.archive.org/web/20240614132951/https://dev.mysql.com/doc/refman/8.4/en/innodb-online-ddl-operations.html#online-ddl-table-operations)
-    * [10.11.4 Metadata Locking](https://dev.mysql.com/doc/refman/8.4/en/metadata-locking.html#metadata-lock-release) / [Link archive.org](https://web.archive.org/web/20240710093303/https://dev.mysql.com/doc/refman/8.4/en/metadata-locking.html#metadata-lock-release)
+    * [15.1.20.5 FOREIGN KEY Constraints](https://dev.mysql.com/doc/refman/8.4/en/create-table-foreign-keys.html#foreign-key-locking) / [archive](https://web.archive.org/web/20240706020716/https://dev.mysql.com/doc/refman/8.4/en/create-table-foreign-keys.html#foreign-key-locking)
+    * [17.12.1 Online DDL Operations](https://dev.mysql.com/doc/refman/8.4/en/innodb-online-ddl-operations.html#online-ddl-table-operations) / [archive](https://web.archive.org/web/20240614132951/https://dev.mysql.com/doc/refman/8.4/en/innodb-online-ddl-operations.html#online-ddl-table-operations)
+    * [10.11.4 Metadata Locking](https://dev.mysql.com/doc/refman/8.4/en/metadata-locking.html#metadata-lock-release) / [archive](https://web.archive.org/web/20240710093303/https://dev.mysql.com/doc/refman/8.4/en/metadata-locking.html#metadata-lock-release)
 - [AWS Documentation - Amazon RDS](https://docs.aws.amazon.com/rds/):
-    * [Common DBA tasks for MySQL DB instances](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Appendix.MySQL.CommonDBATasks.html#Appendix.MySQL.CommonDBATasks.End) / [Link archive.org](https://web.archive.org/web/20240713052429/https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Appendix.MySQL.CommonDBATasks.html#Appendix.MySQL.CommonDBATasks.End)
-    * [RDS for MySQL stored procedure reference - Ending a session or query](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/mysql-stored-proc-ending.html) / [Link archive.org](https://web.archive.org/web/20240225060423/https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/mysql-stored-proc-ending.html)
+    * [Common DBA tasks for MySQL DB instances](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Appendix.MySQL.CommonDBATasks.html#Appendix.MySQL.CommonDBATasks.End) / [archive](https://web.archive.org/web/20240713052429/https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Appendix.MySQL.CommonDBATasks.html#Appendix.MySQL.CommonDBATasks.End)
+    * [RDS for MySQL stored procedure reference - Ending a session or query](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/mysql-stored-proc-ending.html) / [archive](https://web.archive.org/web/20240225060423/https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/mysql-stored-proc-ending.html)
+    * [Managing an RDS Proxy - Avoiding pinning](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/rds-proxy-managing.html#rds-proxy-pinning) / [archive](https://web.archive.org/web/20240704212205/https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/rds-proxy-managing.html#rds-proxy-pinning)
 - [StackOverflow](https://stackoverflow.com)
-    * [MySQL 5.6 - table locks even when ALGORITHM=inplace is used](https://stackoverflow.com/questions/54667071/mysql-5-6-table-locks-even-when-algorithm-inplace-is-used) / [Link archive.org](https://web.archive.org/web/20240717161527/https://stackoverflow.com/questions/54667071/mysql-5-6-table-locks-even-when-algorithm-inplace-is-used)
+    * [MySQL 5.6 - table locks even when ALGORITHM=inplace is used](https://stackoverflow.com/questions/54667071/mysql-5-6-table-locks-even-when-algorithm-inplace-is-used) / [archive](https://web.archive.org/web/20240717161527/https://stackoverflow.com/questions/54667071/mysql-5-6-table-locks-even-when-algorithm-inplace-is-used)
 - [Percona Blog](https://www.percona.com/blog/)
-    * [Chasing a Hung MySQL Transaction: InnoDB History Length Strikes Back](https://www.percona.com/blog/chasing-a-hung-transaction-in-mysql-innodb-history-length-strikes-back/) / [Link archive.org](https://web.archive.org/web/20240522170813/https://www.percona.com/blog/chasing-a-hung-transaction-in-mysql-innodb-history-length-strikes-back/)
-    * [How small changes impact complex systems – MySQL example](https://www.percona.com/blog/small-changes-impact-complex-systems-mysql-example/) / [Link archive.org](https://web.archive.org/web/20240718070236/https://www.percona.com/blog/small-changes-impact-complex-systems-mysql-example/)
+    * [Chasing a Hung MySQL Transaction: InnoDB History Length Strikes Back](https://www.percona.com/blog/chasing-a-hung-transaction-in-mysql-innodb-history-length-strikes-back/) / [archive](https://web.archive.org/web/20240522170813/https://www.percona.com/blog/chasing-a-hung-transaction-in-mysql-innodb-history-length-strikes-back/)
+    * [How small changes impact complex systems – MySQL example](https://www.percona.com/blog/small-changes-impact-complex-systems-mysql-example/) / [archive](https://web.archive.org/web/20240718070236/https://www.percona.com/blog/small-changes-impact-complex-systems-mysql-example/)
+- [Planet MySQL](https://planet.mysql.com/)
+    * [Tracking MySQL query history in long running transactions](https://planet.mysql.com/entry/?id=5988591) / [archive](https://web.archive.org/web/20240814092726/https://planet.mysql.com/entry/?id=5988591)
