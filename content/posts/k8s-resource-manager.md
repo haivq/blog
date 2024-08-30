@@ -114,5 +114,5 @@ Các tài liệu tham khảo:
 
 - [Setting Resource Requests and Limits in Kubernetes](https://www.youtube.com/watch?v=xjpHggHKm78)
 - [Kubernetes Scheduler](https://kubernetes.io/docs/concepts/scheduling-eviction/kube-scheduler/)
-- [Pod Priority and Preemption ](https://kubernetes.io/docs/concepts/configuration/pod-priority-preemption/)
+- [Pod Priority and Preemption](https://kubernetes.io/docs/concepts/configuration/pod-priority-preemption/)
 - [Resource Quotas](https://kubernetes.io/docs/concepts/policy/resource-quotas/)
