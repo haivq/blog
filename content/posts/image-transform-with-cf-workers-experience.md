@@ -20,6 +20,8 @@ tags:
     - optimization
 ---
 
+> Code demo của bài blog được để ở [link GitHub này](https://github.com/aperture147/cf-workers-watermark)
+
 # Mở đầu câu chuyện
 
 Gần đây tôi có 1 bài toán như sau:
@@ -91,7 +93,7 @@ watermarked_storage_cost = storage_cost * 0.7
                          = $7.5 * 0.6 = $4.5
 ```
 
-Vậy tổng phí nếu lựa chọn phương án lưu thêm phiên bản khác là `$20.64`.
+Vậy tổng phí nếu lựa chọn phương án lưu thêm phiên bản khác là `$20.64`, làm tròn lên thành `$21`.
 > Nếu lưu thêm các phiên bản khác nhau nữa, cần phải tính lại cả số lượng request của phiên bản mới để cộng lại, tạm thời ta chỉ tính đến phương án lưu 1 phiên bản
 
 #### Phí sử dụng Workers để convert ảnh:
@@ -118,8 +120,8 @@ Có vẻ hướng sử dụng Cloudflare Image Transformation là quá đắt...
 # Thử nghiệm và đánh giá phương án dùng Cloudflare Workers và Photon
 
 Ta sẽ khảo sát tính khả thi của phương án thông qua:
-- Thời gian xử lý của function (lấy p95 hoặc p99)
-- Lương CPU tiêu tốn
+- Thời gian xử lý của function (lấy p50, p79 và p99)
+- Chi phí bỏ ra, dựa trên lượng mCPUs tiêu tốn
 
 ## Implement của tôi
 
@@ -175,8 +177,6 @@ export default {
 		return response
 	},
 } satisfies ExportedHandler<Env>;
-
-
 ```
 
 Sau đó ta chạy lệnh sau để bật server dev:
@@ -194,10 +194,10 @@ Sau khi gọi liên tục vào server dev, tôi đo được mỗi request sẽ 
     alt="Thời gian cho một request"
     title="Thời gian cho một request"
     caption="Thời gian cho một request" >}}
+0.5s - 2s là quá lâu để serve ảnh, vì thế ta cần phải xem sâu hơn các yếu tố ảnh hưởng tới thời gian lấy ảnh. Tôi đã liệt kê được 3 hành động (theo thứ tự trong code) ảnh hưởng tới thời gian request ở đây:
 
-Những yếu tố ảnh hưởng tới thời gian request ở đây bao gồm:
 1. Việc tải ảnh từ host ngoài
-2. Load ảnh và gắn water
+2. Load ảnh và gắn watermảk
 3. Tạo response gửi về cho user
 
 Trong 3 yếu tố trên, ta có thể giảm thiểu 2 yếu tố `1` và `2` nếu ta cache được request ảnh gửi về. Ta sẽ sử dụng Cache API có sẵn của Cloudflare để giản lược 2 bước trên:
@@ -231,7 +231,6 @@ export default {
 		return response
 	},
 } satisfies ExportedHandler<Env>;
-
 ```
 
 Sau khi thực hiện bước cache, ta thử gọi lại vào URL đã nêu ở trên và kết quả khá lúc này rất nhanh:
@@ -303,14 +302,13 @@ Sau khoảng 2 tiếng chạy với 4k requests, ta thu được thống kê nh�
     title="Kết quả thu được trên Cloudflare"
     caption="Kết quả thu được trên Cloudflare" >}}
 
-Mặc dù p50, p75 và p99 có vẻ khá cao, nhưng ta phải xét đến trường hợp ban đầu mất thời gian để cache ảnh vào Cache API. Sau một thời gian khi tất cả ảnh đã nằm trong cache, các giá trị p50, p79, p99 sẽ hội tụ xấp xỉ 1ms. Với giá thành hiện tại $0.02 cho mỗi 1M mCPU, ta có thể tạm tính theo giả định nhau sau (gấp 3 số lượng request do Cache của Cloudflare không sync qua các PoP):
+Mặc dù p50, p75 và p99 có vẻ khá cao, nhưng ta phải xét đến trường hợp ban đầu mất thời gian để cache ảnh vào Cache API. Sau một thời gian khi tất cả ảnh đã nằm trong cache, các giá trị p50, p79, p99 sẽ hội tụ xấp xỉ 1ms. Với giá thành hiện tại $0.02 cho mỗi 1M mCPUs, ta có thể tạm tính theo giả định nhau sau (gấp 3 số lượng request do Cache của Cloudflare không sync qua các PoP):
 
 ```
 request_caching_cost = 400ms * 8M * $0.02 / 1M * 3
                      = $192
 ```
-
-Như vậy, đây là một kết quả khá là khả quan, khi cũng resize và optimize 8M ảnh thì chỉ mất có `$192`, tức là chỉ bằng 1.6% nếu so với việc dùng Cloudflare Images Transform.
+So với việc sử dụng Cloudflare Image Transform, thì chi phí Workers chỉ còn `$192`, tức là chỉ bằng 1.6% so với trước. Tổng cả chi phí lưu trữ và GetObject cố định ta có giá tổng cuối cùng là: `$213.14`. Ta tính dôi ra thêm khoản ngoài tiền request để caching ảnh ban đầu thì là các request ảnh lấy ra từ trong cache. Làm tròn thành `$220`, tức là thêm khoảng `$7`, tương đương khoảng 350M mCPUs, đủ để serve hơn 300M ảnh.
 
 ## Bất cập
 
@@ -325,15 +323,19 @@ Tất nhiên, không có bữa trưa nào là miễn phí cả. Bây giờ chún
     title="p50, p75 và p99 khá cao"
     caption="p50, p75 và p99 khá cao" >}}
 
-Như ta thấy, khoảng thời gian ban đầu khi đưa optimize ảnh và đưa vào cache, tới 50% số request sẽ mất tới 400ms. Nếu trang của người dùng chỉ có 4 5 cái ảnh thì không sao, nhưng nếu trang của họ phần lớn là ảnh thì sẽ tạo ra trải nghiệm rất tệ cho người dùng.
+Như ta thấy, khoảng thời gian ban đầu khi đưa optimize ảnh và đưa vào cache, tới 50% số request sẽ mất tới 400ms. Nếu trang của người dùng chỉ có 4 5 cái ảnh thì không sao, nhưng nếu trang của họ phần lớn là ảnh thì sẽ tạo ra trải nghiệm rất tệ cho người dùng. Bắt buộc ta phải có một giải pháp precache cho ảnh, nhưng tạo chi phí upfront cost như vậy không hề rẻ chút nào.
 
 ### Cache chỉ tồn tại ở 1 PoP
 
 Điều này là điều khiến tôi cân nhắc có nên sử dụng Cloudflare Workers nhiều nhất. [Theo như document này](https://developers.cloudflare.com/workers/runtime-apis/cache/), mỗi khi người dùng request tới PoP của Cloudflare, code Workers ở trên sẽ lại tốn CPU để tạo lại ảnh. Thực sự chưa có cái gì đo đạc được vấn đề này cả, và đây là điều mà tôi lấn cấn nhất vì nếu có đông khách ở nhiều nơi, tiền có thể bị đội lên cao vọt lên nữa mà không có cách nào ngăn chặn được cả.
 
+### Đắt hơn so với việc lưu phiên bản ở một bucket khác
+
+Khá là tiếc rằng, với cái giá `$220` một tháng so với `$21`, tức là gầp 10 lần, là một cái giá khá đắt phải đánh đổi. Vậy nên nếu ta không thực sự hay thay đổi watermark của ảnh hay chỉnh sửa ảnh theo hiệu ứng thì cái giá gấp 10 lần thế này vẫn là một con số khó có thể chấp nhận được.
+
 # Tóm lại
 
-Đây là bài viết nói về suy nghĩ của tôi khi cần resize ảnh ở trên hệ thống serverless của Cloudflare. Mặc dù về giá không được rẻ cho lắm, nhưng về độ tiện lợn thì tốt hơn các giải pháp mà tôi đã biết. Có lẽ về khoản watermark, ta nên code 1 dòng JS để cho browser tự dán lên ảnh và mặc kệ đời ra sao thì ra, giống như cách mà Shoppee đang dán ảnh quảng cáo sale vào ảnh sản phẩm, rồi tập trung não để xây một sản phẩm có giá trị cốt lõi to hơn chứ không chỉ nằm trên vài cái ảnh.
+Đây là bài viết nói về suy nghĩ của tôi khi cần resize ảnh ở trên hệ thống serverless của Cloudflare. Mặc dù về giá không được rẻ cho lắm, nhưng về độ tiện lợn thì tốt hơn các giải pháp mà tôi đã biết. Có lẽ về khoản watermark, ta nên code 1 dòng JS để cho browser tự dán lên ảnh và mặc kệ đời ra sao thì ra, giống như cách mà Shoppee đang dán ảnh quảng cáo sale vào ảnh sản phẩm, rồi tập trung não để xây một sản phẩm có giá trị cốt lõi to hơn nằm ở phần khác chứ không chỉ nằm trên vài tấm ảnh.
 
 # Tư liệu tham khảo
 
@@ -342,4 +344,4 @@ Như ta thấy, khoảng thời gian ban đầu khi đưa optimize ảnh và đ�
     - [Cloudflare Image Optimization / Pricing](https://developers.cloudflare.com/images/pricing/#images-transformed) / [archive](https://web.archive.org/web/20240810001916/https://developers.cloudflare.com/images/pricing/#images-transformed)
     - [Workers / Runtime APIs / Cache](https://developers.cloudflare.com/workers/runtime-apis/cache/) / [archive](https://web.archive.org/web/20240822091425/https://developers.cloudflare.com/workers/runtime-apis/cache/)
 - [GitHub](https://github.com)
-    - [fineshopdesign/cf-wasm](https://github.com/fineshopdesign/cf-wasm)
+    - [fineshopdesign/cf-wasm](https://github.com/fineshopdesign/cf-wasm) / [archive](https://web.archive.org/web/20240831145937/https://github.com/fineshopdesign/cf-wasm)
