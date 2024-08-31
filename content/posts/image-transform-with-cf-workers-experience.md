@@ -189,7 +189,7 @@ npm run dev
 Sau khi gọi liên tục vào server dev, tôi đo được mỗi request sẽ mất khoảng 0.5s tới 2s.
 
 {{< figure 
-    src="/posts/request-time.png"
+    src="/posts/image-transform-with-cf-workers-experience/request-time.png"
     position="center"
     alt="Thời gian cho một request"
     title="Thời gian cho một request"
@@ -237,7 +237,7 @@ export default {
 Sau khi thực hiện bước cache, ta thử gọi lại vào URL đã nêu ở trên và kết quả khá lúc này rất nhanh:
 
 {{< figure 
-    src="/posts/request-time-cached.png"
+    src="/posts/image-transform-with-cf-workers-experience/request-time-cached.png"
     position="center"
     alt="Thời gian sau khi cache"
     title="Thời gian sau khi cache"
@@ -297,7 +297,7 @@ Theo như code trên, ta sẽ có 100 variant ảnh khác nhau (chọn 1 kích t
 Sau khoảng 2 tiếng chạy với 4k requests, ta thu được thống kê như sau:
 
 {{< figure 
-    src="/posts/cf-dashboard-result.png"
+    src="/posts/image-transform-with-cf-workers-experience/cf-dashboard-result.png"
     position="center"
     alt="Kết quả thu được trên Cloudflare"
     title="Kết quả thu được trên Cloudflare"
@@ -319,7 +319,7 @@ Tất nhiên, không có bữa trưa nào là miễn phí cả. Bây giờ chún
 ### Thời gian tạo ảnh ban đầu rất lâu
 
 {{< figure 
-    src="/posts/cf-dashboard-wall-time.png"
+    src="/posts/image-transform-with-cf-workers-experience/cf-dashboard-wall-time.png"
     position="center"
     alt="p50, p75 và p99 khá cao"
     title="p50, p75 và p99 khá cao"
