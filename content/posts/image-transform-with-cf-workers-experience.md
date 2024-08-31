@@ -197,7 +197,7 @@ Sau khi gọi liên tục vào server dev, tôi đo được mỗi request sẽ 
 0.5s - 2s là quá lâu để serve ảnh, vì thế ta cần phải xem sâu hơn các yếu tố ảnh hưởng tới thời gian lấy ảnh. Tôi đã liệt kê được 3 hành động (theo thứ tự trong code) ảnh hưởng tới thời gian request ở đây:
 
 1. Việc tải ảnh từ host ngoài
-2. Load ảnh và gắn watermảk
+2. Load ảnh và gắn watermark
 3. Tạo response gửi về cho user
 
 Trong 3 yếu tố trên, ta có thể giảm thiểu 2 yếu tố `1` và `2` nếu ta cache được request ảnh gửi về. Ta sẽ sử dụng Cache API có sẵn của Cloudflare để giản lược 2 bước trên:
