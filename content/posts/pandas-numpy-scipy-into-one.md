@@ -1,5 +1,5 @@
 ---
-title: "Phương pháp ma quỷ để gộp chung Pandas, NumPy và SciPy vào chung một layer lambda để chạy trên python 3.10 mà không quá dung lượng 250M"
+title: "Phương pháp ma quỷ để gộp chung Pandas, NumPy và SciPy vào chung một layer lambda để chạy trên Python 3.10 mà không quá dung lượng 250M"
 author: "Aperture"
 date: "2024-04-22T00:20:00+07:00"
 categories:
@@ -108,7 +108,7 @@ rm -r *.dist-info
 # Xoá hết các thư mục tests
 find . | grep -E "*/tests$" | xargs rm -rf
 
-# Xoá hết bytecode python đi nếu có
+# Xoá hết bytecode mà Python sinh ra nếu có
 find . | grep -E "(/__pycache__$|\.pyc$|\.pyo$)" | xargs rm -rf
 
 # Xoá cả pyproject vì không cần đến
