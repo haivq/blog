@@ -10,7 +10,7 @@ languageCode = "vi-VN"
 defaultContentLanguage = "vi"
 
 enableGitInfo = true
-
+copyright = "© Aperture Prometheus :: 2018 - 2024"
 [params]
   # dir name of your main content (default is `content/posts`).
   # the list of set content will show up on your index page (baseurl).
@@ -45,6 +45,8 @@ enableGitInfo = true
   # set all headings to their default size (depending on browser settings)
   # it's set to `true` by default
   # oneHeadingSize = false
+
+  framed = true
 
 [languages]
   [languages.vi.params]
@@ -87,3 +89,7 @@ enableGitInfo = true
 
 [markup.goldmark.renderer]
   unsafe = true
+
+[services]
+  [services.disqus]
+    shortname = 'apertureprometheus'
