@@ -11,6 +11,7 @@ tags:
     - info
     - cv
     - contact
+hideComments: true
 ---
 
 ## Thông tin tuyển dụng:
