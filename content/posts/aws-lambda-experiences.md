@@ -69,7 +69,7 @@ Dưới đây là biểu đồ trạng thái sơ lược flow chạy Lambda khi 
     caption="Lambda Execution Flow"
     attr="Aperture"
     attrlink="https://blog.haivq.com"
-    link="/aws-lambda-experiences/lambda-execution-flow.drawio">}}
+    link="/posts/aws-lambda-experiences/lambda-execution-flow.drawio">}}
 
 Với những ai chưa biết, thay vì tạo mới một runtime cho mỗi lần request, AWS sẽ tạo ra một môi trường chạy code cô lập (hãy tưởng tượng nó như một cái docker container) và giữ nó sống (hoặc gọi là `warm`). Môi trường này sẽ tiếp tục `warm` một lúc và tự tắt nó đi khi không có request tới nó nữa sau một khoảng thời gian đợi (ta không quyết định được khoảng thời gian đợi này). Sau khi khởi tạo, các biến global (cả trong code lẫn trong layer) sẽ vẫn được lưu ở đó chứ không bị giải phóng như các biến nằm trong các function.
 
