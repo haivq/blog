@@ -18,11 +18,15 @@ tags:
    - development
 ---
 
-Kubernetes gần đây đã trở thành một công nghệ nổi tiếng. Không chỉ gắn liên với việc quản lý các cluster lớn, rất nhiều framework hay các stack công nghệ bây giờ đều hỗ trợ k8s (điển hình nhất là kubeflow, nginx). Việc học k8s gần như không còn là môt lựa chọn mà trở thành một yêu cầu quan trọng cho nhiều công việc. Những ai đã/đang sử dụng k8s đều phải công nhận đây là một công nghệ rất mạnh và mềm dẻo, nhưng kèm theo đó là một vài nhược điểm cố hữu: Rất khó sử dụng! Với những dev sử dụng máy tính thông thường, việc điều khiển một cluster k8s thực sự là một cực hình do phải điều khiển nó thông quan kubectl - một chương trình cli có quá nhiều thứ phải nhớ. Ngoài ra để deploy bất kì thứ gì lên đó, chúng ta phải viết một cái file yml dài ngoằng khó hiểu, liệt kê đầy đủ tất cả những gì cần phải có để một chương trình có thể chạy. Và tất nhiên k8s mặc định hoàn toàn không có giao diện. Kubernetes Dashboard (UI chính thức của k8s) cuối cùng vẫn bắt bạn phải viết yml. Rất nhiều config lưu trong k8s không thể lưu chính xác, và kết quả bạn lại phải viết thêm yml để phục vụ các config đó. Vậy nên yêu cầu của chúng ta khi deploy một cluster k8s ở máy bàn cá nhân cần phải thoả mãn các tiêu chí sau:
+> Hiện tại đã có bản Rancher 2.6 trở lên với giao diện mới hơn.
 
-   * Có giao diện, dễ sử dụng
-   * Hiệu năng phải cao
-   * Không viết YML khi cần thiết
+# Mở đầu câu chuyện
+
+Kubernetes gần đây đã trở thành một công nghệ nổi tiếng. Không chỉ gắn liên với việc quản lý các cluster lớn, rất nhiều framework hay các stack công nghệ bây giờ đều hỗ trợ k8s (điển hình nhất là kubeflow, nginx). Việc học k8s gần như không còn là môt lựa chọn mà trở thành một yêu cầu quan trọng cho nhiều công việc. Những ai đã/đang sử dụng k8s đều phải công nhận đây là một công nghệ rất mạnh và mềm dẻo, nhưng kèm theo đó là một nhược điểm rất lớn cố hữu: **Rất khó sử dụng**. Với những dev không phải quản lý hệ thống nhiều, việc điều khiển một cluster k8s thực sự là một cực hình do phải điều khiển nó thông quan `kubectl` - một CLI có quá nhiều thứ phải nhớ. Ngoài ra để deploy bất kì thứ gì lên đó, chúng ta phải viết một file yml dài ngoằng khó hiểu, liệt kê đầy đủ tất cả những gì cần phải có để một chương trình có thể chạy. Và tất nhiên k8s mặc định hoàn toàn không có giao diện. Kubernetes Dashboard (UI chính thức của k8s) cuối cùng vẫn bắt bạn phải viết yml. Rất nhiều config lưu trong k8s không thể lưu chính xác, và kết quả bạn lại phải viết thêm yml để phục vụ các config đó. Vậy nên yêu cầu của chúng ta khi deploy một cluster k8s ở máy bàn cá nhân cần phải thoả mãn các tiêu chí sau:
+
+1. Có giao diện, dễ sử dụng
+2. Hiệu năng phải cao
+3. Không viết YML khi cần thiết
 
 # Tìm đường để giải quyết vấn đề:
 
@@ -184,9 +188,9 @@ sudo k3s kubectl get nodes
 sudo k3s kubectl get pods --all-namespaces
 ```
 
-3. Thêm config vào file .bashrc để có thể dùng kubectl:
+3. Thêm config vào file `.bashrc` để có thể dùng `kubectl`:
 
-Thêm dòng sau vào file config .bashrc:
+Thêm dòng sau vào file config `.bashrc`:
 ```bash
 export KUBECONFIG=~/.kube/local_config
 # Lệnh dưới này để update môi trường

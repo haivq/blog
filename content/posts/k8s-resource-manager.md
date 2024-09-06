@@ -16,7 +16,7 @@ tags:
     - development
 ---
 
-# Đặt vẫn đề
+# Đặt vấn đề
 
 Một trong những thiếu sót khi sử dụng k8s trong môi trường production là không thiết đặt giới hạn tài nguyên cho hệ thống. Khi bạn không giới hạn tài nguyên cho các pod trong k8s, không sớm thì muộn sẽ có một thời điểm server của bạn sẽ hết sạch tài nguyên (điển hình là hết CPU và RAM). Việc này rất dễ xảy ra chạy các workload nặng trên nhiều node có cấu hình khác nhau. Cuối cùng server của bạn sẽ crash, hoặc là chạy rất chậm, khiến hệ thống trở nên kém ổn định, thậm chí là mất mát dữ liệu, gây tổn thất về uy tín và tiền bạc. Vậy một trong những việc đầu tiên khi một đưa bất kì thứ gì lên k8s là phải thiết đặt tài nguyên cho nó.
 
