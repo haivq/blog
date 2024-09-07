@@ -327,7 +327,9 @@ Như ta thấy, khoảng thời gian ban đầu khi đưa optimize ảnh và đ�
 
 ### Cache chỉ tồn tại ở 1 PoP
 
-Điều này là điều khiến tôi cân nhắc có nên sử dụng Cloudflare Workers nhiều nhất. [Theo như document này](https://developers.cloudflare.com/workers/runtime-apis/cache/), mỗi khi người dùng request tới PoP của Cloudflare, code Workers ở trên sẽ lại tốn CPU để tạo lại ảnh. Thực sự chưa có cái gì đo đạc được vấn đề này cả, và đây là điều mà tôi lấn cấn nhất vì nếu có đông khách ở nhiều nơi, tiền có thể bị đội lên cao vọt lên nữa mà không có cách nào ngăn chặn được cả.
+Đây chính là điều khiến tôi băn khoăn nhất rằng có nên sử dụng Cloudflare Workers hay không. [Theo như document này](https://developers.cloudflare.com/workers/runtime-apis/cache/), Cache của Cloudflare Workers là riêng nhau chứ không được chia sẻ giữa các PoP (do thiết kế CDN của Cloudflare), tức là nếu có khách đã gọi ảnh trong PoP ở Hong Kong và cache lại, thì khách khác gọi ảnh ở Thái Lan, thì Cloudflare Workers sẽ lại tốn tiền CPU để tạo lại ảnh lần nữa. Việc này còn gây ra một vấn đề khác, là rất khó có thể đo đạc được trong tương lai ta sẽ tốn bao nhiêu tiền CPU.
+
+> Trong thực tế, Cloudflare CDN có [Tiered Cache](https://developers.cloudflare.com/cache/how-to/tiered-cache/) để các PoP có thể tái sử dụng cache của các PoP khác. Nhưng Cache API không hỗ trợ tính năng này
 
 ### Đắt hơn so với việc lưu phiên bản ở một bucket khác
 
