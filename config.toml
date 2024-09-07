@@ -32,7 +32,7 @@ copyright = "© Aperture Prometheus :: 2018 - 2024"
   centerTheme = true
 
   # set a custom favicon (default is a `themeColor` square)
-  favicon = "common/orange.png"
+  # favicon = "common/orange.png"
 
   # set post to show the last updated
   # If you use git, you can set `enableGitInfo` to `true` and then post will automatically get the last updated
