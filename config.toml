@@ -3,7 +3,6 @@ baseurl = "https://blog.haivq.com/"
 title = "Góc của Aperture"
 
 theme = "terminal"
-paginate = 5
 enableRobotsTXT = true
 
 languageCode = "vi-VN"
@@ -11,13 +10,17 @@ defaultContentLanguage = "vi"
 
 enableGitInfo = true
 copyright = "© Aperture Prometheus :: 2018 - 2024"
+
+[pagination]
+  pagerSize = 5
+
 [params]
   # dir name of your main content (default is `content/posts`).
   # the list of set content will show up on your index page (baseurl).
   contentTypeName = "posts"
 
   # ["orange", "blue", "red", "green", "pink"]
-  themeColor = "orange"
+  themeColor = "blue"
 
   # if you set this to 0, only submenu trigger will be visible
   showMenuItems = 3
@@ -93,3 +96,9 @@ copyright = "© Aperture Prometheus :: 2018 - 2024"
 [services]
   [services.disqus]
     shortname = 'apertureprometheus'
+
+[privacy]
+  [privacy.disqus]
+    disable = true
+  [privacy.youtube]
+    disable = true
