@@ -49,7 +49,8 @@ copyright = "© Aperture Prometheus :: 2018 - 2024"
   # it's set to `true` by default
   # oneHeadingSize = false
 
-  framed = true
+  Toc = true
+  TocTitle = "Mục lục"
 
 [languages]
   [languages.vi.params]
