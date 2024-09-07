@@ -120,7 +120,7 @@ Có vẻ hướng sử dụng Cloudflare Image Transformation là quá đắt...
 # Thử nghiệm và đánh giá phương án dùng Cloudflare Workers và Photon
 
 Ta sẽ khảo sát tính khả thi của phương án thông qua:
-- Thời gian xử lý của function (lấy p50, p79 và p99)
+- Thời gian xử lý của function (lấy p50, p75 và p99)
 - Chi phí bỏ ra, dựa trên lượng mCPUs tiêu tốn
 
 ## Implement của tôi
@@ -302,7 +302,7 @@ Sau khoảng 2 tiếng chạy với 4k requests, ta thu được thống kê nh�
     title="Kết quả thu được trên Cloudflare"
     caption="Kết quả thu được trên Cloudflare" >}}
 
-Mặc dù p50, p75 và p99 có vẻ khá cao, nhưng ta phải xét đến trường hợp ban đầu mất thời gian để cache ảnh vào Cache API. Sau một thời gian khi tất cả ảnh đã nằm trong cache, các giá trị p50, p79, p99 sẽ hội tụ xấp xỉ 1ms. Với giá thành hiện tại $0.02 cho mỗi 1M mCPUs, ta có thể tạm tính theo giả định nhau sau (gấp 3 số lượng request do Cache của Cloudflare không sync qua các PoP):
+Mặc dù p50, p75 và p99 có vẻ khá cao, nhưng ta phải xét đến trường hợp ban đầu mất thời gian để cache ảnh vào Cache API. Sau một thời gian khi tất cả ảnh đã nằm trong cache, các giá trị p50, p75, p99 sẽ hội tụ gần như nhau khoảng 1ms. Với giá thành hiện tại $0.02 cho mỗi 1M mCPUs, ta có thể tạm tính theo giả định nhau sau (gấp 3 số lượng request do Cache của Cloudflare không sync qua các PoP):
 
 ```
 request_caching_cost = 400ms * 8M * $0.02 / 1M * 3
