@@ -228,6 +228,10 @@ figure figcaption {
   border-radius: 0 0 var(--radius) var(--radius);
 }
 
+figure.center {
+  display: table;
+}
+
 ul,
 ol {
   margin-left: 4ch;
