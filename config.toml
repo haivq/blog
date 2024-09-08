@@ -91,3 +91,17 @@ copyright = "© Aperture Prometheus :: 2018 - 2024"
 [services]
   [services.disqus]
     shortname = 'apertureprometheus'
+
+[privacy]
+  [privacy.googleAnalytics]
+    respectDoNotTrack = true
+  [privacy.instagram]
+    simple = true
+  [privacy.twitter]
+    enableDNT = true
+    simple = true
+  [privacy.vimeo]
+    enableDNT = true
+    simple = true
+  [privacy.youtube]
+    privacyEnhanced = true
