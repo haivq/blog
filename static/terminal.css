@@ -228,7 +228,7 @@ figure figcaption {
   border-radius: 0 0 var(--radius) var(--radius);
 }
 
-figure.center {
+figure {
   display: table;
 }
 
