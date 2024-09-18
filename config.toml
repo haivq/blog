@@ -103,5 +103,3 @@ copyright = "© Aperture Prometheus :: 2018 - 2024"
   [privacy.vimeo]
     enableDNT = true
     simple = true
-  [privacy.youtube]
-    privacyEnhanced = true
