@@ -98,6 +98,8 @@ Kết quả, tôi thu được một layer có kích thước vỏn vẹn chỉ 
 
 # Phương pháp tạo ra layer ma quỷ
 
+> Lưu ý: Viêc can thiệp trực tiếp vào source code của thư viện là một việc rất tệ, dễ gây ra lỗi khi không tìm hiểu kĩ, mà kể cả tìm hiểu kĩ vẫn có thể gây lỗi như thường. Nếu có thể bạn hãy dùng cách khác thay vì phương pháp _ma quỷ_ này 💀💀💀.
+
 Vậy các bước để tạo ra một layer nhỏ có thể tóm gọn trong các bước sau đây:
 
 ```bash
@@ -143,8 +145,6 @@ Tóm tắt ngắn gọn lại, là ngày xưa nhiều người build NumPy/SciPy
 Như vậy là thông qua việc inspect thư viện Python đã install, tôi đã tiết kiệm rất nhiều dung lượng khi đưa chúng vào layer. Điều này làm tôi nhớ tới câu chuyện của NaughtyDog khi làm Crash Bandicoot, khi Andy Gavin đã tìm cách xoá bớt thư viện C của Sony đi để giải phóng RAM trên máy PS1 để họ có thể load được nhiều nội dung hơn trong game.
 
 {{< youtube id=izxXGuVL21o title="Cách Crash Bandicoot Hack Playstation 1" >}}
-
-> Lưu ý: Viêc can thiệp trực tiếp vào source code của thư viện là một việc rất tệ, dễ gây ra lỗi khi không tìm hiểu kĩ, mà kể cả tìm hiểu kĩ vẫn có thể gây lỗi như thường. Nếu có thể bạn hãy dùng cách khác thay vì phương pháp _ma quỷ_ này 💀💀💀.
 
 # Nguồn tham khảo
 
