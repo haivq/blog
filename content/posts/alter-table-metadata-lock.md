@@ -203,11 +203,11 @@ Nên nhớ rằng phương pháp nay quá đơn giản để giải quyết vấ
 
 ## QUAN TRỌNG NHẤT: Sử dụng transaction có trách nhiệm, luôn kết thúc transaction ngay sau khi không sử dụng nữa
 
-Dù có bao nhiêu phương pháp hay bao nhiêu công cụ đi nữa, tất cả chỉ là phao cứu hộ để giúp chúng ta cầm máu sau khi tự bắn vào chân mình, chứ không phải vì có _thuốc_ rồi rồi thì cứ mở transaction rồi mặc kệ nó sống chết ra sao thì ra. Phòng bệnh thì luôn tốt hơn chữa bệnh, và chữa bệnh lúc nào cũng dễ gây tác dụng phụ hoặc di chứng. Dưới đây là hai vấn đề dễ thấy nhất khi dùng connection pool và kill định kì transaction:
-- Với connection pool, lợi thế chính của nó là multiplexing các query vào với nhau, việc ta làm các câu query ảnh hưởng đến việc multiplexing, ví dụ như `INSERT` vào CSDL xong `SELECT` lại nó ra, khiến Connection Pool phải hold một Connection để xử lý vấn đề này. Việc thao tác với transaction một cách không cẩn thận sẽ dễ khiến tình trạng trên xảy ra. Vấn đề này đã được nêu trong [document của RDS Proxy](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/rds-proxy-managing.html#rds-proxy-pinning).
-- Với việc kill transaction định kì, thực sự việc làm này khá tiêu cực vì nếu có một thực sự có một transaction nào đó có thời gian idle cao, thì rõ ràng phương pháp này không ổn một chút nào.
+Dù có bao nhiêu phương pháp hay bao nhiêu công cụ đi nữa, tất cả chỉ là phao cứu hộ để giúp chúng ta cầm máu sau khi tự bắn vào chân mình, chứ không phải vì có _thuốc_ chữa rồi thì cứ mở transaction xả láng rồi mặc kệ nó sống chết ra sao thì ra. Phòng bệnh thì luôn tốt hơn chữa bệnh, và chữa bệnh lúc nào cũng bung bét và dễ có tác dụng phụ hoặc gây di chứng. Dưới đây là hai vấn đề dễ thấy nhất khi dùng connection pool và kill định kì transaction:
+- Với connection pool, lợi thế chính của nó là multiplexing (mux) nôm na là trộn nhiều câu query vào với nhau rồi chạy, nhưng không phải các query đều có thể mux. Việc ta query lẫn lộn vào với nhau hoàn toàn có thể khiến việc mux không thể thực hiện được. Ví dụ như `INSERT` vào CSDL xong `SELECT` lại nó ra, khiến Connection Pool phải hold riêng một Connection để `INSERT` còn câu `SELECT` sẽ phải chạy sau. Nếu dùng không khôn ngoan thì cuối cùng vẫn gây ra vấn đề hết connection như ở trên. Vấn đề này đã được nêu trong [document của RDS Proxy](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/rds-proxy-managing.html#rds-proxy-pinning). Mặc dù không khiến Database lăn ra chết nhưng cũng sẽ khiến hiệu suất query giảm đi đáng kể do bị bottleneck ở connection pool.
+- Với việc kill transaction định kì thực sự rất tiêu cực, không khác kết án kịch khung cho tội nhẹ chỉ vì trạng thái của thẩm phán không vui. Tưởng tưởng có một transaction nào đó thực sự có thời gian idle cao hơn bình thường mà ta kill mất, thì sẽ làm mất hết quá trình thực thi của transaction đó, gây ra những lỗi rất khó debug trong (lỗi ở CSDL luôn khó debug hơn lỗi code).
 
-Vậy nên luôn sử dụng transaction có trách nhiệm, kết thúc nó khi không dùng đến nữa. Như trong trường hợp của tôi sử dụng AWS Lambda và dùng thư viện `PyMySQL`, tôi luôn mặc định `ROLLBACK` các transaction sau khi kết thúc request như ví dụ dưới đây:
+Vậy nên hãy luôn sử dụng transaction có trách nhiệm, kết thúc nó khi không dùng đến nữa. Như trong trường hợp của tôi sử dụng AWS Lambda và dùng thư viện `PyMySQL`, tôi luôn mặc định `ROLLBACK` các transaction sau khi kết thúc request như ví dụ dưới đây:
 
 ```python
 conn = get_connection() # function kết nối db, giữ connection warm
@@ -250,13 +250,13 @@ def lambda_function(event, context):
     return {"statusCode": "200"}
 ```
 
-Ta có thể nhét decorator này vào trong Lambda Layer và tái sử dụng ở nhiều function khác nhau để tái sử dụng logic này.
+Ta có thể nhét decorator này vào trong Lambda Layer và tái sử dụng đoạn code này ở nhiều function khác nhau.
 
 # Kết luận
 
-Việc thay đổi cấu trúc bảng (hay chạy các query DDL nói chung) không phải là một công việc thường xuyên xảy ra, vì hiếm khi một cái CSDL đang chạy ngon lành tự dưng lại lôi ra để phẫu thuật, chỉnh sửa cả. Việc quản lý các transaction càng trở nên quan trọng hơn khi các câu query chồng chéo nhau trên các bảng ở các transaction khác nhau sẽ gây blocking nhau, kéo tụt hiệu năng của cả hệ thống xuống. Để giải quyết các vấn đề về chiến lược, tư duy khi query, thiết kế CSDL thì phải dành cho một người có trình độ cao hơn và kinh nghiệm dày dặn hơn, ví dụ như anh [Trần Quốc Huy](https://www.youtube.com/@tranquochuywecommit) với kênh YouTube rất nhiều kiến thức bổ ích về CSDL ở đây.
+Việc thay đổi cấu trúc bảng (hay chạy các query DDL nói chung) không phải là một công việc thường xuyên xảy ra, vì hiếm khi một cái CSDL đang chạy ngon lành tự dưng lại lôi ra để chỉnh sửa cả, mà có muốn sửa cũng phải chọn khung thời gian và chiến lược hợp lý (và có một chút mê tín). Việc quản lý các transaction càng trở nên quan trọng hơn khi các câu query chồng chéo nhau trên các bảng ở các transaction khác nhau sẽ gây blocking, kéo tụt hiệu năng của cả hệ thống xuống. Để giải quyết các vấn đề về chiến lược, tư duy khi query, thiết kế CSDL thì phải dành cho một người có trình độ cao hơn và kinh nghiệm dày dặn hơn, ví dụ như anh [Trần Quốc Huy](https://www.youtube.com/@tranquochuywecommit) với kênh YouTube rất nhiều kiến thức bổ ích về CSDL ở đây.
 
-Mong rằng bài viết này sẽ giúp bạn đọc giải quyết vấn đề, vì việc này đã tốn mất 1 ngày ngồi tra tài liệu MySQL và đào bới khắp StackOverflow để làm xong.
+Mong rằng bài viết này sẽ giúp bạn đọc giải quyết vấn đề, vì việc này đã tốn mất 1 ngày ngồi tra tài liệu MySQL và đào bới khắp StackOverflow để hiểu rõ ngọn nguồn,
 
 > Ghi chú: Một lần nữa, ChatGPT hay bất kì công cụ AI nào đều không giúp sức được cho tôi trong quá trình sửa lỗi này. Có thể do tôi sử dụng sai cách nên mong các chuyên gia _prompt engineer_ giúp tôi đưa ra những câu prompt hào sảng để nó chói qua tim mấy cái model LLM mà sinh ra những câu trả lời có thực sự hữu ích (đã thử phương pháp thêm _"please"_ và _"làm ơn"_ sau mỗi câu hỏi nhưng không được).
 
