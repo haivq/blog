@@ -22,6 +22,7 @@ tags:
 ---
 
 > Bài viết cập nhật về giải pháp này ở đây: [Kinh nghiệm sau khi dành gần một năm xử lý ảnh trên Cloudflare Workers](/posts/one-year-of-img-proc-on-cf-worker)
+
 > Code demo của bài blog được để ở [link GitHub này](https://github.com/aperture147/cf-workers-watermark)
 
 # Mở đầu câu chuyện
