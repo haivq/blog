@@ -22,9 +22,11 @@ tags:
     - optimization
 ---
 
+> Đọc phần trước của bài viết này tại đây: [Trải nghiệm khi xử lý ảnh trên Cloudflare Workers](/posts/image-transform-with-cf-workers-experience)
+
 # Mở đầu câu chuyện
 
-Tiếp tục bài viết [Trải nghiệm khi xử lý ảnh trên Cloudflare Workers](/posts/image-transform-with-cf-workers-experience), sau một năm sử dụng Cloudflare Workers để xử lý ảnh bằng thư viện [Photon](https://github.com/silvia-odwyer/photon), tôi đã rút ra được một vài kinh nghiệm và giới hạn của Cloudflare Workers khi sử dụng nó để làm các tác vụ nặng về tính toán.
+Tiếp tục nội dung của bài viết [cũ](/posts/image-transform-with-cf-workers-experience), sau một năm sử dụng Cloudflare Workers để xử lý ảnh bằng thư viện [Photon](https://github.com/silvia-odwyer/photon), tôi đã rút ra được một vài kinh nghiệm và giới hạn của Cloudflare Workers khi sử dụng nó để làm các tác vụ nặng về tính toán.
 
 # Kích thước bộ nhớ của Workers khá giới hạn
 
