@@ -48,7 +48,7 @@ Cũng như đã nêu trong [document ở trên](https://developers.cloudflare.co
     src="/posts/one-year-of-img-proc-on-cf-worker/cf-metric-1.png"
     position="center"
     alt="Metric trên Cloudflare trong 2 tuần"
-    title="Metric trên Cloudflare trong 2 tuần" >}}
+    caption="Metric trên Cloudflare trong 2 tuần" >}}
 
 Như thống kê ở trên thì median CPU time của code chạy worker tận 148ms, vượt quá 10ms của Workers Free Plan. Vì thế bắt buộc ta phải mua Cloudflare Workers Paid Plan ($5/tháng) thì mới có đủ CPU mà chạy các job xử lý ảnh. Nhưng để an toàn thì ta nên giới hạn lại CPU Time limit lại trong `wrangler.jsonc` để tránh các trường hợp 1 worker dùng quá nhiều CPU:
 
@@ -73,7 +73,7 @@ Thỉnh thoảng sẽ có những tấm ảnh khi xử lý trên Cloudflare Work
     src="/posts/one-year-of-img-proc-on-cf-worker/unreachable-wasm-error.png"
     position="center"
     alt="Lỗi `unreachable` do code WASM gây ra"
-    title="Lỗi `unreachable` do code WASM gây ra" >}}
+    caption="Lỗi `unreachable` do code WASM gây ra" >}}
 
 Vì lỗi năm trong code WASM đã compile ra, nên việc debug đòi hỏi tôi phải build lại `Photon-rs` từ đầu và debug trong code thư viện Rust. Nhưng vì số lượng ảnh bị lỗi này cũng ít, thay vì trả ra lỗi 500, ta có thể handle nó thông qua exception chung của WASM như sau:
 

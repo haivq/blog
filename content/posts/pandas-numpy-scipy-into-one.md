@@ -74,7 +74,7 @@ Sau rất nhiều bao Sài Gòn bạc và đào xới các thể loại GitHub I
     src="/posts/pandas-numpy-scipy-into-one/github-issue.png"
     position="center"
     alt="Ý tưởng clean up repo SciPy trên GitHub Issue"
-    title="Ý tưởng clean up repo SciPy trên GitHub Issue"
+    caption="Ý tưởng clean up repo SciPy trên GitHub Issue"
     attr="keithrozario/Klayers"
     attrlink="https://github.com/keithrozario/Klayers/issues/360#issuecomment-1893493985"
     link="https://github.com/keithrozario/Klayers/issues/360#issuecomment-1893493985">}}
@@ -91,7 +91,7 @@ Kết quả, tôi thu được một layer có kích thước vỏn vẹn chỉ 
     src="/posts/pandas-numpy-scipy-into-one/final-size.png"
     position="center"
     alt="Kết quả sau khi cleanup"
-    title="Kết quả sau khi cleanup"
+    caption="Kết quả sau khi cleanup"
     attr="blog.haivq.com" >}}
 
 # Phương pháp tạo ra layer ma quỷ
@@ -130,7 +130,7 @@ Như vậy là tôi đã hoàn thành việc giảm kích thước layer. Và sa
     src="/posts/pandas-numpy-scipy-into-one/explanation.png"
     position="center"
     alt="Lý do thư mục `tests` được đưa vào trong thư viện"
-    title="Lý do thư mục `tests` được đưa vào trong thư viện"
+    caption="Lý do thư mục `tests` được đưa vào trong thư viện"
     attr="keithrozario/Klayers"
     attrlink="https://github.com/keithrozario/Klayers/issues/360#issuecomment-2076527549"
     link="https://github.com/keithrozario/Klayers/issues/360#issuecomment-2076527549">}}
@@ -141,7 +141,7 @@ Tóm tắt ngắn gọn lại, là ngày xưa nhiều người build NumPy/SciPy
 
 Như vậy là thông qua việc inspect thư viện Python đã install, tôi đã tiết kiệm rất nhiều dung lượng khi đưa chúng vào layer. Điều này làm tôi nhớ tới câu chuyện của NaughtyDog khi làm Crash Bandicoot, khi Andy Gavin đã tìm cách xoá bớt thư viện C của Sony đi để giải phóng RAM trên máy PS1 để họ có thể load được nhiều nội dung hơn trong game.
 
-{{< youtube id=izxXGuVL21o title="Cách Crash Bandicoot Hack Playstation 1" >}}
+{{< youtube id=izxXGuVL21o caption="Cách Crash Bandicoot Hack Playstation 1" >}}
 
 # Nguồn tham khảo
 

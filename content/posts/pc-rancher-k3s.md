@@ -39,7 +39,7 @@ Kubernetes gần đây đã trở thành một công nghệ nổi tiếng. Khôn
     style="width:300px"
     position="center"
     alt="MicroK8s"
-    title="MicroK8s"
+    caption="MicroK8s"
     attr="MicroK8s"
     attrlink="https://microk8s.io"
     link="https://microk8s.io" >}}
@@ -69,7 +69,7 @@ Nếu bạn đã làm quen được với microk8s, tôi nghĩ bạn có thể t
     style="width:300px"
     position="center"
     alt="minikube"
-    title="minikube"
+    caption="minikube"
     attr="minikube"
     attrlink="https://minikube.sigs.k8s.io/docs/"
     link="https://minikube.sigs.k8s.io/docs/" >}}
@@ -100,7 +100,7 @@ Vậy nên theo tôi thì minikube không tối ưu để chạy thực tế vì
     style="width:300px"
     position="center"
     alt="kubeadm"
-    title="kubeadm"
+    caption="kubeadm"
     attr="kubeadm"
     attrlink="https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/"
     link="https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/" >}}
@@ -128,7 +128,7 @@ Tóm lại, kubeadm rất tốt, nhưng hoàn toàn không phù hợp với ai k
     position="center"
     style="width:300px"
     alt="k3s"
-    title="k3s"
+    caption="k3s"
     attr="k3s"
     attrlink="https://k3s.io"
     link="https://k3s.io" >}}

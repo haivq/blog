@@ -83,7 +83,7 @@ Lấy ví dụ như Snowflake của Discord sẽ như sau:
     src="/posts/id-generating/discord-snowflake.png"
     position="center"
     alt="Discord Snowflake"
-    title="Discord Snowflake"
+    caption="Discord Snowflake"
     attr="Discord Development Portal"
     attrlink="https://discord.com/developers/docs/reference#convert-snowflake-to-datetime"
     link="https://discord.com/developers/docs/reference#convert-snowflake-to-datetime">}}
@@ -99,7 +99,7 @@ Hoặc như Snowflake của Baidu:
     src="/posts/id-generating/baidu-snowflake.png"
     position="center"
     alt="Baidu Snowflake"
-    title="Baidu Snowflake"
+    caption="Baidu Snowflake"
     attr="Baidu uid-generator"
     attrlink="https://github.com/baidu/uid-generator"
     link="https://github.com/baidu/uid-generator">}}
