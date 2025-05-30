@@ -14,6 +14,7 @@ tags:
     - experience
     - python
     - cpp
+draft: true
 ---
 
 # Mở đầu câu chuyện
