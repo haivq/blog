@@ -75,7 +75,6 @@ Sau rất nhiều bao Sài Gòn bạc và đào xới các thể loại GitHub I
     position="center"
     alt="Ý tưởng clean up repo SciPy trên GitHub Issue"
     title="Ý tưởng clean up repo SciPy trên GitHub Issue"
-    caption="Ý tưởng clean up repo SciPy trên GitHub Issue"
     attr="keithrozario/Klayers"
     attrlink="https://github.com/keithrozario/Klayers/issues/360#issuecomment-1893493985"
     link="https://github.com/keithrozario/Klayers/issues/360#issuecomment-1893493985">}}
@@ -93,8 +92,7 @@ Kết quả, tôi thu được một layer có kích thước vỏn vẹn chỉ 
     position="center"
     alt="Kết quả sau khi cleanup"
     title="Kết quả sau khi cleanup"
-    caption="Kết quả sau khi cleanup"
-    attr="blog.haivq.com">}}
+    attr="blog.haivq.com" >}}
 
 # Phương pháp tạo ra layer ma quỷ
 
@@ -133,7 +131,6 @@ Như vậy là tôi đã hoàn thành việc giảm kích thước layer. Và sa
     position="center"
     alt="Lý do thư mục `tests` được đưa vào trong thư viện"
     title="Lý do thư mục `tests` được đưa vào trong thư viện"
-    caption="Lý do thư mục `tests` được đưa vào trong thư viện"
     attr="keithrozario/Klayers"
     attrlink="https://github.com/keithrozario/Klayers/issues/360#issuecomment-2076527549"
     link="https://github.com/keithrozario/Klayers/issues/360#issuecomment-2076527549">}}

@@ -115,8 +115,7 @@ cf_image_transform_cost = 8M * ($0.5 / 1k) * 3
     src="/posts/image-transform-with-cf-workers-experience/shotgun-bill.gif"
     position="center"
     alt="$12000 mỗi tháng?? Một số tiền quá lớn!"
-    title="$12000 mỗi tháng???? Một số tiền quá lớn!"
-    caption="$12000 mỗi tháng???? Một số tiền quá lớn!" >}}
+    title="$12000 mỗi tháng???? Một số tiền quá lớn!" >}}
 
 Có vẻ hướng sử dụng Cloudflare Image Transformation là quá đắt... Ngay cả việc sử dụng Cloudflare Images cũng nói luôn rẳng việc chứa 20 variants [không bao gồm việc vẽ thêm watermark](https://developers.cloudflare.com/images/pricing/#images-stored), vậy nên ta nên chọn phương pháp khác rẻ tiền hơn: Sử dụng thư viện [@cf-wasm/photon](https://www.npmjs.com/package/@cf-wasm/photon) để tối ưu ảnh. Việc này sẽ ảnh hưởng tới việc sử dụng CPU time, và ta sẽ tính nó vào phần sau. 
 
@@ -195,8 +194,7 @@ Sau khi gọi liên tục vào server dev, tôi đo được mỗi request sẽ 
     src="/posts/image-transform-with-cf-workers-experience/request-time.png"
     position="center"
     alt="Thời gian cho một request"
-    title="Thời gian cho một request"
-    caption="Thời gian cho một request" >}}
+    title="Thời gian cho một request" >}}
 0.5s - 2s là quá lâu để serve ảnh, vì thế ta cần phải xem sâu hơn các yếu tố ảnh hưởng tới thời gian lấy ảnh. Tôi đã liệt kê được 3 hành động (theo thứ tự trong code) ảnh hưởng tới thời gian request ở đây:
 
 1. Việc tải ảnh từ host ngoài
@@ -242,8 +240,7 @@ Sau khi thực hiện bước cache, ta thử gọi lại vào URL đã nêu ở
     src="/posts/image-transform-with-cf-workers-experience/request-time-cached.png"
     position="center"
     alt="Thời gian sau khi cache"
-    title="Thời gian sau khi cache"
-    caption="Thời gian sau khi cache" >}}
+    title="Thời gian sau khi cache" >}}
 
 Giờ, ta deploy lên Cloudflare. Để tận dụng Cache API, ta cần phải có 1 custom domain cho nó. Mở file `wrangler.toml` và thêm dòng sau để bật custom domain của bạn (bắt buộc domain phải đang có nameserver của Cloudflare):
 
@@ -302,8 +299,7 @@ Sau khoảng 2 tiếng chạy với 4k requests, ta thu được thống kê nh�
     src="/posts/image-transform-with-cf-workers-experience/cf-dashboard-result.png"
     position="center"
     alt="Kết quả thu được trên Cloudflare"
-    title="Kết quả thu được trên Cloudflare"
-    caption="Kết quả thu được trên Cloudflare" >}}
+    title="Kết quả thu được trên Cloudflare" >}}
 
 Mặc dù p50, p75 và p99 có vẻ khá cao, nhưng ta phải xét đến trường hợp ban đầu mất thời gian để cache ảnh vào Cache API. Sau một thời gian khi tất cả ảnh đã nằm trong cache, các giá trị p50, p75, p99 sẽ hội tụ gần như nhau khoảng 1ms. Với giá thành hiện tại $0.02 cho mỗi 1M mCPUs, ta có thể tạm tính theo giả định nhau sau (gấp 3 số lượng request do Cache của Cloudflare không sync qua các PoP):
 
@@ -323,8 +319,7 @@ Tất nhiên, không có bữa trưa nào là miễn phí cả. Bây giờ chún
     src="/posts/image-transform-with-cf-workers-experience/cf-dashboard-wall-time.png"
     position="center"
     alt="p50, p75 và p99 khá cao"
-    title="p50, p75 và p99 khá cao"
-    caption="p50, p75 và p99 khá cao" >}}
+    title="p50, p75 và p99 khá cao" >}}
 
 Như ta thấy, khoảng thời gian ban đầu khi đưa optimize ảnh và đưa vào cache, tới 50% số request sẽ mất tới 400ms. Nếu trang của người dùng chỉ có 4 5 cái ảnh thì không sao, nhưng nếu trang của họ phần lớn là ảnh thì sẽ tạo ra trải nghiệm rất tệ cho người dùng. Bắt buộc ta phải có một giải pháp precache cho ảnh, nhưng tạo chi phí upfront cost như vậy không hề rẻ chút nào.
 

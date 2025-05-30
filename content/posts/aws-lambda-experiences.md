@@ -50,7 +50,6 @@ Thông qua các thành phần trên, tôi có thể liệt kê sơ qua các tài
     position="center"
     alt="Topology hệ thống"
     title="Topology hệ thống"
-    caption="Topology hệ thống"
     attr="Aperture"
     attrlink="https://blog.haivq.com"
     link="/aws-lambda-experiences/design-topology.drawio">}}
@@ -66,7 +65,6 @@ Dưới đây là biểu đồ trạng thái sơ lược flow chạy Lambda khi 
     position="center"
     alt="Lambda Execution Flow"
     title="Lambda Execution Flow"
-    caption="Lambda Execution Flow"
     attr="Aperture"
     attrlink="https://blog.haivq.com"
     link="/posts/aws-lambda-experiences/lambda-execution-flow.drawio">}}
@@ -163,7 +161,6 @@ Như ở công ty hiện tại, tôi kết hợp cả hai phương án trên đ�
     position="center"
     alt="Database Connection Giảm"
     title="Database Connection Giảm"
-    caption="Database Connection Giảm"
     attr="Aperture"
     attrlink="https://blog.haivq.com" >}}
 
@@ -178,7 +175,6 @@ Chắc hẳn bạn cũng để ý rằng, một khi Lambda đã nhập vào VPC 
     position="center"
     alt="Ví dụ về network topology chưa tốt"
     title="Ví dụ về network topology chưa tốt"
-    caption="Ví dụ về network topology chưa tốt"
     attr="Aperture"
     attrlink="https://blog.haivq.com" >}}
 
@@ -194,7 +190,6 @@ Ta có thể thấy bất cập của mô hình này như sau:
     position="center"
     alt="Ví dụ về network topology ổn"
     title="Ví dụ về network topology ổn"
-    caption="Ví dụ về network topology ổn"
     attr="Aperture"
     attrlink="https://blog.haivq.com" >}}
 

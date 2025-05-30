@@ -36,7 +36,6 @@ Minh hoạ sẽ như sau:
     position="center"
     alt="Full encryption"
     title="Full encryption"
-    caption="Full encryption"
     attr="Full encryption"
     attrlink="https://developers.cloudflare.com/ssl/origin-configuration/ssl-modes/full/"
     link="https://developers.cloudflare.com/ssl/origin-configuration/ssl-modes/full/">}}

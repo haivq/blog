@@ -34,8 +34,7 @@ Câu query này lâu một cách bất thường mãi không thấy xong trong k
     src="/posts/alter-table-metadata-lock/waiting-for-table-metadata-lock.png"
     position="center"
     alt="Một loạt query đang đợi metadata lock"
-    title="Một loạt query đang đợi metadata lock"
-    caption="Một loạt query đang đợi metadata lock" >}}
+    title="Một loạt query đang đợi metadata lock" >}}
 
 Tôi để câu query này 15 phút, nhưng càng ngày càng có nhiều query bị block lại. Tức là không chỉ mình bảng mà tôi đang thao tác bị lock, mà tất cả các bảng con có foreign key trỏ tới bảng này cũng bị lock theo luôn. Điều này rất không ổn với một hệ thống đang chạy production, nhất là khi bảng con đang bị liên luỵ đều là các bảng tối quan trọng, được sử dụng rất nhiều trong hệ thống. Locking 15 phút sẽ chết rất nhiều các function Lambda vốn chỉ có giới hạn thời gian sống tối đa 15 phút. Không còn cách nào khác, tôi phải ngừng câu query `ALTER TABLE` ở trên và tìm giải pháp khác.
 
@@ -114,8 +113,7 @@ Vậy ta có sơ đồ đơn giản sau để mô tả vấn đề đợi dắt 
     src="/posts/alter-table-metadata-lock/alter-table-metadata-lock.drawio.png"
     position="center"
     alt="`ALTER TABLE` diagram"
-    title="`ALTER TABLE` diagram"
-    caption="`ALTER TABLE` diagram" >}}
+    title="`ALTER TABLE` diagram">}}
 
 ## Việc gì ngăn cản `metadata lock` xảy ra?
 
@@ -125,8 +123,7 @@ Trước hết, tôi thử chạy `SHOW FULL PROCESSLIST` xem có câu query nà
     src="/posts/alter-table-metadata-lock/show-full-processlist.png"
     position="center"
     alt="SHOW FULL PROCESSLIST hiển thị không có query nào đang chạy cả"
-    title="SHOW FULL PROCESSLIST hiển thị không có query nào đang chạy cả"
-    caption="SHOW FULL PROCESSLIST hiển thị không có query nào đang chạy cả" >}}
+    title="SHOW FULL PROCESSLIST hiển thị không có query nào đang chạy cả" >}}
 
 Nhưng một transaction tồn tại không có nghĩa là phải có query xảy ra trong nó. Có thể transaction đang được để rảnh nhưng chưa có ai `ROLLBACK`, `COMMIT` transaction hay session chứa transaction đó chưa bị kill. Do đó ta cần query vào bảng `information_schema.innodb_trx`, liệt kê tất cả các transaction đang chạy:
 
@@ -141,8 +138,7 @@ Ta sẽ có kết quả như sau:
     src="/posts/alter-table-metadata-lock/innodb-trx.png"
     position="center"
     alt="Danh sách các transaction trong InnoDB"
-    title="Danh sách các transaction trong InnoDB"
-    caption="Danh sách các transaction trong InnoDB" >}}
+    title="Danh sách các transaction trong InnoDB" >}}
 
 Như ở bảng trên, ta thấy có rất nhiều các transaction đang chạy. Nếu một trong các transaction này đã/đang can thiệp vào bảng cha đang cần `ALTER TABLE` hoặc một trong các bảng con của nó, các query về sau mà liên quan tới bảng cha và các bảng con trong lúc đang `ALTER TABLE` bảng cha cũng sẽ bị block lại. Vậy để cho câu query `ALTER TABLE` có thể chạy được, ta phải kết thúc transaction đang bị block.
 

@@ -42,8 +42,7 @@ Cũng như đã nêu trong [document ở trên](https://developers.cloudflare.co
     src="/posts/one-year-of-img-proc-on-cf-worker/cf-metric-1.png"
     position="center"
     alt="Metric trên Cloudflare trong 2 tuần"
-    title="Metric trên Cloudflare trong 2 tuần"
-    caption="Metric trên Cloudflare trong 2 tuần" >}}
+    title="Metric trên Cloudflare trong 2 tuần" >}}
 
 Như thống kê ở trên thì median CPU time của code chạy worker tận 148ms, vượt quá 10ms của Workers free. Vì vậy bắt buộc ta phải nâng lên gói paid và giới hạn CPU Time limit lại trong `wrangler.jsonc` như sau:
 
@@ -68,8 +67,7 @@ Thỉnh thoảng sẽ có những tấm ảnh khi xử lý trên Cloudflare Work
     src="/posts/one-year-of-img-proc-on-cf-worker/unreachable-wasm-error.png"
     position="center"
     alt="Lỗi `unreachable` do code WASM gây ra"
-    title="Lỗi `unreachable` do code WASM gây ra"
-    caption="Lỗi `unreachable` do code WASM gây ra" >}}
+    title="Lỗi `unreachable` do code WASM gây ra" >}}
 
 Chỉ có một số ảnh là gặp phải lỗi như thế này. Vì lỗi năm trong code WASM đã compile ra, nên chỉ còn cách debug trong code thư viện Rust. Thay vì trả ra lỗi 500, ta có thể handle nó thông qua exception chung của WASM như sau:
 

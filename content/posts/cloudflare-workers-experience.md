@@ -42,7 +42,6 @@ Với một người có kinh tế eo hẹp, không được funding vốn từ 
     position="center"
     alt="Khi bạn cố gắng xây hệ thống có uptime cao trên AWS"
     title="Khi bạn cố gắng xây hệ thống có uptime cao trên AWS"
-    caption="Khi bạn cố gắng xây hệ thống có uptime cao trên AWS"
     attr="Fireship.io"
     attrlink="https://youtu.be/ZzI9JE0i6Lc?t=22"
     link="https://youtu.be/ZzI9JE0i6Lc?t=22">}}
