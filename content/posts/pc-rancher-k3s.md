@@ -35,7 +35,7 @@ Kubernetes gần đây đã trở thành một công nghệ nổi tiếng. Khôn
 ---
 
 {{< figure 
-    src="/posts/pc-rancer-k3s/k3s.png"
+    src="/posts/pc-rancher-k3s/k3s.png"
     style="width:300px"
     position="center"
     alt="MicroK8s"
@@ -65,7 +65,7 @@ Nếu bạn đã làm quen được với microk8s, tôi nghĩ bạn có thể t
 ---
 
 {{< figure 
-    src="/posts/pc-rancer-k3s/minikube.png"
+    src="/posts/pc-rancher-k3s/minikube.png"
     style="width:300px"
     position="center"
     alt="minikube"
@@ -96,7 +96,7 @@ Vậy nên theo tôi thì minikube không tối ưu để chạy thực tế vì
 ---
 
 {{< figure 
-    src="/posts/pc-rancer-k3s/kubeadm.png"
+    src="/posts/pc-rancher-k3s/kubeadm.png"
     style="width:300px"
     position="center"
     alt="kubeadm"
@@ -124,7 +124,7 @@ Tóm lại, kubeadm rất tốt, nhưng hoàn toàn không phù hợp với ai k
 ---
 
 {{< figure 
-    src="/posts/pc-rancer-k3s/k3s.png"
+    src="/posts/pc-rancher-k3s/k3s.png"
     position="center"
     style="width:300px"
     alt="k3s"
