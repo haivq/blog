@@ -91,6 +91,8 @@ copyright = "© Aperture Prometheus :: 2018 - 2025"
 [services]
   [services.disqus]
     shortname = 'apertureprometheus'
+  [services.googleAnalytics]
+    id = 'G-WRWZ96NN7H'
 
 [privacy]
   [privacy.googleAnalytics]
