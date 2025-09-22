@@ -72,17 +72,21 @@ copyright = "© Aperture Prometheus :: 2018 - 2025"
       email = "me@haivq.com"
     [languages.vi.menu]
       [[languages.vi.menu.main]]
-        identifier = "rss"
-        name = "RSS"
-        url = "/index.xml"
-      [[languages.vi.menu.main]]
         identifier = "about"
         name = "Thông tin"
         url = "/about"
       [[languages.vi.menu.main]]
+        identifier = "categories"
+        name = "Danh mục"
+        url = "/categories"
+      [[languages.vi.menu.main]]
         identifier = "thoughts"
         name = "Suy nghĩ của tôi"
         url = "https://thoughts.haivq.com"
+      [[languages.vi.menu.main]]
+        identifier = "rss"
+        name = "RSS"
+        url = "/index.xml"
       
 
 [markup.goldmark.renderer]
