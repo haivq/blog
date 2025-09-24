@@ -1,14 +1,17 @@
 ---
-title: "Sử dụng `libopenshot` để render video"
+title: "Sử dụng `libopenshot` thay cho `moviepy` để render video"
 author: "Aperture"
 date: "2025-03-12T14:37:11+07:00"
 categories:
     - video
     - video rendering
+    - libopenshot
+    - moviepy
 tags:
     - video
     - video rendering
     - moviepy
+    - ffmpeg
     - openshot
     - libopenshot
     - experience
