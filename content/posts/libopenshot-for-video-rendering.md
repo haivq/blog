@@ -1,7 +1,7 @@
 ---
 title: "Sử dụng `libopenshot` để render video"
 author: "Aperture"
-date: "2025-08-12T14:37:11+07:00"
+date: "2025-03-12T14:37:11+07:00"
 categories:
     - video
     - video rendering
