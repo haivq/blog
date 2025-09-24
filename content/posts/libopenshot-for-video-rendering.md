@@ -1,7 +1,7 @@
 ---
 title: "Sử dụng `libopenshot` để render video"
 author: "Aperture"
-date: "2025-03-12T14:37:11+07:00"
+date: "2025-08-12T14:37:11+07:00"
 categories:
     - video
     - video rendering
@@ -56,4 +56,4 @@ Với nhiều người thì những nhược điểm của `libopenshot` có th�
 
 # Tóm lại
 
-Sau khi deliver ứng dụng render cho khách hàng, họ rất bất ngờ khi code `libopenshot` render rất nhanh (chỉ mất 8-20s trong khi dùng `moviepy` sẽ mất 10-120s). Nhưng khi họ thấy code của tôi thì có vẻ họ không hài lòng cho lắm, có vẻ nhanh thôi là chưa đủ với họ, mà cần phải dễ hiểu và phổ biến nữa. Kết thúc project thì họ có thể render cả đống video trên mạng và tích hợp vào hạ tầng render video Shorts/Reels/TikTok. Câu chuyện này làm tôi suy nghĩ, liệu nhanh hơn có tốt?
+Sau khi deliver ứng dụng render cho khách hàng, họ rất bất ngờ khi code `libopenshot` render rất nhanh (chỉ mất 8-20s trong khi dùng `moviepy` sẽ mất 10-120s). Nhưng khi họ thấy code của tôi thì có vẻ họ không hài lòng cho lắm, dù nhanh hơn nhiều, giúp họ giảm TCO nhưng có vẻ nhanh và rẻ thôi là chưa đủ với họ, mà cần phải dễ hiểu, phổ biến và dễ extend nữa, mà những điều này thì cần phải có một chút hiểu biết về C++ mới được. Kết thúc project thì họ có thể render cả đống video trên mạng và tích hợp vào hạ tầng render video Shorts/Reels/TikTok. Câu chuyện này làm tôi suy nghĩ, liệu nhanh hơn có tốt, hay ưu tiên feature trước mới là điều quan trọng nhất?
