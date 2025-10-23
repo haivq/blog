@@ -65,20 +65,20 @@ Tải OpenShift xuống từ Red Hat và cài nó vào máy. Đầu tiên ta [đ
 Tải OpenShift local về ta cài đặt vào máy, cài xong máy có thể bắt restart. Restart xong, mở Powershell (hay Terminal) và chạy `crc setup` để tải image của OpenShift xuống máy. Script cũng sẽ bật Hyper-V nếu chưa có.
 
 {{< figure 
-    src="/posts/openshift-demo-on-local-machine/download-openshift.png"
+    src="/posts/openshift-demo-on-local-machine/setup-openshift.png"
     position="center"
     alt="Setup OpenShift"
     caption="Setup OpenShift">}}
 
 Sau khi setup xong ta cũng tắt máy đi bật lại cho chắc. Sau bước này thì ta chuyển sang bước 2: thực sự bật OpenShift lên và thao tác.
 
-## Config OpenShift sau khi cài đặt ban đầu:
+## Config OpenShift sau bước chuẩn bị ban đầu:
 
-Trước tiên ta phải config lại OpenShift trước khi chạy. Có những mục sau cần config lại:
-- Chỉnh số nhân CPU, tốt nhất là 4 vCore trở lên: `crc config set cpus {số vCore}`
-- Chỉnh dung lượng RAM, ít nhất là 16G ram trở lên: `crc config set memory {dung lượng RAM theo MiB, nhớ là bội số của 2}`
+Trước tiên ta phải config lại OpenShift trước khi bật. Có những mục sau cần config lại:
+- Chỉnh số nhân CPU, tốt nhất là 4 vCore trở lên cho đỡ lag vì OpenShift có rất nhiều component bên trong: `crc config set cpus {số vCore}`
+- Chỉnh dung lượng RAM, ít nhất là 16G ram trở lên (lý do tương tự như nhân CPU ở trên): `crc config set memory {dung lượng RAM theo MiB, nhớ là bội số của 2}`
 - Bật cluster monitoring, nếu không sẽ không có monitoring cho cluster local này: `crc config set enable-cluster-monitoring true`
-- Chỉnh dung lượng ổ cứng máy ảo, vì mặc định image của OpenShift chỉ có khoảng 30-32Gi thôi, phải tăng lên thì mới chạy ổn được, tốt nhất nên để khoảng 50Gi: `crc config set disk-size {dung lượng ổ cứng theo Gi}`
+- Chỉnh dung lượng ổ cứng máy ảo, vì mặc định image của OpenShift chỉ có khoảng 30-32Gi thôi, phải tăng lên thì mới không bị dính lỗi `disk pressure`, tốt nhất nên để khoảng 40-50Gi: `crc config set disk-size {dung lượng ổ cứng theo Gi}`
 
 Sau khi setup xong ta kiểm tra lại bằng lệnh `crc config view`:
 
@@ -88,7 +88,7 @@ Sau khi setup xong ta kiểm tra lại bằng lệnh `crc config view`:
     alt="Config của OpenShift"
     caption="Config của OpenShift">}}
 
-Tạm thời config như thế là được rồi, ta sẽ bật OpenShift lên và dùng
+Tạm thời config như thế là được rồi, ta sẽ bật OpenShift lên và dùng.
 
 ## Bật OpenShift local:
 
