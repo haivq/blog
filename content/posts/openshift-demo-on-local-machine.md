@@ -38,9 +38,9 @@ Nói vui vui rằng, OpenShift thực chất chỉ là k8s thêm nhiều gia v�
 
 1. OpenShift bắt buộc phải cài trên RHEL, nhân Linux mà yêu cầu đầu tiên và hàng đầu phải là security. Chính vì phải cài trên RHEL nên OpenShift kế thừa toàn bộ những tính năng security mà RHEL đã có. Chính vì thế mà RHEL sẽ luôn chậm hơn Linux vài phiên bản.
 
-2. OpenShift không chỉ có mỗi k8s, mà nó là cả một giải pháp để triển khai, giám sát, theo dõi, cảnh báo, thậm chí có sẵn cả frontend luôn. K8s chay không bao hàm việc CI/CD, monitoring và alerting cũng phải cài thêm. Cũng chính vì thế mà yêu cầu phần cứng của OpenShift cũng tương đối cao.
+2. OpenShift không chỉ có mỗi k8s, mà nó là cả một giải pháp để triển khai, giám sát, theo dõi, cảnh báo, thậm chí có sẵn cả frontend luôn. K8s chay không bao hàm việc CI/CD; monitoring và alerting cũng phải cài thêm mới có. Cũng chính vì thế mà yêu cầu phần cứng của OpenShift cũng tương đối cao.
 
-Nếu như ngày trước tôi muốn sử dụng k8s mà muốn kèm theo các yếu tố trên, thì tôi phải cài thêm Rancher, cắm Rancher vào cái cluster k8s đã có, sau đó từ cái Rancher đó tôi add các helm chart vào rồi cài một loạt monitoring lên. Nhưng OpenShift thì bundle hết tất cả vào một gói luôn.
+Nếu như ngày trước tôi muốn sử dụng k8s mà muốn kèm theo các yếu tố trên, thì tôi thường dùng giải pháp của Rancher, tạo một cluster k8s chỉ để chứa Rancher, sau đó kết nối Rancher vào cái cluster k8s đã có bằng cách cài cattle agent lên đó, sau đó từ giao diện của Rancher đó tôi add các helm chart vào rồi cài một loạt các package lên. Nhưng OpenShift thì bundle hết tất cả vào một gói luôn.
 
 # Cài OpenShift ra sao?
 
