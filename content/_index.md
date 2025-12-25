@@ -4,9 +4,9 @@ framed: true
 
 # Xin chào! 👋👋👋
 
-Tôi là Hải (Aperture) Vũ, DevOps và Backend Developer tại Maxflowtech/Caterpillar.
+Tôi là Hải (Aperture) Vũ, Technical Account Manager tại Red Hat.
 
-Làm việc với AWS ban ngày, nghịch ngợm và nghiên cứu Cloudflare ban đêm.
+Làm việc cùng khách hàng với OpenShift/OpenStack ban ngày, nghịch ngợm và nghiên cứu Cloudflare/Homelab ban đêm.
 
 Đang trên đường tích cóp kinh nghiệm để thiết kế một hệ thống scale khủng mà tiết kiệm và có đủ tiền để mua một căn nhà dưỡng già bên bờ biển.
 

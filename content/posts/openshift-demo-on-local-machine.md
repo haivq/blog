@@ -128,6 +128,8 @@ Khi vào được OpenShift màn hình Home Dashboard sẽ như sau:
 
 Mong bài viết này có thể giúp ích cho bạn để setup 1 môi trường OpenShift local trên homelab của bạn. Mong rằng tôi có thể pass phỏng vấn và trở thành một Red Hatter chính hiệu!
 
+> Cập nhật: Tôi đã nhận được offer làm việc tại Red Hat!
+
 # Tài liệu tham khảo
 
 - [How to install Red Hat OpenShift Local on your laptop](https://www.redhat.com/en/blog/install-openshift-local) / [Archive](https://web.archive.org/web/20250924055521/https://www.redhat.com/en/blog/install-openshift-local):
