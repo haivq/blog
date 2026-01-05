@@ -335,7 +335,7 @@ Khá là tiếc rằng, với cái giá `$220` một tháng so với `$21`, tứ
 
 # Tóm lại
 
-Đây là bài viết nói về suy nghĩ của tôi khi cần resize ảnh ở trên hệ thống serverless của Cloudflare. Mặc dù về giá không được rẻ cho lắm, nhưng về độ tiện lợi (không phải quản lý VPS) hơn các giải pháp mà tôi đã biết. Có lẽ về khoản watermark, ta nên code 1 dòng JS để cho browser tự dán lên ảnh và mặc kệ đời ra sao thì ra, giống như cách mà Shopee đang dán ảnh quảng cáo sale vào ảnh sản phẩm, rồi tập trung não để xây một sản phẩm có giá trị cốt lõi to hơn nằm ở phần khác chứ không chỉ nằm trên vài tấm ảnh.
+Đây là bài viết nói về suy nghĩ của tôi khi cần resize ảnh ở trên hệ thống serverless của Cloudflare. Mặc dù về giá không được rẻ cho lắm, nhưng về độ tiện lợi thì giải pháp này hơn các giải pháp mà tôi đã biết (không phải quản lý VPS, không tốn chi phí bandwidth qua CDN). Nhưng thật lòng thì, có lẽ về khoản watermark, ta nên code 1 dòng JS để cho browser tự dán lên ảnh và mặc kệ đời ra sao thì ra, giống như cách mà Shopee đang dán ảnh quảng cáo sale vào ảnh sản phẩm, rồi tập trung não để xây một sản phẩm có giá trị cốt lõi to hơn nằm ở phần khác chứ không chỉ nằm trên vài tấm ảnh.
 
 # Tư liệu tham khảo
 
