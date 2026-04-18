@@ -36,7 +36,7 @@ Tôi có 1 tuần để chuẩn bị, tìm hiểu. Với background Kubernetes r
 
 Nói vui vui rằng, OpenShift thực chất chỉ là k8s thêm nhiều gia vị, vì như tôi tìm hiểu ban đầu thì lõi bên trong của OpenShift là k8s. Nhưng sau khi tìm hiểu sâu hơn, thì tôi nhận ra một vài điều sau:
 
-1. OpenShift bắt buộc phải cài trên RHCOS, một kernel kế thừa từ RHEL (hoặc bạn có thể cài thẳng trên RHEL nếu muốn), nhân Linux mà yêu cầu đầu tiên và hàng đầu phải là security. Chính vì phải cài trên RHCOS nên OpenShift kế thừa toàn bộ những tính năng security mà RHEL đã có.
+1. OpenShift bắt mặc định cài trên RHCOS, một kernel kế thừa từ RHEL (hoặc bạn có thể cài thẳng trên RHEL nếu muốn), nhân Linux mà yêu cầu đầu tiên và hàng đầu phải là security. Chính vì phải cài trên RHCOS nên OpenShift kế thừa toàn bộ những tính năng security mà RHEL đã có.
 
 2. OpenShift không chỉ có mỗi k8s, mà nó là cả một giải pháp để triển khai, giám sát, theo dõi, cảnh báo, thậm chí có sẵn cả console luôn. K8s chay không bao hàm việc CI/CD; monitoring và alerting cũng phải cài thêm mới có. Cũng chính vì thế mà yêu cầu phần cứng của OpenShift cũng tương đối cao.
 
