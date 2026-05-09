@@ -9,7 +9,7 @@ languageCode = "vi-VN"
 defaultContentLanguage = "vi"
 
 enableGitInfo = true
-copyright = "© Aperture Prometheus :: 2018 - 2025"
+copyright = "© Aperture Prometheus :: 2018 - 2026"
 
 [pagination]
   pagerSize = 5
