@@ -89,7 +89,7 @@ Vì thi là thi thao tác thật, không phải khoanh trắc nghiệm, nên tô
 
 # Kết luận
 
-Ở trên là toàn bộ kinh nghiệm của tôi khi đi thi RHCSA. Theo như tôi đánh giá thì bài thi không quá khó và rất nhiều câu hỏi thực tế, không phải dạng đánh đố hay bẫy đề, bẫy câu chữ để cố tình cho bạn trượt, nên nếu bạn đã làm SysAdmin một thời gian rồi thì bài thi này sẽ không thể nào làm khó được bạn. Chúc bạn thành công trong kì thi!
+Ở trên là toàn bộ kinh nghiệm của tôi khi đi thi RHCSA. Theo như tôi đánh giá thì bài thi không quá khó và các câu hỏi đều rất thực tế, không phải dạng đánh đố hay bẫy đề, bẫy câu chữ để cố tình cho bạn trượt, nên nếu bạn đã làm SysAdmin một thời gian rồi thì bài thi này sẽ không thể nào làm khó được bạn. Chúc bạn thành công trong kì thi!
 
 # Dẫn nguồn:
 
