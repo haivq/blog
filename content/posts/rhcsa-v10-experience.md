@@ -85,7 +85,7 @@ Kiểm tra lại một lần không chết ai cả. Nếu bài thi quá dễ và
 
 ## QUAN TRỌNG NHẤT: THỰC HÀNH, THỰC HÀNH, THỰC HÀNH, THỰC HÀNH, THỰC HÀNH, THỰC HÀNH, THỰC HÀNH, THỰC HÀNH, THỰC HÀNH, THỰC HÀNH, THỰC HÀNH, THỰC HÀNH, THỰC HÀNH, THỰC HÀNH, THỰC HÀNH
 
-Vì thi là thi thao tác thật, không phải khoanh trắc nghiệm, nên tôi khuyên rằng bạn nên thực hành nhiều lần trước khi thi, vì theo như kinh nghiệm của tôi, học lý thuyết suông không giải quyết được gì hết, bạn chỉ cần tắt điện thoại, leo lên giường đi ngủ là tất cả kiến thức bạn đã ôn cũng sẽ trôi tuột ra khỏi não.
+Vì thi là thi thao tác thật, không phải khoanh trắc nghiệm, nên tôi khuyên rằng bạn nên thực hành nhiều lần trước khi thi, vì theo như kinh nghiệm của tôi, học lý thuyết suông không giải quyết được gì hết, bạn chỉ cần tắt điện thoại hay máy tính, leo lên giường lướt Facebook/TikTok hay đi ngủ là tất cả kiến thức bạn đã ôn cũng sẽ trôi tuột ra khỏi não.
 
 # Kết luận
 
