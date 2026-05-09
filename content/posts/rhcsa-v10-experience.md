@@ -81,7 +81,7 @@ Tất cả đều là lựa chọn của bạn, sử dụng phương pháp nào 
 
 Kiểm tra lại một lần không chết ai cả. Nếu bài thi quá dễ và bạn hoàn thành nó trước hạn như một vị thần, hãy dành 10-15p để review lại đáp án, đảm bảo các yếu tố:
   * Không làm bài ở nhầm node, đề bài yêu cầu bạn làm node 1 này bạn lại làm ở trên node 2
-  * Nếu trong đề bài yêu cầu bạn phải đảm bảo các config không bị mất khi reboot, bạn cũng phải chắc chắn rằng lúc reboot thì tất cả các config của bạn không trôi tuột xuống cống
+  * Nếu trong đề bài yêu cầu bạn phải đảm bảo bài làm của bạn không bị mất khi reboot, bạn cũng phải chắc chắn rằng lúc reboot thì tất cả công sức của bạn của bạn không trôi tuột xuống cống
 
 ## QUAN TRỌNG NHẤT: THỰC HÀNH, THỰC HÀNH, THỰC HÀNH, THỰC HÀNH, THỰC HÀNH, THỰC HÀNH, THỰC HÀNH, THỰC HÀNH, THỰC HÀNH, THỰC HÀNH, THỰC HÀNH, THỰC HÀNH, THỰC HÀNH, THỰC HÀNH, THỰC HÀNH
 
