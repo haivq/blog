@@ -20,7 +20,7 @@ tags:
 
 # Hoàn cảnh
 
-Câu chuyện bắt đầu khi sếp của tôi thông báo rằng mỗi nhân việt Red Hat phải có tối thiểu 2 certificate Red Hat trong năm nay, và bắt buộc phải có 1 certificate trước tháng 6 này. Vậy nên trong tháng 5 tôi phải ôn và thi lấy một chứng chỉ. Dựa vào công việc của tôi đang làm, thì tôi cần phải thi lấy 3 chứng chỉ sau:
+Câu chuyện bắt đầu khi sếp nhắc nhở tôi rằng rằng mỗi nhân viên Red Hat phải có tối thiểu 2 certificate Red Hat đang active, và bắt buộc phải có 1 certificate trước tháng 6 này. Vậy nên hiện tại trong tháng 5 tôi phải ôn và thi lấy một chứng chỉ. Dựa vào công việc của tôi đang làm, thì tôi cần phải thi lấy 3 chứng chỉ sau:
 
   * [RHCSA (EX200)](https://www.redhat.com/en/services/training/ex200-red-hat-certified-system-administrator-rhcsa-exam): Tối thiểu phải có để có nền kiến thức cơ bản để quản lý các máy RHEL
   * [RHCE (EX294)](https://www.redhat.com/en/services/training/ex294-red-hat-certified-engineer-rhce-exam-red-hat-enterprise-linux): Nâng cao hơn từ RHCSA, tự động hoá việc quản lý các máy RHEL thông qua [Ansible Automation Platform](https://www.redhat.com/en/technologies/management/ansible)
