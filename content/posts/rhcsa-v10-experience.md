@@ -61,7 +61,7 @@ Việc sử dụng ChatGPT quá nhiều chắc hẳn đã khiến nhiều anh em
 
   * Một terminal được SSH vào trong node, sẵn sàng gõ lệnh
   * Một terminal khác cũng được SSH vào trong node để sẵn sàng tra man page (bắt buộc thôi, vì làm gì có internet mà hỏi ChatGPT)
-  * Một cửa sổ browser để tra cứu documentation của hãng. Documentation của RHEL được cung cấp sẵn dưới dạng Offline Portal.
+  * Một cửa sổ browser để tra cứu documentation của hãng. Documentation của RHEL được cung cấp sẵn dưới dạng [Offline Knowledge Portal](https://access.redhat.com/products/red-hat-offline-knowledge-portal/).
 
 Bằng không bạn sẽ loạn cào cào lên và không biết phải làm gì ở đâu, dễ dẫn đến việc gõ lệnh sai ở một terminal khác, phá nát công sức bạn đã làm từ đầu đến giờ.
 
