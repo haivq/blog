@@ -5,7 +5,7 @@ title = "Góc của Aperture"
 theme = "terminal"
 enableRobotsTXT = true
 
-languageCode = "vi-VN"
+locale = "vi-VN"
 defaultContentLanguage = "vi"
 
 enableGitInfo = true
@@ -103,7 +103,7 @@ copyright = "© Aperture Prometheus :: 2018 - 2026"
     respectDoNotTrack = true
   [privacy.instagram]
     simple = true
-  [privacy.twitter]
+  [privacy.x]
     enableDNT = true
     simple = true
   [privacy.vimeo]
