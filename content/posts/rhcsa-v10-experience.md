@@ -71,7 +71,7 @@ Như thời điểm tôi thi, thì trong bài thi sẽ có ít nhất 2 câu đi
 
 ## Không có phương pháp nào là cố định để giải một bài thi
 
-Khi bạn ôn các course hay xem tutorial ở trên mạng, có thể bạn sẽ thấy cái chuyên gia vẩy tay gõ ra những dòng lệnh dài ngoằng và trúc trắc để config một thứ gì đó, trong khi có một cách dễ hơn, có UI để hoàn thành công việc. Nhưng bạn có biết rằng thực tế giám khảo không quan tâm đến việc bạn hoàn thành bài thi như thế nào không? Hãy vận dụng toàn bộ kiến thức và kinh nghiệm của bạn để sử dụng các công cụ có sẵn để làm bài thi nhanh nhất có thể.
+Khi bạn ôn các course hay xem tutorial ở trên mạng, có thể bạn sẽ thấy cái chuyên gia vẩy tay gõ ra những dòng lệnh dài ngoằng và trúc trắc để config một thứ gì đó, khiến nhiều người nghĩ rằng phải dùng CLI hay đúng command đó thì mới hoàn thành được bài thi. Nhưng bạn có biết rằng thực tế giám khảo không quan tâm đến việc bạn hoàn thành bài thi như thế nào không? Hãy vận dụng toàn bộ kiến thức và kinh nghiệm của bạn để sử dụng các công cụ có sẵn để làm bài thi nhanh nhất có thể, không nhất thiết phải sử dụng công cụ mà bạn chưa quen.
 
 Ví dụ, để config network bạn có thể dùng `nmtui` thay vì `nmcli`. Nhiều tác vụ có thể thực hiện bằng `cockpit` thay vì phải gõ tay.
 
@@ -83,7 +83,7 @@ Kiểm tra lại một lần không chết ai cả. Nếu bài thi quá dễ và
   * Không làm bài ở nhầm node, đề bài yêu cầu bạn làm node 1 này bạn lại làm ở trên node 2
   * Nếu trong đề bài yêu cầu bạn phải đảm bảo bài làm của bạn không bị mất khi reboot, bạn cũng phải chắc chắn rằng lúc reboot thì tất cả công sức của bạn của bạn không trôi tuột xuống cống
 
-## QUAN TRỌNG NHẤT: THỰC HÀNH, THỰC HÀNH, THỰC HÀNH, THỰC HÀNH, THỰC HÀNH, THỰC HÀNH, THỰC HÀNH, THỰC HÀNH, THỰC HÀNH, THỰC HÀNH, THỰC HÀNH, THỰC HÀNH, THỰC HÀNH, THỰC HÀNH, THỰC HÀNH
+## QUAN TRỌNG NHẤT: THỰC HÀNH, THỰC HÀNH và THỰC HÀNH (cái gì quan trọng phải nói 3 lần)
 
 Vì thi là thi thao tác thật, không phải khoanh trắc nghiệm, nên tôi khuyên rằng bạn nên thực hành nhiều lần trước khi thi, vì theo như kinh nghiệm của tôi, học lý thuyết suông không giải quyết được gì hết, bạn chỉ cần tắt điện thoại hay máy tính, leo lên giường lướt Facebook/TikTok hay đi ngủ là tất cả kiến thức bạn đã ôn cũng sẽ trôi tuột ra khỏi não.
 
