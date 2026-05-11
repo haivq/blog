@@ -3,19 +3,21 @@ title: "Một vài kinh nghiệm rút ra sau khi thi và đạt chứng chỉ RH
 author: "Aperture"
 date: "2026-05-09T23:00:00+07:00"
 categories:
-    - redhat
-    - rhcsa
-    - experience
+  - redhat
+  - rhcsa
+  - experience
 tags:
-    - redhat
-    - rh
-    - system administrator
-    - infrastructure
-    - sysadmin
-    - rhel
-    - exam
-    - rhcsa
-    - experience
+  - redhat
+  - system administrator
+  - infrastructure
+  - sysadmin
+  - rhel
+  - exam
+  - rhcsa
+  - experience
+cover: "/posts/rhcsa-v10-experience/cover.png"
+images:
+  - "/posts/rhcsa-v10-experience/cover.png"
 ---
 
 # Hoàn cảnh
