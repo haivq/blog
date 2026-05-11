@@ -26,17 +26,17 @@ Câu chuyện bắt đầu khi sếp nhắc nhở tôi rằng mỗi nhân viên 
   * [RHCE (EX294)](https://www.redhat.com/en/services/training/ex294-red-hat-certified-engineer-rhce-exam-red-hat-enterprise-linux): Nâng cao hơn từ RHCSA, tự động hoá việc quản lý các máy RHEL thông qua [Ansible Automation Platform](https://www.redhat.com/en/technologies/management/ansible)
   * [RHCOA (EX280)](https://www.redhat.com/en/services/training/red-hat-certified-openshift-administrator-exam): Cũng là nền kiến thức tối thiểu để quản lý cluster OCP
 
-Theo lộ trình tôi sẽ cần phải có toàn bộ các chứng chỉ này, tương lai sẽ phải học thêm 2 chứng chỉ nữa trong [danh sách này](https://www.redhat.com/en/services/certification/rhca#exams) để đạt được level [RHCA](https://www.redhat.com/en/services/certification/rhca).
+Theo lộ trình tôi sẽ cần phải có toàn bộ các chứng chỉ trên, trong tương lai tôi còn phải học thêm 2 chứng chỉ nữa trong [danh sách này](https://www.redhat.com/en/services/certification/rhca#exams) để đạt được level [RHCA](https://www.redhat.com/en/services/certification/rhca).
 
-Nhưng trước mắt vì deadline cuối tháng 5 phải có certificate và công việc khá bận, nên tôi ôn và gia hạn lại RHCSA cho tiện. Dưới đây sẽ là kinh nghiệm mà tôi thu được từ lần thi RHCSA gần đây nhất.
+Nhưng trước mắt vì deadline cuối tháng 5 phải có certificate đang active và công việc đang rất bận, nên tôi ôn và gia hạn lại RHCSA luôn cho tiện. Dưới đây sẽ là kinh nghiệm mà tôi muốn chia sẻ từ lần thi RHCSA gần đây nhất.
 
 # Kinh nghiệm khi đi thi
 
-> Lưu ý: Do quy định của hãng nên tôi không được phép tiết lộ nội dung của đề, vui lòng đừng hỏi.
+> Lưu ý: Do quy định của hãng nên tôi không được phép tiết lộ nội dung của đề thi, vui lòng đừng hỏi.
 
 ## Chuẩn bị trước khi thi
 
-Vì thi là thi remote, nên bạn sẽ bắt buộc phải chuẩn bị môi trường thi theo yêu cầu của giám thị. Khi bạn đăng kí thi xong thì sẽ có email gửi về để mô tả sơ qua những gì bạn cần chuẩn bị. Nhưng tôi xin liệt kê một số yêu cầu quan trọng sau:
+Vì thi là thi remote, nên bạn sẽ bắt buộc phải chuẩn bị môi trường thi theo yêu cầu của hãng, và giám thị sẽ kiểm tra lại trước khi thi. Khi bạn đăng kí thi xong thì sẽ có email gửi về để mô tả sơ qua những gì bạn cần chuẩn bị. Nhưng tôi xin liệt kê một số yêu cầu quan trọng sau:
 
   * Chuẩn bị trước 1 webcam **góc rộng** (kể cả bạn thi bằng laptop và đã có webcam theo máy rồi), đặt ở vị trí có thể thấy được mặt, bàn phím và chuột của bạn. Không cần phải quay màn hình vì lúc thi đã có record màn hình.
   * Lúc thi chỉ cho dùng 1 màn hình, nên nếu bạn có 2 màn hình thì tháo xuống và bê ra chỗ khác. Kể cả việc tắt màn hình đi cũng không được chấp nhận, vì trước boot USB lên kiểm tra máy thì nó cũng sẽ detect được ra là bạn đang cắm 2 màn hình.
@@ -60,10 +60,10 @@ Việc này không bắt buộc, nhưng theo tôi, bạn nên tạo một SSH ke
 Việc sử dụng ChatGPT quá nhiều chắc hẳn đã khiến nhiều anh em ỷ lại vào công cụ trên mạng, cộng thêm việc sử dụng có một màn hình trong khi nhiều người có tới 2 - 3 cái màn hình sẽ đem lại trải nghiệm bí bách và bất lực trong lúc thi. Lúc này bạn cần phải phân chia màn hình thật thông minh để có thể tiện làm 3 việc sau:
 
   * Một terminal được SSH vào trong node, sẵn sàng gõ lệnh
-  * Một terminal khác cũng được SSH vào trong node để sẵn sàng tra man page (bắt buộc thôi, vì làm gì có internet mà hỏi ChatGPT)
-  * Một cửa sổ browser để tra cứu documentation của hãng. Documentation của RHEL được cung cấp sẵn dưới dạng [Offline Knowledge Portal](https://access.redhat.com/products/red-hat-offline-knowledge-portal/).
+  * Một terminal khác cũng được SSH vào trong node để sẵn sàng tra `man` page
+  * Một cửa sổ browser để tra cứu documentation của hãng. Documentation của RHEL được cung cấp sẵn dưới dạng [Offline Knowledge Portal](https://access.redhat.com/products/red-hat-offline-knowledge-portal/)
 
-Bằng không bạn sẽ loạn cào cào lên và không biết phải làm gì ở đâu, dễ dẫn đến việc gõ lệnh sai ở một terminal khác, phá nát công sức bạn đã làm từ đầu đến giờ.
+Bằng không bạn sẽ loạn cào cào lên và không biết mình cần phải làm gì/ở đâu, dễ dẫn đến một lỗi sơ đẳng - gõ lệnh sai ở một terminal khác, phá nát công sức bạn đã làm từ đầu đến giờ. (Fun fact: Việc gõ lệnh sai terminal là một lỗi ngớ ngẩn, nhưng đã khiến [GitLab xoá bay toàn bộ database của họ](https://www.youtube.com/watch?v=tLdRBsuvVKc))
 
 ## Cẩn thận với câu liệt
 
@@ -89,16 +89,17 @@ Vì thi là thi thao tác thật, không phải khoanh trắc nghiệm, nên tô
 
 # Kết luận
 
-Ở trên là toàn bộ kinh nghiệm của tôi khi đi thi RHCSA. Theo như tôi đánh giá thì bài thi không quá khó và các câu hỏi đều rất thực tế, không phải dạng đánh đố hay bẫy đề, bẫy câu chữ để cố tình cho bạn trượt, nên nếu bạn đã làm SysAdmin một thời gian rồi thì bài thi này sẽ không thể nào làm khó được bạn. Bạn có thể xem chứng chỉ của tôi tại [đây](https://rhtapps.redhat.com/verify?certId=260-063-169)
+Ở trên là toàn bộ kinh nghiệm của tôi khi đi thi RHCSA. Theo như tôi đánh giá thì bài thi không khó và các câu hỏi đều rất thực tế, không phải dạng đánh đố hay bẫy đề, bẫy câu chữ để cố tình cho bạn trượt, nên nếu bạn đã làm sysadmin một thời gian rồi thì bài thi này sẽ không thể nào làm khó được bạn. Bạn có thể xem chứng chỉ của tôi tại [đây](https://rhtapps.redhat.com/verify?certId=260-063-169).
 
 Chúc bạn thành công trong kì thi!
 
 # Dẫn nguồn:
 
-- [How to prepare for Red Hat certification exams | Red Hat](https://www.redhat.com/en/services/certification/exam-preparation)
-- [Red Hat Certified System Administrator (RHCSA) exam | Red Hat](https://www.redhat.com/en/services/training/ex200-red-hat-certified-system-administrator-rhcsa-exam)
-- [Red Hat Certified Engineer (RHCE) exam | Red Hat](https://www.redhat.com/en/services/training/ex294-red-hat-certified-engineer-rhce-exam-red-hat-enterprise-linux)
-- [Red Hat Certified OpenShift Administrator exam | Red Hat](https://www.redhat.com/en/services/training/red-hat-certified-openshift-administrator-exam)
-- [Red Hat Training & Certification space | Red Hat](https://access.redhat.com/community/learn)
-- [Inside a Red Hat Certification Exam: What you need to know | YouTube](https://www.youtube.com/watch?v=Me6Y12-sux8)
-- [How I Scored 300/300 on the RHCSA Exam – 8 Tips You Need to Know! | YouTube](https://www.youtube.com/watch?v=QlAwLcLz8CM)
+  - [How to prepare for Red Hat certification exams | Red Hat](https://www.redhat.com/en/services/certification/exam-preparation)
+  - [Red Hat Certified System Administrator (RHCSA) exam | Red Hat](https://www.redhat.com/en/services/training/ex200-red-hat-certified-system-administrator-rhcsa-exam)
+  - [Red Hat Certified Engineer (RHCE) exam | Red Hat](https://www.redhat.com/en/services/training/ex294-red-hat-certified-engineer-rhce-exam-red-hat-enterprise-linux)
+  - [Red Hat Certified OpenShift Administrator exam | Red Hat](https://www.redhat.com/en/services/training/red-hat-certified-openshift-administrator-exam)
+  - [Red Hat Training & Certification space | Red Hat](https://access.redhat.com/community/learn)
+  - [Red Hat Offline Knowledge Portal | Red Hat](https://access.redhat.com/products/red-hat-offline-knowledge-portal/)
+  - [Inside a Red Hat Certification Exam: What you need to know | YouTube](https://www.youtube.com/watch?v=Me6Y12-sux8)
+  - [How I Scored 300/300 on the RHCSA Exam – 8 Tips You Need to Know! | YouTube](https://www.youtube.com/watch?v=QlAwLcLz8CM)
