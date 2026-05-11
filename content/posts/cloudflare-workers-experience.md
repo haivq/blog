@@ -26,6 +26,9 @@ tags:
     - experience
     - scaling
     - cloud
+cover: "/posts/cloudflare-workers-experience/9999-up-time-fireship.png"
+images:
+    - "/posts/cloudflare-workers-experience/9999-up-time-fireship.png"
 ---
 
 # Đặt vấn đề
@@ -36,15 +39,6 @@ Sau một thời gian dài, rất dài làm việc với AWS, Azure, Oracle Clou
 - Vẫn còn gồng được được khi bắt đầu serve lượng nhỏ người dùng nhưng khi phải gánh một hệ thống khủng để gánh một lượng lớn khách thì giá sẽ cao vọt lên.
 
 Với một người có kinh tế eo hẹp, không được funding vốn từ bất kì đối tượng nào mà phải tự gồng gánh từ hạ tầng đến lương nhân viên, thì việc vỡ nợ trước khi sản phẩm ra tiền là viễn cảnh không hề xa.
-
-{{< figure 
-    src="/posts/cloudflare-workers-experience/9999-up-time-fireship.png"
-    position="center"
-    alt="Khi bạn cố gắng xây hệ thống có uptime cao trên AWS"
-    caption="Khi bạn cố gắng xây hệ thống có uptime cao trên AWS"
-    attr="Fireship.io"
-    attrlink="https://youtu.be/ZzI9JE0i6Lc?t=22"
-    link="https://youtu.be/ZzI9JE0i6Lc?t=22">}}
 
 Để đủ trang trải cho cả dự án, cũng như đảm bảo tính ổn định của hệ thống, bắt buộc tôi phải lựa chọn một giải pháp nào đó thoả mãn các tiêu chí sau:
 
