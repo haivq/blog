@@ -20,6 +20,7 @@ tags:
     - cloud
     - image
     - optimization
+cover: "/posts/revisiting-img-proc-on-cf-worker/cover.jpg"
 images:
   - "/posts/revisiting-img-proc-on-cf-worker/cover.jpg"
 ---
