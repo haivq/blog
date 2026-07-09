@@ -8,6 +8,7 @@ categories:
     - cloudflare workers
     - experience
     - image processing
+    - worker cache
 tags:
     - cloudflare
     - workers
@@ -16,7 +17,6 @@ tags:
     - cache
     - lambda
     - experience
-    - lesson learned
     - cloud
     - image
     - optimization
