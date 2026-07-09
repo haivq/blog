@@ -22,7 +22,7 @@ tags:
     - optimization
 ---
 
-> Đọc phần trước của bài viết này tại đây: [Trải nghiệm khi xử lý ảnh trên Cloudflare Workers](/posts/image-transform-with-cf-workers-experience)
+> Đọc phần trước của bài viết này tại ["Trải nghiệm khi xử lý ảnh trên Cloudflare Workers"](/posts/image-transform-with-cf-workers-experience) và phần mới hơn tại ["Quay lại câu chuyện xử lý ảnh trên Cloudflare Workers sử dụng Photon WASM"](/posts/revisiting-img-proc-on-cf-worker)]
 
 # Mở đầu câu chuyện
 
@@ -100,7 +100,9 @@ Thông qua cách này ta có thể bắt được các ảnh bị lỗi và lấ
 Dưới đây là những giới hạn của hạ tầng CDN của Cloudflare, khác so với Cloudflare Workers
 
 ## Cache data trên CDN của Cloudflare chỉ tồn tại ở 1 PoP và Cloudflare Workers chạy ở mọi PoP, gây đội giá dù đã dùng Cache API
- 
+
+> Vấn đề này đã được giải quyết bằng với tính năng ["Cache đắt trước Workers"](https://blog.cloudflare.com/workers-cache/). Vui lòng đọc bài viết mới ["Quay lại câu chuyện xử lý ảnh trên Cloudflare Workers sử dụng Photon WASM"](/posts/revisiting-img-proc-on-cf-worker)
+
 Cache trên CDN ở một Point of Presence (PoP) Cloudflare, như nhiều CDN khác, chỉ tồn tại ở PoP đó chứ không tự động replicate sang các PoP khác. Khi mỗi khi có connect tới PoP bị miss cache thì Cloudflare sẽ gọi vào vào Origin Server. Nhưng vấn đề là Cloudflare có tận 300 PoP, theo lý thuyết thì 300 PoP mà miss cache sẽ gọi vào origin server 300 lần, nhiều khi sẽ không cải thiện tốc độ được nhiều. Để khắc phục vấn đề này, Cloudflare có một giải pháp gọi là [`Tiered Cache`](https://developers.cloudflare.com/cache/how-to/tiered-cache/), thay vì tất cả các PoP đều gọi vào Origin server thì PoP ở tier thấp sẽ gọi vào PoP tier cao để tối ưu hoá Cache và tốc độ truy cập mà không phải gọi vào Origin server quá nhiều.
 
 Map vấn đề này sang Cloudflare Workers, thì tất cả các PoP của Cloudflare đều chạy được Workers. Nhưng rất tiếc Cache API của Cloudflare Workers chỉ có thể tương tác với Cache của PoP đó mà thôi, không dùng được với Tiered Cache. Nhắc lại rằng Cloudflare có tới 300 PoP, tức là mỗi ảnh đi tới Cloudflare Workers ở một PoP mới chưa cache sẽ phải chạy lại code xử lý ảnh từ đầu. Đây không phải là một tin vui với tôi, vì chỉ riêng khu vực Bắc Mỹ đã có tới gần 60 PoP. Việc gọi vào PoP mà convert ảnh lại từ đầu thực sự đang đốt tiền CPU.
