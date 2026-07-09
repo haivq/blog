@@ -28,13 +28,13 @@ tags:
 
 # Mở đầu câu chuyện
 
-Sau bài viết [cũ về kinh nghiệm xử lý ảnh trên Workers](/posts/one-year-of-img-proc-on-cf-worker), gần đây Cloudflare cho ra mắt một tính năng rất quan trọng, ảnh hưởng trực tiếp đến hiệu năng và ví tiền tới công việc này: [Giờ đây đã có Cache đứng trước Workers](https://blog.cloudflare.com/workers-cache/). Tính năng khủng bố này không chỉ giải quyết vấn đề cache cho ảnh trên Cloudflare Edge, ngoài ra còn giải quyết rất nhiều vấn đề khác mà nhiều năm nay tôi gặp phải
+Sau bài viết [cũ về kinh nghiệm xử lý ảnh trên Workers](/posts/one-year-of-img-proc-on-cf-worker), gần đây Cloudflare cho ra mắt một tính năng rất quan trọng, ảnh hưởng trực tiếp đến hiệu năng và ví tiền tới công việc này: [Giờ đây đã có Cache đứng trước Workers](https://blog.cloudflare.com/workers-cache/). Tính năng khủng bố này không chỉ giải quyết vấn đề cache cho ảnh trên Cloudflare Edge, ngoài ra còn giải quyết rất nhiều vấn đề khác liên quan đến cache mà nhiều năm nay tôi gặp phải, tuy nhiên bài viết này sẽ chỉ tập trung vào câu chuyện tối ưu xử lý ảnh trên Workers.
 
 *Lưu ý: Bài viết không sử dụng AI.*
 
 # Giới hạn trước kia trên Workers khi chưa có Cache đứng trước
 
-Tôi xin liệt kê lại 2 giới hạn lớn trước khi có Cache đứng trước.
+Tôi xin liệt kê lại 2 giới hạn lớn trước khi có Cache đứng trước Worker.
 
 ## Cache trong Worker là Regional
 
