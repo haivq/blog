@@ -20,6 +20,8 @@ tags:
     - cloud
     - image
     - optimization
+images:
+  - "/posts/revisiting-img-proc-on-cf-worker/cover.jpg"
 ---
 
 > Đọc các phần trước của bài viết này tại đây:
