@@ -37,23 +37,25 @@ images:
 
 # Hoàn cảnh
 
-Sau khi vào làm Red Hat một thời gian, đột nhiên tôi lại có hứng thú trở lại với việc setup homelab. Từ ý định ban đầu chỉ setup 1 2 con máy server chạy OCP để làm lab demo cho khách hàng, càng ngày tôi lại càng lún sâu vào cái hố vôi homelab này. Khởi điểm chỉ là lưu vài tấm ảnh, lưu một 2 bộ phim để stream vào Apple TV xem với vợ rồi xoá, và làm hub smart home để điều khiển mấy món đồ không tương thích với homekit, cuối cùng tôi setup luôn cả server media, cài 1 cụm OCP to oạch, mua NAS để làm lưu trữ trung tâm và sắm một con router ngon hơn để gánh tải mạng (dù sự thực tôi thấy con Mikrotik hAP3 này hiệu năng Wifi 6 quá cùi).
+Sau khi vào làm Red Hat một thời gian, đột nhiên tôi lại có hứng thú trở lại với việc setup homelab. Từ ý định ban đầu chỉ setup 2 con máy mini PC chạy OCP để làm lab demo cho khách hàng, càng ngày tôi lại càng lún sâu vào cái hố vôi này. Khởi điểm chỉ là lưu catalog ảnh chụp, lưu thêm một vài bộ phim để xem với vợ và làm hub smart home để điều khiển mấy món đồ không tương thích với Homekit, cuối cùng tôi setup luôn cả server media, cài 1 cụm OCP lớn, mua NAS để làm lưu trữ trung tâm và sắm một con router ngon hơn để gánh tải mạng (dù sự thực tôi thấy con Mikrotik hAP ax³ này hiệu năng Wifi 6 quá cùi so với giá thành của nó).
 
-{{< figure 
+{{< figure
     src="/posts/project-quay-homelab/homelab.jpeg"
     position="center"
     alt="Khoe góc homelab tại nhà"
     caption="Khoe góc homelab tại nhà" >}}
 
-Gần đây tôi lại có nhu cầu cài đặt OCP disconnected để thi thêm RHCOA và thử nghiệm một dự án nho nhỏ cũng yêu cầu air-gap, nên tôi tính cài đặt luôn một con registry để lưu trữ image giả lập quá trình cài đặt disconnected và làm image proxy để pull image cho nhanh, dù sao thì dung lượng NAS cũng đang thừa. Vì đã làm ở Red Hat nên chắc chắn tôi sẽ bị bias bởi các sản phẩm của Red Hat, tôi chọn giải pháp Quay làm giải pháp registry.
+Gần đây tôi lại có nhu cầu cài đặt OCP disconnected để có thêm kinh nghiệm và có môi trường ôn RHCOA, tiện thể thử nghiệm một dự án nho nhỏ cũng yêu cầu air-gap, nên tôi tính cài đặt luôn một con registry để lưu trữ image, làm mirror cho việc cài đặt OCP disconnected và làm image proxy để pull image cho nhanh (dù sao thì dung lượng NAS cũng đang thừa). Do khách hàng sử dụng Quay làm registry tương đối nhiều nên chọn luôn Quay làm giải pháp registry.
 
-# Quay là cái gì?
+# Vậy Quay là cái gì?
+
+## Giới thiệu về Quay
 
 Mặc dù người tìm đến bài viết này nhiều khi vốn đã hiểu về Quay hay registry rồi, nhưng tôi xin phép được giới thiệu ngắn gọn như sau:
 
-[Project Quay](https://github.com/quay/quay) là một registry open source, ban đầu chính là công nghệ đứng sau [quay.io](quay.io), di sản của team [CoreOS](https://www.redhat.com/en/technologies/cloud-computing/openshift/what-was-coreos). Sau khi được Red Hat mua lại thì project được open source thành Project Quay. Tất nhiên đúng cách làm việc của Red Hat, Project Quay chính là upstream của sản phẩm enterprise mà họ đem đi bán - [Red Hat Quay](https://www.redhat.com/en/technologies/cloud-computing/quay). Không chỉ làm registry đơn thuần, Project Quay còn rất nhiều tính năng khác hay ho mà chắc chắn tôi sẽ không giới thiệu trong bài viết này, người đọc vui lòng tự đọc ở [trang giới thiệu này](https://docs.projectquay.io/red_hat_quay_overview.html). Trong bài viết này tôi sẽ cài Project Quay thay vì Red Hat Quay, nhưng phương pháp cài giữa 2 phiên bản này là như nhau, bạn có thể cài Red Hat Quay nếu bạn muốn.
+[Project Quay](https://github.com/quay/quay) là một registry open source, ban đầu chính là công nghệ đứng sau [quay.io](quay.io), di sản của team [CoreOS](https://www.redhat.com/en/technologies/cloud-computing/openshift/what-was-coreos). Sau khi được Red Hat mua lại thì project được open source thành Project Quay. Tất nhiên đúng cách làm việc của Red Hat, Project Quay chính là upstream của sản phẩm enterprise mà họ đem đi bán - [Red Hat Quay](https://www.redhat.com/en/technologies/cloud-computing/quay).
 
-# Cài đặt Quay
+Không chỉ làm registry đơn thuần, Project Quay còn rất nhiều tính năng khác hay ho mà chắc chắn tôi sẽ không giới thiệu trong bài viết này, người đọc vui lòng tự đọc ở [trang giới thiệu này](https://docs.projectquay.io/red_hat_quay_overview.html). Tôi cũng sẽ cài Project Quay thay vì Red Hat Quay, nhưng phương pháp cài giữa 2 phiên bản này là như nhau, bạn có thể cài Red Hat Quay nếu bạn muốn (nhớ tạo tài khoản Red Hat và active trial license trước nhé).
 
 ## Mô tả kiến trúc của Quay
 
@@ -73,9 +75,11 @@ Cả 2 phương pháp trên, một cái quá nhỏ và không thực sự dạy 
   - 1 cái S3-compatible rời để lưu trữ image lên đó thay vì lưu hết vào ổ đĩa máy cài Quay
   - Bỏ Clair vì tôi chỉ cần lưu trữ
 
+# Chuẩn bị trước khi cài đặt Quay
+
 ## Cấu hình của tôi
 
-Vậy là sau khi chọn con đường hybrid, ta sẽ cần phải sizing tài nguyên cho con Quay này. Dựa vào (sizing documentation của Quay)[https://docs.projectquay.io/quay_jtbd-plan.html#sizing-intro], tôi lựa chọn cấu hình deploy như sau:
+Vậy là sau khi chọn con đường hybrid, ta sẽ cần phải sizing tài nguyên trước khi cài. Dựa vào [sizing documentation của Quay](https://docs.projectquay.io/quay_jtbd-plan.html#sizing-intro), tôi lựa chọn cấu hình deploy như sau:
 
   - OS: RHEL 10 (vì tôi đang sẵn RHEL 10, thực tế không quá quan trọng vì dù sao chúng ta cũng chạy container)
   - Container Runtime: Podman (để chạy rootless container)
@@ -92,18 +96,18 @@ Vì tất cả cài qua container, nên tôi cũng cài hết các component tr�
   - [PostgreSQL 18.6](https://images.redhat.com/?search=postgres&name=postgresql&version=18.6): registry.access.redhat.com/hi/postgresql:18.6
   - [Valkey 9.0.6 thay cho Redis](https://images.redhat.com/?search=valkey&name=valkey&version=9.0.6): registry.access.redhat.com/hi/valkey:9.0.6
 
-Bạn có thể sẽ có 4 câu hỏi sau, và tôi xin trả lời luôn:
+Bạn có thể sẽ có 3 câu hỏi sau, và tôi xin trả lời luôn:
   1. Tại sao lại dùng Valkey thay vì Redis: Redis đã thay đổi license của mình từ BSD sang SSPL/RSAL, tức là người dùng (dạng end-user) thì dùng và contribute cho Redis như bình thường, nhưng sẽ ngăn cấm các nền tảng lấy Redis ra và bán lại (như AWS ElastiCache), trừ khi trả cho Redis một cục tiền to. Bạn có thể đọc bài giải thích về sự kiện này trong [một bài viết của TechCrunch](https://techcrunch.com/2024/03/31/why-aws-google-and-oracle-are-backing-the-valkey-redis-fork/).
   2. Image của PostgreSQL và Valkey là cái gì mà lại HI vậy: HI thực ra chính là Hardened Image của Red Hat, được thiết kế ra để giảm các vấn đề về Security đến mức tối thiểu. Tôi đang tìm hiểu về Hardened Image nên sử dụng luôn. Thực tế tôi đã tìm image Redis thay vì Valkey, nhưng không tìm thấy trong [catalog HI của Red Hat](https://images.redhat.com/), nên tiện thể sử dụng Valkey luôn.
   3. Dùng Valkey có ổn không: Valkey là một bản fork của Redis, giống như MariaDB và MySQL vậy. Nếu sử dụng một cách cơ bản bình thường thì theo tôi thấy không có gì khác so với Redis. Hơn nữa Redis/Valkey cũng chỉ là nơi chứa cache và không chứa thông tin gì quan trọng cả, nên khi cần ta có thể dựng một con Redis lên thay cho Valkey mà không quá lo lắng về việc Quay chết. 
 
-## Bắt đầu cài đặt
+# Các bước cài đặt Quay
 
-OK sau khi bạn đã pull các image ở trên về, ta bắt đầu quá trình cài đặt Quay.
+OK sau khi bạn đã chuẩn bị xong xuôi các bước ở trên, ta bắt đầu quá trình cài đặt Quay.
 
-### Cấu hình sơ bộ cho Quay host
+## Cấu hình sơ bộ cho Quay host
 
-#### Chuẩn bị directory chứa toàn bộ dữ liệu của Quay
+### Chuẩn bị directory chứa toàn bộ dữ liệu của Quay
 
 Để gom toàn bộ deployment vào một chỗ, tôi tạo 1 directory chứa toàn bộ dữ liệu của Quay. Trong ví dụ này tôi để luôn ở `/home/haivu` vì `/home` đang có dung lượng lớn, chứa dữ liệu ở đây sẽ tiện.
 
@@ -114,7 +118,7 @@ cd ~/quay
 
 Từ bây giờ ta sẽ lấy `~/quay` làm gốc và mọi thư mục cho các component mới đều sẽ để tại đây.
 
-#### Cấu hình network của Podman cho tiện lợi
+### Cấu hình network của Podman cho tiện lợi
 
 Sau đó khi tạo directory `~/quay`, tạo network `quay-net` để ta có thể dùng container name thẳng trong cùng 1 network mà không phải expose port ra ngoài
 
@@ -122,12 +126,12 @@ Sau đó khi tạo directory `~/quay`, tạo network `quay-net` để ta có th�
 podman network create quay-net
 ```
 
-#### Cấu hình DNS cho Quay
+### Cấu hình DNS cho Quay
 
 Chọn một hostname mà bạn muốn đặt cho Quay. Trong ví dụ này tôi lấy luôn `quay.haivq.local`. Tạo một record A trên DNS nội bộ của bạn trỏ vào hostname này.
 
 ```
-A 192.168.1.123 quay.haivq.local
+A quay.haivq.local 192.168.1.123 
 ```
 
 Sau khi chọn hostname và cập nhật DNS, sửa file `/etc/hosts`, đặt IP của Quay host trùng với hostname của Quay để phân giải DNS cho nhanh, tránh các lỗi khù khoằm do DNS gây ra (sửa IP của máy hiện tại của bạn vào đây, tôi sẽ giả sử IP sẽ là `192.168.1.123`):
@@ -136,7 +140,7 @@ Sau khi chọn hostname và cập nhật DNS, sửa file `/etc/hosts`, đặt IP
 192.168.1.123 quay.haivq.local
 ```
 
-#### Sinh Root CA và certificate cho Quay
+### Sinh Root CA và certificate cho Quay
 
 Theo chuẩn sách giáo khoa, ta buộc phải tạo một SSL certificate cho Quay.
 
@@ -222,6 +226,10 @@ Về sau khi cần kết nối tới Quay sử dụng các công cụ như [`oc-
 
 Sau khi chuẩn bị xong các bước khởi tạo ban đầu, ta bắt đầu cài Quay và các component của nó.
 
+## Cấu hình cho PosgreSQL và Valkey
+
+Ta chuẩn bị trước PostgreSQL và Valkey trước khi khởi chạy Quay
+
 ### Khởi tạo PostgreSQL
 
 1. Tại `~/quay`, tạo directory `postgresql/data` để chứa data của postgresql:
@@ -268,7 +276,11 @@ Giải thích các params truyền vào cho Valkey như sau:
   - `--protected-mode "no"`: Cho phép các container khác có thể connect vào Valkey, vì Valkey mặc định phải cùng trong `localhost` (trong trường hợp này là trong cùng một container) mới kết nối được
   - `--save ""` và `--appendonly "no"`: Tắt tính năng [dump data ra disk và AOF của Valkey](https://valkey.io/topics/persistence/), biến Valkey trở thành một in-memory cache đúng nghĩa
 
-### Khởi tạo Quay
+## Cài đặt Quay
+
+Sau khi PostgreSQL và Valkey đã chạy, ta bắt đầu khởi tạo Quay
+
+### Cấu hình config trước khi bật Quay
 
 1. Về lại `~/quay`, tạo directory `quay` (cùng tên) để chứa `config`:
 
@@ -374,7 +386,9 @@ ssl.key
 ssl.crt
 ```
 
-4. Đến thời điểm này, ta có thể khởi động Quay lên được rồi:
+### Bật Quay và khởi tạo user
+
+1. Đến thời điểm này, ta có thể khởi động Quay lên được rồi:
 ```bash
 podman run -d --name quay \
     --network quay-net \
@@ -386,7 +400,7 @@ podman run -d --name quay \
 
 Đợi một lúc cho quay migrate database, ta có thể vào được giao diện của Quay ngay tại: `quay.haivq.local:8443` (Nhớ đổi domain của bạn đi đấy).
 
-5. Sau khi Quay đã online, ta phải khởi tạo password cho cho user `quayadmin` thì mới login được (chú ý thay đổi username, password, email cho phù hợp với mục đích sử dụng):
+2. Sau khi Quay đã online, ta phải khởi tạo password cho cho user `quayadmin` thì mới login được (chú ý thay đổi username, password, email cho phù hợp với mục đích sử dụng):
 ```bash
 curl -k -X POST https://quay.haivq.local:8443/api/v1/user/initialize -H 'Content-Type: application/json' -d '{
     "username": "quayadmin",
@@ -397,11 +411,14 @@ curl -k -X POST https://quay.haivq.local:8443/api/v1/user/initialize -H 'Content
 ```
 Sau khi khởi tạo xong, ta có thể dùng username/password đã đặt để vào Quay
 
-6. QUAN TRỌNG: Ngay lập tức bỏ trường `FEATURE_USER_INITIALIZE: true` ra khỏi file `config.yaml` để ngăn việc cho phép init password xảy ra mà không qua login.
+3. QUAN TRỌNG: Ngay lập tức bỏ trường `FEATURE_USER_INITIALIZE: true` ra khỏi file `config.yaml` để ngăn việc cho phép init password xảy ra mà không qua login, sau đó restart Quay để áp dụng config mới:
+```bash
+podman container restart quay
+```
 
 Vậy là đến đây ta đã cài xong Project Quay.
 
-# Quản lý deployment bằng compose file:
+# Quản lý deployment bằng compose file
 
 Để đơn giản hoá việc cài đặt và quản lý Quay, ta có thể sử dụng file `docker-compose.yml` để quản trị Quay đơn giản hơn. Config healthcheck, thời gian chờ start/stop container và đợi các container sử dụng compose file nhàn hơn rất nhiều là ngồi truy lại cái command `podman`. Tôi sẽ lấy một ví dụ file compose mà tôi đang sử dụng ở đây, file này được đặt trong directory `~/quay` cho dễ quản lý, vui lòng sửa lại theo nhu cầu của mỗi người:
 
