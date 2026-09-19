@@ -30,6 +30,9 @@ tags:
     - devops
     - infrastructure
     - experience
+cover: "/posts/project-quay-homelab/cover.png"
+images:
+    - "/posts/project-quay-homelab/cover.png"
 ---
 
 # Hoàn cảnh
