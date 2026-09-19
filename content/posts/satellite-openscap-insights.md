@@ -20,6 +20,7 @@ tags:
     - sysadmin
     - maintenance
     - rhel
+draft: true
 ---
 
 # Hoàn cảnh
