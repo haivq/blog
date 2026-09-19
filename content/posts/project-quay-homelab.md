@@ -144,9 +144,9 @@ Sau khi chọn hostname và cập nhật DNS, sửa file `/etc/hosts`, đặt IP
 
 Theo chuẩn sách giáo khoa, ta buộc phải tạo một SSL certificate cho Quay.
 
-> Trong bài viết này tôi sẽ issue ra luôn RootCA và Certificate cho nhanh. Nếu bạn đã có một CA chung cho toàn bộ hệ thống (ví dụ Dogtag PKI CA) thì chỉ cần tạo CSR và gửi cho CA để lấy cert về.
+> Trong bài viết này tôi sẽ issue ra luôn RootCA và Certificate cho nhanh. Nếu bạn đã có một CA chung cho toàn bộ hệ thống (ví dụ Dogtag PKI CA) thì chỉ cần tạo CSR và gửi cho CA để lấy certificate về.
 
-Về lại `~/quay`, tạo một thư mục `certs` và tạo certificate tại đó (phần này tôi làm theo hướng dẫn của ChatGPT):
+Về lại `~/quay`, tạo một thư mục `certs` và tạo certificate tại đó (phần này tôi làm theo hướng dẫn của ChatGPT, lưu ý thay giá trị SAN và CN cho sát nhu cầu thực tế):
 
 ```bash
 cd ~/quay
@@ -222,7 +222,7 @@ quay.crt
 quay.ext
 ```
 
-Về sau khi cần kết nối tới Quay sử dụng các công cụ như [`oc-mirror`](https://docs.redhat.com/en/documentation/openshift_container_platform/4.22/html/disconnected_environments/about-installing-oc-mirror-v2) hay sử dụng Quay làm mirror registry cho OCP, ta sẽ phải trust Root CA đã tạo. Lưu ý lưu các file `RootCA.*` cẩn thận, vì mất CA sẽ phải sinh lại CA xong trust lại sẽ rất mất thời gian, đặc biệt khi trust một CA mới cho OCP sẽ gây reboot toàn bộ các node.
+Về sau khi cần kết nối tới Quay sử dụng các công cụ như [`oc-mirror`](https://docs.redhat.com/en/documentation/openshift_container_platform/4.22/html/disconnected_environments/about-installing-oc-mirror-v2) hay sử dụng Quay làm mirror registry cho OCP, ta sẽ phải trust Root CA đã tạo. Vì vậy lưu ý lưu các file `rootCA.*` cẩn thận, vì mất CA thì ta sẽ phải sinh lại CA rồi tiến hành trust ở tất cả các máy đang sử dụng Qua, gây tốn rất nhiều thời gian không mong muốn, đặc biệt khi trust một CA mới cho OCP sẽ gây reboot toàn bộ các node.
 
 Sau khi chuẩn bị xong các bước khởi tạo ban đầu, ta bắt đầu cài Quay và các component của nó.
 
@@ -274,7 +274,7 @@ podman run -d --name redis \
 
 Giải thích các params truyền vào cho Valkey như sau:
   - `--protected-mode "no"`: Cho phép các container khác có thể connect vào Valkey, vì Valkey mặc định phải cùng trong `localhost` (trong trường hợp này là trong cùng một container) mới kết nối được
-  - `--save ""` và `--appendonly "no"`: Tắt tính năng [dump data ra disk và AOF của Valkey](https://valkey.io/topics/persistence/), biến Valkey trở thành một in-memory cache đúng nghĩa
+  - `--save ""` và `--appendonly "no"`: Tắt tính năng [dump data ra disk và AOF của Valkey](https://valkey.io/topics/persistence/), biến Valkey trở thành một in-memory cache thuần tuý.
 
 ## Cài đặt Quay
 
@@ -291,7 +291,7 @@ mkdir -p quay/config
 
 2. Khởi tại config của Quay tại `~/quay/quay/config`
 
-Sử dụng `nano`, `vi` hay bất kì method nào để ghi nội dung sau vào file `quay/config/config.yaml`
+Sử dụng `nano`, `vi` hay bất kì method nào để ghi nội dung sau vào file `quay/config/config.yaml` rồi sửa đổi cho hợp nhu cầu.
 
 ```yml
 AUTHENTICATION_TYPE: Database
@@ -315,13 +315,13 @@ USER_EVENTS_REDIS:
 DISTRIBUTED_STORAGE_CONFIG:
   minioDSM:
     - RadosGWStorage
-    - access_key: somes3accesskey
-      bucket_name: quay
-      hostname: miniohostname
+    - access_key: somes3accesskey # thay access key
+      bucket_name: quay # thay bucket name
+      hostname: miniohostname # thay hostname của s3
       is_secure: false
       port: '9000'
-      secret_key: somesecretkey
-      storage_path: /datastorage/registry
+      secret_key: somesecretkey # thay secret key
+      storage_path: /datastorage/registry # đổi storage path thành cái khác nếu muốn
       signature_version: v4
 
 DISTRIBUTED_STORAGE_PREFERENCE:
@@ -331,11 +331,13 @@ DISTRIBUTED_STORAGE_DEFAULT_LOCATIONS: []
 SUPER_USERS:
   - quayadmin
 
+# Giảm số lượng worker để tiết kiệm RAM
 WORKER_COUNT_REGISTRY: 4
 WORKER_COUNT_WEB: 2
 WORKER_CONNECTION_COUNT_REGISTRY: 10
 WORKER_CONNECTION_COUNT_WEB: 5
 
+# Tắt một loạt các feature không cần thiết để nhẹ gánh cho Quay
 FEATURE_BUILD_SUPPORT: false
 FEATURE_SECURITY_SCANNER: false
 FEATURE_MAILING: false
@@ -346,21 +348,25 @@ FEATURE_QUOTA_MANAGEMENT: false
 FEATURE_STORAGE_REPLICATION: false
 FEATURE_RATE_LIMITS: false
 FEATURE_ANONYMOUS_ACCESS: false
+FEATURE_USER_CREATION: false
+ROBOTS_DISALLOW: true
 
+# Bật các tính năng cần thiết lên phục vụ cho việc mirror image
 CREATE_NAMESPACE_ON_PUSH: true
 CREATE_PRIVATE_REPO_ON_PUSH: true
 FEATURE_EXTENDED_REPOSITORY_NAMES: true
 FEATURE_GENERAL_OCI_SUPPORT: true
-ROBOTS_DISALLOW: true
-CLEAN_BLOB_UPLOAD_FOLDER: true
 
+# Điều chỉnh một số cấu hình để giảm tải cho Quay và ổ cứng
+CLEAN_BLOB_UPLOAD_FOLDER: true
 GARBAGE_COLLECTION_FREQUENCY: 300
 
+# 2 flag này cần có để dựng Quay production
 TESTING: false
-
-FEATURE_USER_CREATION: false
-FEATURE_USER_INITIALIZE: true
 SETUP_COMPLETE: true
+
+# Bật tính năng này lên để có thể khởi tạo username/password, sẽ tắt đi sau khi khởi tạo xong
+FEATURE_USER_INITIALIZE: true
 ```
 
 Để cho Quay chạy nhẹ nhàng, tôi đã tắt một loạt tính năng và giảm cấu hình mặc định của Quay xuống, vui lòng xem ý nghĩa của các config trên ở các mục này:
@@ -370,7 +376,7 @@ SETUP_COMPLETE: true
 
 3. Copy các certificate đã tạo vào trong thư mục `config` của Quay
 
-Để quay có thể sử dụng certificate đã sinh ra, bắt buộc phải để các file certificate này vào thư mục config của Quay với đúng tên `ssl.key` và `ssl.crt`. Ta phải copy đúng 2 file này vào đúng vị trí cạnh file `config.yaml` ở trên thì Quay mới hoạt động:
+Để quay có thể sử dụng certificate đã sinh ra, bắt buộc phải để các file certificate này vào thư mục config của Quay với đúng tên `ssl.key` và `ssl.crt`. Ta phải copy đúng 2 file này vào đúng vị trí cạnh file `config.yaml` ở trên thì Quay mới nhận certificate và hoạt động:
 
 
 ```bash
@@ -411,7 +417,7 @@ curl -k -X POST https://quay.haivq.local:8443/api/v1/user/initialize -H 'Content
 ```
 Sau khi khởi tạo xong, ta có thể dùng username/password đã đặt để vào Quay
 
-3. QUAN TRỌNG: Ngay lập tức bỏ trường `FEATURE_USER_INITIALIZE: true` ra khỏi file `config.yaml` để ngăn việc cho phép init password xảy ra mà không qua login, sau đó restart Quay để áp dụng config mới:
+3. **QUAN TRỌNG**: Ngay lập tức bỏ trường `FEATURE_USER_INITIALIZE: true` ra khỏi file `config.yaml` để ngăn việc cho phép init password xảy ra mà không qua login, sau đó restart Quay để áp dụng config mới:
 ```bash
 podman container restart quay
 ```
@@ -420,7 +426,7 @@ Vậy là đến đây ta đã cài xong Project Quay.
 
 # Quản lý deployment bằng compose file
 
-Để đơn giản hoá việc cài đặt và quản lý Quay, ta có thể sử dụng file `docker-compose.yml` để quản trị Quay đơn giản hơn. Config healthcheck, thời gian chờ start/stop container và đợi các container sử dụng compose file nhàn hơn rất nhiều là ngồi truy lại cái command `podman`. Tôi sẽ lấy một ví dụ file compose mà tôi đang sử dụng ở đây, file này được đặt trong directory `~/quay` cho dễ quản lý, vui lòng sửa lại theo nhu cầu của mỗi người:
+Để đơn giản hoá việc quản lý Quay, ta có thể sử dụng file `docker-compose.yml` để quản trị Quay đơn giản hơn. Config healthcheck, thời gian chờ start/stop container và đợi các container sử dụng compose file nhàn hơn rất nhiều là ngồi truy lại cái command `podman`. Tôi sẽ lấy một ví dụ file compose mà tôi đang sử dụng ở đây, file này được đặt trong directory `~/quay` cho dễ quản lý, vui lòng sửa lại theo nhu cầu của mỗi người:
 
 ```yaml
 services:
@@ -517,7 +523,7 @@ Lưu ý rằng khi sử dụng phương pháp compose này, bạn vẫn sẽ c�
 Ở trên là kinh nghiệm của tôi trong việc cài Quay. Mong bạn đọc sẽ thấy bài viết hữu ích và giúp đỡ bạn làm quen nhanh chóng với Quay và xây dựng một registry trong homelab đơn giản và hiệu quả.
 
 # Nguồn tham khảo
-- [Project Quay Documentation](https://docs.projectquay.io/welcome.html) / [archive](https://web.archive.org/web/20260919091034/https://docs.projectquay.io/welcome.html):
-- [Red Hat Quay Documentation](https://docs.redhat.com/en/documentation/red_hat_quay/3.18) / [archive](https://web.archive.org/web/20260919091907/https://docs.redhat.com/en/documentation/red_hat_quay/3.18)
-- [Red Hat Hardened Images](https://www.redhat.com/en/products/hardened-images) / [archive](https://web.archive.org/save/https://www.redhat.com/en/products/hardened-images)
-- [TechCrunch - Why AWS, Google and Oracle are backing the Valkey Redis fork](https://techcrunch.com/2024/03/31/why-aws-google-and-oracle-are-backing-the-valkey-redis-fork/) / [archive](https://web.archive.org/web/20260120044327/https://techcrunch.com/2024/03/31/why-aws-google-and-oracle-are-backing-the-valkey-redis-fork/)
+  - [Project Quay Documentation](https://docs.projectquay.io/welcome.html) / [archive](https://web.archive.org/web/20260919091034/https://docs.projectquay.io/welcome.html):
+  - [Red Hat Quay Documentation](https://docs.redhat.com/en/documentation/red_hat_quay/3.18) / [archive](https://web.archive.org/web/20260919091907/https://docs.redhat.com/en/documentation/red_hat_quay/3.18)
+  - [Red Hat Hardened Images](https://www.redhat.com/en/products/hardened-images) / [archive](https://web.archive.org/save/https://www.redhat.com/en/products/hardened-images)
+  - [TechCrunch - Why AWS, Google and Oracle are backing the Valkey Redis fork](https://techcrunch.com/2024/03/31/why-aws-google-and-oracle-are-backing-the-valkey-redis-fork/) / [archive](https://web.archive.org/web/20260120044327/https://techcrunch.com/2024/03/31/why-aws-google-and-oracle-are-backing-the-valkey-redis-fork/)
