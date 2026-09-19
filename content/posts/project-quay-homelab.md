@@ -64,29 +64,29 @@ Nếu bạn đã xài [Docker registry](https://hub.docker.com/_/registry) thì 
   - Quay: Chính là cái Quay instance làm đầu não xử lý logic
   - PostgreSQL: 1 cái database để chứa thông tin, backup định kì vì không thể thay thế
   - Redis: Làm cache để Quay lưu dữ liệu tạm thời, chết tạo con khác
-  - S3/S3-compatible storage (optional): Nơi thực sự chứa image data. Thực tế không bắt buộc phải có S3, nhưng không ai muốn quản 1 cái ổ cứng nặng trịch trong máy cả, đẩy được ra S3 cho nó nhẹ đầu óc, scale ra cũng dễ hơn
+  - S3/S3-compatible storage (tuỳ chọn): Nơi thực sự chứa image data. Thực tế không bắt buộc phải có S3, nhưng không ai muốn quản 1 cái ổ cứng nặng trịch trong máy cả, đẩy được ra S3 cho nó nhẹ đầu óc, scale ra cũng dễ hơn
 
 Trong documentation của Quay có 2 phương pháp:
-  - Cài [Proof-of-Concept](https://docs.projectquay.io/quay_jtbd-install.html#install-red-hat-quay-proof-of-concept_install_red_hat_quay_on_openshift_container_platform): Nhét tất cả mọi thứ vào 1 máy, lưu data trên chính disk của con đó, với mục đích start Quay lên nhanh nhất có thể để trải nghiệm.
+  - Cài [Proof-of-Concept](https://docs.projectquay.io/quay_jtbd-install.html#install-red-hat-quay-proof-of-concept_install_red_hat_quay_on_openshift_container_platform): Nhét tất cả mọi thứ vào 1 máy, lưu data của PostgreSQL và blob của image trên chính disk của máy đó, với mục đích start Quay lên nhanh nhất có thể để trải nghiệm.
   - Cài [High-availability](https://docs.projectquay.io/quay_jtbd-install.html#preparing-for-quay-ha): Thực sự cài 1 con Quay High-availability, yêu cầu phải có 2-3 node cài Quay + Redis, 1 node làm HAproxy + PostgreSQL, 1 node làm Clair và 5 node làm CEPH cluster cho S3.
 
-Cả 2 phương pháp trên, một cái quá nhỏ và không thực sự dạy ta được cái gì trong lúc cài, một cái thì quá lớn và kềnh càng, không đủ tài nguyên để dựng mà quản lý cũng nhọc óc, vậy nên ta sẽ đi theo một con đường dung hoà cả 2:
-  - 1 node cài toàn bộ Quay, Redis và PostgreSQL để tiết kiệm tài nguyên
-  - 1 cái S3-compatible rời để lưu trữ image lên đó thay vì lưu hết vào ổ đĩa máy cài Quay
-  - Bỏ Clair vì tôi chỉ cần lưu trữ
+Cả 2 phương pháp trên, cài kiểu Proof-of-Concept thì quá nhỏ, không phải best practice và không thực sự dạy ta được cái gì trong lúc cài, cài kiểu High-availability như trong tài liệu thì quá lớn và kềnh càng, không đủ tài nguyên để dựng mà quản lý cũng nhọc óc, vậy nên ta sẽ đi theo một con đường dung hoà cả 2:
+  - 1 node cài toàn bộ Quay, Redis và PostgreSQL để tiết kiệm tài nguyên như Proof-of-Concept
+  - Đẩy toàn bộ blob của image ra một S3-compatible thay vì lưu hết vào ổ đĩa máy cài Quay như High-availability
+  - Bỏ Clair vì registry này tôi chỉ cần lưu trữ image, không cần scan security
 
 # Chuẩn bị trước khi cài đặt Quay
 
 ## Cấu hình của tôi
 
-Vậy là sau khi chọn con đường hybrid, ta sẽ cần phải sizing tài nguyên trước khi cài. Dựa vào [sizing documentation của Quay](https://docs.projectquay.io/quay_jtbd-plan.html#sizing-intro), tôi lựa chọn cấu hình deploy như sau:
+Vậy là sau khi chọn con đường hybrid, ta sẽ cần phải sizing tài nguyên trước khi cài. Dựa vào [tài liệu sizing của Quay](https://docs.projectquay.io/quay_jtbd-plan.html#sizing-intro), tôi lựa chọn cấu hình deploy như sau:
 
-  - OS: RHEL 10 (vì tôi đang sẵn RHEL 10, thực tế không quá quan trọng vì dù sao chúng ta cũng chạy container)
-  - Container Runtime: Podman (để chạy rootless container)
+  - OS: RHEL 10 (vì tôi đang sẵn có server RHEL 10, thực tế bạn có thể cài trên Fedora, CentOS hay Alma Linux, Rocky Linux. OS không quá quan trọng vì dù sao chúng ta cũng chạy container)
+  - Container runtime: Podman (vì nó là sản phẩm mặc định trong server RHEL 10, chạy được rootless container, cũng không phải đương đầu với userland proxy của Docker)
   - Disk: Trống 40G cho chắc ăn
   - RAM: Trống 8G
   - CPU: 2 core cho Quay, Redis và PostgreSQL mỗi cái 1 core, tổng là 4 core
-  - S3: MinIO đặt trên máy NAS
+  - S3-compatible: MinIO đặt trên máy NAS
 
 ## Chuẩn bị các image trước khi cài
 
@@ -97,9 +97,9 @@ Vì tất cả cài qua container, nên tôi cũng cài hết các component tr�
   - [Valkey 9.0.6 thay cho Redis](https://images.redhat.com/?search=valkey&name=valkey&version=9.0.6): registry.access.redhat.com/hi/valkey:9.0.6
 
 Bạn có thể sẽ có 3 câu hỏi sau, và tôi xin trả lời luôn:
-  1. Tại sao lại dùng Valkey thay vì Redis: Redis đã thay đổi license của mình từ BSD sang SSPL/RSAL, tức là người dùng (dạng end-user) thì dùng và contribute cho Redis như bình thường, nhưng sẽ ngăn cấm các nền tảng lấy Redis ra và bán lại (như AWS ElastiCache), trừ khi trả cho Redis một cục tiền to. Bạn có thể đọc bài giải thích về sự kiện này trong [một bài viết của TechCrunch](https://techcrunch.com/2024/03/31/why-aws-google-and-oracle-are-backing-the-valkey-redis-fork/).
-  2. Image của PostgreSQL và Valkey là cái gì mà lại HI vậy: HI thực ra chính là Hardened Image của Red Hat, được thiết kế ra để giảm các vấn đề về Security đến mức tối thiểu. Tôi đang tìm hiểu về Hardened Image nên sử dụng luôn. Thực tế tôi đã tìm image Redis thay vì Valkey, nhưng không tìm thấy trong [catalog HI của Red Hat](https://images.redhat.com/), nên tiện thể sử dụng Valkey luôn.
-  3. Dùng Valkey có ổn không: Valkey là một bản fork của Redis, giống như MariaDB và MySQL vậy. Nếu sử dụng một cách cơ bản bình thường thì theo tôi thấy không có gì khác so với Redis. Hơn nữa Redis/Valkey cũng chỉ là nơi chứa cache và không chứa thông tin gì quan trọng cả, nên khi cần ta có thể dựng một con Redis lên thay cho Valkey mà không quá lo lắng về việc Quay chết. 
+  1. Tại sao lại dùng Valkey thay vì Redis: Redis đã thay đổi license của mình từ BSD sang [SSPL](https://www.mongodb.com/legal/licensing/server-side-public-license)/[RSALv2](https://redis.io/legal/rsalv2-agreement/), tức là người dùng end-user có thể dùng miễn phí và contribute cho Redis như bình thường, nhưng sẽ ngăn cấm các nền tảng khác dựng Redis lên và bán lại (như AWS ElastiCache), trừ khi trả cho Redis một cục tiền to. Bạn có thể đọc bài giải thích về sự kiện này trong [một bài viết của TechCrunch](https://techcrunch.com/2024/03/31/why-aws-google-and-oracle-are-backing-the-valkey-redis-fork/).
+  2. Image của PostgreSQL và Valkey là gì trông lạ vậy, cái HI là gì thế: HI thực ra chính là Hardened Image của Red Hat, được thiết kế ra để giảm các vấn đề về Security đến mức tối thiểu, bắt nguồn từ dự án [Humming Bird](https://hummingbird-project.io/). Tôi đang tìm hiểu về Hardened Image nên sử dụng luôn. Thực tế tôi đã tìm image Redis thay vì Valkey, nhưng không tìm thấy trong [catalog Hardened Image của Red Hat](https://images.redhat.com/), nên đổi sang sử dụng thử Valkey.
+  3. Dùng Valkey có ổn không: Valkey là một bản fork của Redis, giống như MariaDB và MySQL vậy. Nếu sử dụng một cách cơ bản bình thường thì theo tôi thấy không có gì khác so với Redis. Hơn nữa Redis/Valkey cũng chỉ là cache và không chứa thông tin gì quan trọng cả, nên khi cần ta có thể dựng một con Redis lên thay cho Valkey. 
 
 # Các bước cài đặt Quay
 
@@ -120,7 +120,7 @@ Từ bây giờ ta sẽ lấy `~/quay` làm gốc và mọi thư mục cho các 
 
 ### Cấu hình network của Podman cho tiện lợi
 
-Sau đó khi tạo directory `~/quay`, tạo network `quay-net` để ta có thể dùng container name thẳng trong cùng 1 network mà không phải expose port ra ngoài
+Sau khi tạo directory `~/quay`, tạo network `quay-net` để ta có thể dùng container name thẳng trong cùng 1 network mà không phải expose port ra ngoài
 
 ```bash
 podman network create quay-net
