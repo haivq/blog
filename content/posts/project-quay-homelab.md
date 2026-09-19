@@ -1,7 +1,7 @@
 ---
 title: "Cài đặt Quay làm Registry cho toàn bộ homelab"
 author: "Aperture"
-date: "2026-09-19T20:30:00+07:00"
+date: 2026-09-19T15:00:00+07:00
 categories:
     - Quay
     - Registry
