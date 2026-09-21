@@ -35,7 +35,7 @@ Kubernetes gần đây đã trở thành một công nghệ nổi tiếng. Khôn
 ---
 
 {{< figure 
-    src="/posts/pc-rancher-k3s/k3s.png"
+    src="/posts/pc-rancher-k3s/microk8s.png"
     style="width:300px"
     position="center"
     alt="MicroK8s"
