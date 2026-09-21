@@ -20,6 +20,9 @@ tags:
     - development
     - virtualization
     - windows
+cover: "/posts/openshift-demo-on-local-machine/cover.png"
+images:
+    - "/posts/openshift-demo-on-local-machine/cover.png"
 ---
 
 # Mở đầu câu chuyện
