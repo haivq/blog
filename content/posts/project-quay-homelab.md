@@ -1,5 +1,5 @@
 ---
-title: "Cài đặt Quay làm Registry cho toàn bộ homelab"
+title: "Cài Project Quay 3.18 làm Container Registry cho Homelab với Podman và S3"
 author: "Aperture"
 date: 2026-09-19T15:00:00+07:00
 categories:
@@ -63,16 +63,16 @@ Nếu bạn đã xài [Docker registry](https://hub.docker.com/_/registry) thì 
 
   - Quay: Chính là cái Quay instance làm đầu não xử lý logic
   - PostgreSQL: 1 cái database để chứa thông tin, backup định kì vì không thể thay thế
-  - Redis: Làm cache để Quay lưu dữ liệu tạm thời, chết tạo con khác
+  - Redis: Làm cache để Quay lưu dữ liệu tạm thời, mất mát được, nên nếu có sự cố thì có thể tạo nhanh một Redis mà không sợ ảnh hưởng tới dữ liệu.
   - S3/S3-compatible storage (tuỳ chọn): Nơi thực sự chứa image data. Thực tế không bắt buộc phải có S3, nhưng không ai muốn quản 1 cái ổ cứng nặng trịch trong máy cả, đẩy được ra S3 cho nó nhẹ đầu óc, scale ra cũng dễ hơn
 
 Trong documentation của Quay có 2 phương pháp:
   - Cài [Proof-of-Concept](https://docs.projectquay.io/quay_jtbd-install.html#install-red-hat-quay-proof-of-concept_install_red_hat_quay_on_openshift_container_platform): Nhét tất cả mọi thứ vào 1 máy, lưu data của PostgreSQL và blob của image trên chính disk của máy đó, với mục đích start Quay lên nhanh nhất có thể để trải nghiệm.
-  - Cài [High-availability](https://docs.projectquay.io/quay_jtbd-install.html#preparing-for-quay-ha): Thực sự cài 1 con Quay High-availability, yêu cầu phải có 2-3 node cài Quay + Redis, 1 node làm HAproxy + PostgreSQL, 1 node làm Clair và 5 node làm CEPH cluster cho S3.
+  - Cài [High-availability](https://docs.projectquay.io/quay_jtbd-install.html#preparing-for-quay-ha): Thực sự cài 1 con Quay phù hợp cho production, yêu cầu phải có 2-3 node cài Quay + Redis, 1 node làm HAproxy + PostgreSQL, 1 node làm Clair và trong documentation có gợi ý cài 5 node làm CEPH cluster cho S3 nếu chưa có S3 provider nào khác.
 
-Cả 2 phương pháp trên, cài kiểu Proof-of-Concept thì quá nhỏ, không phải best practice và không thực sự dạy ta được cái gì trong lúc cài, cài kiểu High-availability như trong tài liệu thì quá lớn và kềnh càng, không đủ tài nguyên để dựng mà quản lý cũng nhọc óc, vậy nên ta sẽ đi theo một con đường dung hoà cả 2:
+Cả 2 phương pháp trên, cài kiểu Proof-of-Concept thì quá nhỏ, không phải best practice và không thực sự dạy ta được cái gì trong lúc cài, cài kiểu High-availability như trong tài liệu thì quá lớn và kềnh càng (tận 3 node quay, 1 node DB và LB, 1 node Clair, 5 node CEPH ko tính vì họ chỉ lấy ví dụ), không đủ tài nguyên để dựng mà quản lý cũng nhọc óc, vậy nên ta sẽ đi theo một con đường dung hoà cả 2:
   - 1 node cài toàn bộ Quay, Redis và PostgreSQL để tiết kiệm tài nguyên như Proof-of-Concept
-  - Đẩy toàn bộ blob của image ra một S3-compatible thay vì lưu hết vào ổ đĩa máy cài Quay như High-availability
+  - Đẩy toàn bộ blob của image ra một S3-compatible thay vì lưu hết vào ổ đĩa máy cài Quay như High-availability.
   - Bỏ Clair vì registry này tôi chỉ cần lưu trữ image, không cần scan security
 
 # Chuẩn bị trước khi cài đặt Quay
@@ -81,7 +81,7 @@ Cả 2 phương pháp trên, cài kiểu Proof-of-Concept thì quá nhỏ, khôn
 
 Vậy là sau khi chọn con đường hybrid, ta sẽ cần phải sizing tài nguyên trước khi cài. Dựa vào [tài liệu sizing của Quay](https://docs.projectquay.io/quay_jtbd-plan.html#sizing-intro), tôi lựa chọn cấu hình deploy như sau:
 
-  - OS: RHEL 10 (vì tôi đang sẵn có server RHEL 10, thực tế bạn có thể cài trên Fedora, CentOS hay Alma Linux, Rocky Linux. OS không quá quan trọng vì dù sao chúng ta cũng chạy container)
+  - OS: RHEL 10 (vì tôi đang sẵn có server RHEL 10, thực tế bạn có thể cài trên Fedora, CentOS hay Alma Linux, Rocky Linux, chúng đều có chung nguồn gốc là từ RHEL mà ra. Tôi chưa test trên các Linux Distro khác, hoan nghênh bạn đọc đóng góp ý kiến)
   - Container runtime: Podman (vì nó là sản phẩm mặc định trong server RHEL 10, chạy được rootless container, cũng không phải đương đầu với userland proxy của Docker)
   - Disk: Trống 40G cho chắc ăn
   - RAM: Trống 8G
@@ -125,6 +125,18 @@ Sau khi tạo directory `~/quay`, tạo network `quay-net` để ta có thể d�
 ```bash
 podman network create quay-net
 ```
+
+### Cấu hình linger để ngăn việc container bị exit sau khi thoát SSH session.
+
+Do rootless podman chạy trong context của một user nhất định, nên sau khi user logout ra khỏi SSH, tất cả các container tạo bởi rootless Podman sau một thời gian sẽ bị stop lại. Cách xử lý chính là bật `linger` lên để giữ cho container không bị tắt kể cả khi user đã logout ra khỏi máy.
+
+Để bật tính năng này lên, chạy câu lệnh sau:
+
+```bash
+loginctl enable-linger
+```
+
+> Lưu ý: Đây có thể không phải behavior mà bạn mong muốn, vậy nên nếu bạn muốn chỉ mỗi mình các component của Quay được sống, còn các process đang chạy của bạn sẽ tự kết thúc sau khi thoát SSH, hãy tạo 1 user mới và bật `linger` cho user đó.
 
 ### Cấu hình DNS cho Quay
 
@@ -226,7 +238,7 @@ Về sau khi cần kết nối tới Quay sử dụng các công cụ như [`oc-
 
 Sau khi chuẩn bị xong các bước khởi tạo ban đầu, ta bắt đầu cài Quay và các component của nó.
 
-## Cấu hình cho PosgreSQL và Valkey
+## Cấu hình cho PostgreSQL và Valkey
 
 Ta chuẩn bị trước PostgreSQL và Valkey trước khi khởi chạy Quay
 
@@ -289,7 +301,7 @@ cd ~/quay
 mkdir -p quay/config
 ```
 
-2. Khởi tại config của Quay tại `~/quay/quay/config`
+2. Khởi tạo config của Quay tại `~/quay/quay/config`
 
 Sử dụng `nano`, `vi` hay bất kì method nào để ghi nội dung sau vào file `quay/config/config.yaml` rồi sửa đổi cho hợp nhu cầu.
 
@@ -321,7 +333,7 @@ DISTRIBUTED_STORAGE_CONFIG:
       is_secure: false
       port: '9000'
       secret_key: somesecretkey # thay secret key
-      storage_path: /datastorage/registry # đổi storage path thành cái khác nếu muốn
+      storage_path: /datastorage/registry # đổi storage path thành cái khác nếu muốn, lưu ý đấy là storage path trong s3, không phải volume của Quay
       signature_version: v4
 
 DISTRIBUTED_STORAGE_PREFERENCE:
@@ -332,6 +344,7 @@ SUPER_USERS:
   - quayadmin
 
 # Giảm số lượng worker để tiết kiệm RAM
+# NOTE: trong doc có nói WORKER_COUNT_REGISTRY min là 8, nhưng do tôi dùng ít nên để là 4 cho tiết kiệm
 WORKER_COUNT_REGISTRY: 4
 WORKER_COUNT_WEB: 2
 WORKER_CONNECTION_COUNT_REGISTRY: 10
@@ -343,7 +356,7 @@ FEATURE_SECURITY_SCANNER: false
 FEATURE_MAILING: false
 FEATURE_ORG_MIRROR: false
 FEATURE_REPO_MIRROR: false
-FEATURE_PROXY_CACHE: false
+FEATURE_PROXY_CACHE: true
 FEATURE_QUOTA_MANAGEMENT: false
 FEATURE_STORAGE_REPLICATION: false
 FEATURE_RATE_LIMITS: false
@@ -373,6 +386,12 @@ FEATURE_USER_INITIALIZE: true
   - [Configure Project Quay](https://docs.projectquay.io/config_quay.html)
   - [Manage Project Quay](https://docs.projectquay.io/manage_quay.html)
   - [Optimize](https://docs.projectquay.io/quay_jtbd-optimize.html)
+
+Để generate `SECRET_KEY` và`DATABASE_SECRET_KEY`, tôi dùng command sau cho nhanh:
+
+```bash
+openssl rand -hex 32
+```
 
 3. Copy các certificate đã tạo vào trong thư mục `config` của Quay
 
@@ -406,7 +425,7 @@ podman run -d --name quay \
 
 Đợi một lúc cho quay migrate database, ta có thể vào được giao diện của Quay ngay tại: `quay.haivq.local:8443` (Nhớ đổi domain của bạn đi đấy).
 
-2. Sau khi Quay đã online, ta phải khởi tạo password cho cho user `quayadmin` thì mới login được (chú ý thay đổi username, password, email cho phù hợp với mục đích sử dụng):
+2. Sau khi Quay đã online, ta phải khởi tạo password cho user `quayadmin` thì mới login được (chú ý thay đổi username, password, email cho phù hợp với mục đích sử dụng):
 ```bash
 curl -k -X POST https://quay.haivq.local:8443/api/v1/user/initialize -H 'Content-Type: application/json' -d '{
     "username": "quayadmin",
