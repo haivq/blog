@@ -533,8 +533,8 @@ Sau khi đặt xong healthcheck, bạn có thể theo dõi trạng thái của Q
 Lưu ý rằng khi sử dụng phương pháp compose này, bạn vẫn sẽ cần phải:
   
   - Cấu hình DNS và certificate
-  - Tạo trước các directory cần thiết
-  - Khởi tạo PostgreSQL và cài plugin `pg_trgm` và `quaydb`
+  - Chuẩn bị các directory cần thiết
+  - Khởi tạo PostgreSQL và cài plugin `pg_trgm` vào `quaydb`
   - Cấu hình `config.yaml` của Quay
 
 # Tổng kết
