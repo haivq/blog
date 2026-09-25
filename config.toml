@@ -49,11 +49,11 @@ copyright = "Hai \"Aperture\" Vu :: <a href=\"/license/\">Licensing details</a> 
 [languages]
   [languages.vi.params]
     languageName = "Tiếng Việt"
-    title = "Góc của Aperture"
+    title = "Góc của HaiVQ"
     subtitle = "Nơi ghi chép kinh nghiệm làm việc của tôi"
-    owner = "Aperture Prometheus"
+    owner = "HaiVQ"
     keywords = "tam,redhat,devops,coding,resume,experience"
-    copyright = "Aperture Prometheus"
+    copyright = "HaiVQ"
     menuMore = "Xem thêm"
     readMore = "Đọc tiếp"
     newerPosts = "Bài mới hơn"
@@ -65,10 +65,10 @@ copyright = "Hai \"Aperture\" Vu :: <a href=\"/license/\">Licensing details</a> 
     words = "chữ"
 
     [languages.vi.params.logo]
-      logoText = "Góc của Aperture"
+      logoText = "Góc của HaiVQ"
       logoHomeLink = "/"
     [languages.vi.author]
-      name = "Aperture"
+      name = "HaiVQ"
       email = "me@haivq.com"
     [languages.vi.menu]
       [[languages.vi.menu.main]]
