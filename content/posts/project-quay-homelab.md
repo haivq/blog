@@ -63,7 +63,7 @@ Nếu bạn đã xài [Docker registry](https://hub.docker.com/_/registry) thì 
 
   - Quay: Chính là cái Quay instance làm đầu não xử lý logic
   - PostgreSQL: 1 cái database để chứa thông tin, backup định kì vì không thể thay thế
-  - Redis: Làm cache để Quay lưu dữ liệu tạm thời, mất mát được, nên nếu có sự cố thì có thể tạo nhanh một Redis mà không sợ ảnh hưởng tới dữ liệu.
+  - Redis: Làm cache để Quay lưu dữ liệu tạm thời, nên nếu có sự cố thì có thể tạo nhanh một Redis mà không sợ ảnh hưởng tới dữ liệu quan trọng.
   - S3/S3-compatible storage (tuỳ chọn): Nơi thực sự chứa image data. Thực tế không bắt buộc phải có S3, nhưng không ai muốn quản 1 cái ổ cứng nặng trịch trong máy cả, đẩy được ra S3 cho nó nhẹ đầu óc, scale ra cũng dễ hơn
 
 Trong documentation của Quay có 2 phương pháp:
@@ -97,7 +97,7 @@ Vì tất cả cài qua container, nên tôi cũng cài hết các component tr�
   - [Valkey 9.0.6 thay cho Redis](https://images.redhat.com/?search=valkey&name=valkey&version=9.0.6): registry.access.redhat.com/hi/valkey:9.0.6
 
 Bạn có thể sẽ có 3 câu hỏi sau, và tôi xin trả lời luôn:
-  1. Tại sao lại dùng Valkey thay vì Redis: Redis đã thay đổi license của mình từ BSD sang [SSPL](https://www.mongodb.com/legal/licensing/server-side-public-license)/[RSALv2](https://redis.io/legal/rsalv2-agreement/), tức là người dùng end-user có thể dùng miễn phí và contribute cho Redis như bình thường, nhưng sẽ ngăn cấm các nền tảng khác dựng Redis lên và bán lại (như AWS ElastiCache), trừ khi trả cho Redis một cục tiền to. Bạn có thể đọc bài giải thích về sự kiện này trong [một bài viết của TechCrunch](https://techcrunch.com/2024/03/31/why-aws-google-and-oracle-are-backing-the-valkey-redis-fork/).
+  1. Tại sao lại dùng Valkey thay vì Redis: Redis đã thay đổi license của mình từ BSD sang [SSPL](https://www.mongodb.com/legal/licensing/server-side-public-license)/[RSALv2](https://redis.io/legal/rsalv2-agreement/), tức là người dùng end-user có thể dùng miễn phí và contribute cho Redis như bình thường, nhưng sẽ là cú đấm cho các nền tảng khác dựng Redis lên và bán lại (như AWS ElastiCache). Bạn có thể đọc bài giải thích về sự kiện này trong [một bài viết của TechCrunch](https://techcrunch.com/2024/03/31/why-aws-google-and-oracle-are-backing-the-valkey-redis-fork/). Dù Redis 8 đã bổ sung giấy phép [AGPLv3](https://www.gnu.org/licenses/agpl-3.0.en.html), nhưng tôi đang muốn tìm hiểu tương thích giữa Valkey so với Redis, và trước mắt đang hoạt động ổn trong lab của tôi, nên tôi lựa chọn Valkey. Tuy nhiên, trong tài liệu của Project Quay không nói rõ ràng về việc Valkey đã được test và thay thế hoàn toàn cho Redis, nên hãy cân nhắc trước khi sử dụng Valkey trong môi trường prouction.
   2. Image của PostgreSQL và Valkey là gì trông lạ vậy, cái HI là gì thế: HI thực ra chính là Hardened Image của Red Hat, được thiết kế ra để giảm các vấn đề về Security đến mức tối thiểu, bắt nguồn từ dự án [Humming Bird](https://hummingbird-project.io/). Tôi đang tìm hiểu về Hardened Image nên sử dụng luôn. Thực tế tôi đã tìm image Redis thay vì Valkey, nhưng không tìm thấy trong [catalog Hardened Image của Red Hat](https://images.redhat.com/), nên đổi sang sử dụng thử Valkey.
   3. Dùng Valkey có ổn không: Valkey là một bản fork của Redis, giống như MariaDB và MySQL vậy. Nếu sử dụng một cách cơ bản bình thường thì theo tôi thấy không có gì khác so với Redis. Hơn nữa Redis/Valkey cũng chỉ là cache và không chứa thông tin gì quan trọng cả, nên khi cần ta có thể dựng một con Redis lên thay cho Valkey. 
 
@@ -443,6 +443,141 @@ podman container restart quay
 
 Vậy là đến đây ta đã cài xong Project Quay.
 
+## Backup cho PostgreSQL
+
+Như đã đề cập ở trên, PostgreSQL cần phải được backup định kì vì nó chứa toàn bộ dữ liệu của Quay. Như bình thường ta có thể chạy 1 container backup, kết nối tới container của PostgreSQL và chạy backup cho `quaydb`, chính là database chứa data của Quay. Trong trường hợp gặp sự cố, ta có thể sử dụng file backup đã dump ra để restore lại PostgreSQL. Để chạy job backup, ta sẽ sử dụng chính [`pg_dump`](https://www.postgresql.org/docs/18/app-pgdump.html) trong chính image của PostgreSQL và nhét nó vào một cronjob chạy hàng ngày.
+
+Để cho tiện, tôi tạo một shell script dưới đây, với mục đích backup vào folder `/mnt/backup/quay/postgresql` - là một NFS tôi mount vào máy RHEL để chứa các file backup. NFS này đã align user và group với user tôi đang chạy Quay nên sẽ không phải gặp lại các vấn đề về quyền nữa. Để tránh gặp phải vấn đề về SELinux và permission giữa container và NFS, tôi sẽ dump nó vào folder `/tmp` trước rồi copy vào NFS sau.
+
+Để cho dễ minh hoạ, file này được đặt ở `/home/haivu/quay/postgresql-quay-backup.sh`. Dưới đây là nội dung của script, vui lòng thay đổi các nội dung như NFS mountpoint, local backup directory, vân vân.
+
+> Script này được viết dựa theo gợi ý của [Bash Coding Standard (BCS)](https://github.com/Open-Technology-Foundation/bash-coding-standard), mục [Atomic file write](https://github.com/Open-Technology-Foundation/bash-coding-standard/blob/main/docs/BCS-Bash-Ref/12_Signals-and-Traps/15_Atomic-file-write.md)
+
+```bash
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+log() {
+  printf '[%(%Y-%m-%d %H:%M:%S)T] %s\n' -1 "$*"
+}
+
+log_error() {
+  printf '[%(%Y-%m-%d %H:%M:%S)T] ERROR: %s\n' -1 "$*" >&2
+}
+
+# Đảm bảo không có 2 backup job chạy cùng một lúc
+LOCK_FILE="/run/user/$(id -u)/quay-postgresql-backup.lock"
+exec 9>"$LOCK_FILE"
+if ! flock -n 9; then
+  log_error "Another backup is already running."
+  exit 1
+fi
+
+# Đảm bảo file mới tạo có permission restrictive, thay vì phụ thuộc vào umask mặc định của môi trường
+umask 077
+
+# Thay đổi cho matching với môi trường thực tế
+PG_PASSWORD="quaypassword"
+PG_IMAGE="registry.access.redhat.com/hi/postgresql:18.6"
+PG_NETWORK="quay-net"
+
+TIMESTAMP="$(date '+%Y-%m-%d_%H-%M-%S')"
+
+BACKUP_NAME="quaydb-$TIMESTAMP.dump"
+
+# Thay đổi local backup dir nếu cần
+TMP_BACKUP_DIR="/tmp"
+TMP_BACKUP_PATH="$TMP_BACKUP_DIR/$BACKUP_NAME"
+TMP_PARTIAL_BACKUP_PATH="$(mktemp "$TMP_BACKUP_PATH.XXXXXX.partial")"
+
+# Thay đổi NFS backup dir cho phù hợp với môi trường thật
+NFS_MOUNTPOINT="/mnt/backup"
+NFS_BACKUP_DIR="$NFS_MOUNTPOINT/quay/postgresql"
+NFS_BACKUP_PATH="$NFS_BACKUP_DIR/$BACKUP_NAME"
+NFS_PARTIAL_BACKUP_PATH=""
+
+# Xoá các file partial
+cleanup_partials() {
+  # Xoá file partial backup dù có lỗi hay ko
+  rm -f -- "$TMP_PARTIAL_BACKUP_PATH"
+
+  # xoá file partial trên NFS
+  if [[ -n "$NFS_PARTIAL_BACKUP_PATH" ]]; then
+    rm -f -- "$NFS_PARTIAL_BACKUP_PATH"
+  fi
+}
+
+# Chạy cleanup sau khi script exit
+trap cleanup_partials EXIT
+
+log "Backing up PostgreSQL to $TMP_BACKUP_PATH..."
+
+if podman run --rm \
+    --network "$PG_NETWORK" \
+    -e PGPASSWORD="$PG_PASSWORD" \
+    --entrypoint pg_dump \
+    "$PG_IMAGE" \
+    -h postgresql \
+    -U quayuser \
+    -d quaydb \
+    -Fc \
+    > "$TMP_PARTIAL_BACKUP_PATH"
+then
+  mv "$TMP_PARTIAL_BACKUP_PATH" "$TMP_BACKUP_PATH"
+else
+  rm -f -- "$TMP_PARTIAL_BACKUP_PATH"
+  log_error "Backup failed, please check again!"
+  exit 1
+fi
+
+chmod 600 "$TMP_BACKUP_PATH"
+
+log "Backup file created at $TMP_BACKUP_PATH"
+
+# Trigger NFS automount vì trong hạ tầng của tôi thì tôi đang mount NFS bằng autofs
+log "Triggering NFS automount..."
+
+if ! timeout 10 stat "$NFS_BACKUP_DIR" >/dev/null 2>&1; then
+  log_error "Unable to access NFS backup directory: $NFS_BACKUP_DIR"
+  exit 1
+fi
+
+echo "Copying backup to NFS at $NFS_BACKUP_PATH..."
+
+NFS_PARTIAL_BACKUP_PATH="$(
+  mktemp "$NFS_BACKUP_PATH.XXXXXX.partial"
+)"
+
+if ! cp "$TMP_BACKUP_PATH" "$NFS_PARTIAL_BACKUP_PATH"; then
+  log_error "Failed to copy backup to NFS."
+  log_error "Local backup preserved at $TMP_BACKUP_PATH"
+  exit 1
+fi
+
+mv "$NFS_PARTIAL_BACKUP_PATH" "$NFS_BACKUP_PATH"
+NFS_PARTIAL_BACKUP_PATH=""
+
+log "Backup file copied to $NFS_BACKUP_PATH"
+
+rm -f -- "$TMP_BACKUP_PATH"
+
+log "Local backup at $TMP_BACKUP_PATH removed"
+
+log "Backup completed!"
+```
+
+Giờ ta có thể chạy file này định kì bằng việc biến nó vào Cronjob. Để thêm Cronjob hiện tại, mở Crontab hiện tại bằng lệnh `crontab -e` và cho nội dung như sau vào:
+
+```
+CRON_TZ=Asia/Ho_Chi_Minh
+TZ=Asia/Ho_Chi_Minh
+
+0 2 * * * /home/haivu/quay/postgresql-quay-backup.sh >> /home/haivu/quay/postgresql/log/backup.log 2>&1
+```
+
+Như vậy là job này sẽ luôn chạy lúc 2h sáng theo đúng giờ Việt Nam (múi giờ UTC+7).
+
+
 # Quản lý deployment bằng compose file
 
 Để đơn giản hoá việc quản lý Quay, ta có thể sử dụng file `docker-compose.yml` để quản trị Quay đơn giản hơn. Config healthcheck, thời gian chờ start/stop container và đợi các container sử dụng compose file nhàn hơn rất nhiều là ngồi truy lại cái command `podman`. Tôi sẽ lấy một ví dụ file compose mà tôi đang sử dụng ở đây, file này được đặt trong directory `~/quay` cho dễ quản lý, vui lòng sửa lại theo nhu cầu của mỗi người:
@@ -451,6 +586,8 @@ Vậy là đến đây ta đã cài xong Project Quay.
 services:
   postgresql:
     image: registry.access.redhat.com/hi/postgresql:18.6
+    networks:
+      - quay-net
     restart: unless-stopped
     stop_grace_period: 300s
     cpus: "1.0"
@@ -474,6 +611,8 @@ services:
 
   redis:
     image: registry.access.redhat.com/hi/valkey:9.0.6
+    networks:
+      - quay-net
     restart: unless-stopped
     stop_grace_period: 60s
     cpus: "1.0"
@@ -498,6 +637,8 @@ services:
       redis:
         condition: service_healthy
     image: quay.io/projectquay/quay:3.18.0
+    networks:
+      - quay-net
     restart: unless-stopped
     stop_grace_period: 120s
     cpus: "2.0"
@@ -518,11 +659,15 @@ services:
       timeout: 10s
       retries: 3
       start_period: 90s
+
+networks:
+  quay-net:
+    name: quay-net
 ```
 
-Như đã thấy, tôi có thể setup healthcheck cho tất cả component và đặt `depends_on` của Quay vào PostgreSQL và Valkey, đảm bảo 2 component này sống trước rồi mới bật Quay lên và Quay phải xuống trước khi 2 component đó xuống. Tôi cũng đặt luôn `stop_grace_period` cho các component khác nhau để đảm bảo chúng đủ thời gian để gracefully shutdown, thay vì mặc định 10s rồi sẽ bị kill. Mặc định compose sẽ tự tạo network cho các component này nên tôi không phải tự tạo bằng tay ở trên nữa. 
+Như đã thấy, tôi có thể setup healthcheck cho tất cả component và đặt `depends_on` của Quay vào PostgreSQL và Valkey, đảm bảo 2 component này sống trước rồi mới bật Quay lên và Quay phải xuống trước khi 2 component đó xuống. Tôi cũng đặt luôn `stop_grace_period` cho các component khác nhau để đảm bảo chúng đủ thời gian để gracefully shutdown, thay vì mặc định 10s rồi sẽ bị kill. Thay vì dùng network mặc định mà `podman compose` tạo ra, tôi tạo hẳn một network riêng, việc này sẽ phục vụ cho tác vụ backup về sau.
 
-Sau khi đặt xong healthcheck, bạn có thể theo dõi trạng thái của Quay trên Cockpit khá là tiện lợi:
+Khi đặt xong healthcheck, bạn có thể theo dõi trạng thái của Quay trên Cockpit khá là tiện lợi:
 
 {{< figure 
     src="/posts/project-quay-homelab/cockpit-quay.png"
@@ -536,6 +681,7 @@ Lưu ý rằng khi sử dụng phương pháp compose này, bạn vẫn sẽ c�
   - Chuẩn bị các directory cần thiết
   - Khởi tạo PostgreSQL và cài plugin `pg_trgm` vào `quaydb`
   - Cấu hình `config.yaml` của Quay
+  - Cấu hình backup Cronjob cho Quay
 
 # Tổng kết
 
@@ -546,3 +692,6 @@ Lưu ý rằng khi sử dụng phương pháp compose này, bạn vẫn sẽ c�
   - [Red Hat Quay Documentation](https://docs.redhat.com/en/documentation/red_hat_quay/3.18) / [archive](https://web.archive.org/web/20260919091907/https://docs.redhat.com/en/documentation/red_hat_quay/3.18)
   - [Red Hat Hardened Images](https://www.redhat.com/en/products/hardened-images) / [archive](https://web.archive.org/save/https://www.redhat.com/en/products/hardened-images)
   - [TechCrunch - Why AWS, Google and Oracle are backing the Valkey Redis fork](https://techcrunch.com/2024/03/31/why-aws-google-and-oracle-are-backing-the-valkey-redis-fork/) / [archive](https://web.archive.org/web/20260120044327/https://techcrunch.com/2024/03/31/why-aws-google-and-oracle-are-backing-the-valkey-redis-fork/)
+  - [pg_dump - PostgreSQL 18 Documentation](https://www.postgresql.org/docs/18/app-pgdump.html) / [archive](https://web.archive.org/web/20260918185222/https://www.postgresql.org/docs/18/app-pgdump.html)
+  - [Bash Coding Standard (BCS)](https://github.com/Open-Technology-Foundation/bash-coding-standard) / [archive](https://web.archive.org/web/20260925103119/https://github.com/Open-Technology-Foundation/bash-coding-standard)
+    * [Atomic file write](https://github.com/Open-Technology-Foundation/bash-coding-standard/blob/main/docs/BCS-Bash-Ref/12_Signals-and-Traps/15_Atomic-file-write.md) / [archive](https://web.archive.org/save/https://github.com/Open-Technology-Foundation/bash-coding-standard/blob/main/docs/BCS-Bash-Ref/12_Signals-and-Traps/15_Atomic-file-write.md)
