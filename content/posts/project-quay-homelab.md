@@ -10,6 +10,7 @@ categories:
     - Disconnected
     - Air-gapped
     - Red Hat
+    - Home Lab
 tags:
     - quay
     - projectquay
@@ -17,7 +18,6 @@ tags:
     - rhquay
     - mirror
     - registry
-    - rhquay
     - kubernetes
     - k8s
     - openshift
@@ -30,6 +30,7 @@ tags:
     - devops
     - infrastructure
     - experience
+    - homelab
 cover: "/posts/project-quay-homelab/cover.png"
 images:
     - "/posts/project-quay-homelab/cover.png"
@@ -330,7 +331,7 @@ DISTRIBUTED_STORAGE_CONFIG:
     - access_key: somes3accesskey # thay access key
       bucket_name: quay # thay bucket name
       hostname: miniohostname # thay hostname của s3
-      is_secure: false
+      is_secure: false # Homelab only: traffic giữa Quay và S3 đang dùng HTTP không mã hóa
       port: '9000'
       secret_key: somesecretkey # thay secret key
       storage_path: /datastorage/registry # đổi storage path thành cái khác nếu muốn, lưu ý đấy là storage path trong s3, không phải volume của Quay
@@ -427,7 +428,8 @@ podman run -d --name quay \
 
 2. Sau khi Quay đã online, ta phải khởi tạo password cho user `quayadmin` thì mới login được (chú ý thay đổi username, password, email cho phù hợp với mục đích sử dụng):
 ```bash
-curl -k -X POST https://quay.haivq.local:8443/api/v1/user/initialize -H 'Content-Type: application/json' -d '{
+curl --cacert ~/quay/certs/rootCA.crt -X POST https://quay.haivq.local:8443/api/v1/user/initialize \
+    -H 'Content-Type: application/json' -d '{
     "username": "quayadmin",
     "password": "quayadmin",
     "email": "quayadmin@haivq.local",
@@ -687,6 +689,13 @@ Lưu ý rằng khi sử dụng phương pháp compose này, bạn vẫn sẽ c�
   - Khởi tạo PostgreSQL và cài plugin `pg_trgm` vào `quaydb`
   - Cấu hình `config.yaml` của Quay
   - Cấu hình backup Cronjob cho Quay
+
+# Các hạng mục cần chú ý
+
+Còn một số hạng mục sau mà tôi chưa đưa code backup vào trong bài blog vì bài viết đã quá dài, nhưng tôi thấy nên nêu bật ra:
+
+  - S3 phải thực sự HA: Thường khi nhắc tới S3 là người ta đã nghĩ đến một phương tiện lưu trữ có tính HA và không dễ dàng chết. Trong bài viết này tôi lưu nó trên NAS có RAID (cụ thể là SHR-1) nên phần nào ngăn chặn được việc 1 cái ổ đĩa lăn ra hẹo sẽ gây toang toàn bộ storage. Nói vậy nhưng ta vẫn phải đảm bảo rằng S3 phải thực sự HA, chứ không phải là 1 cái process MinIO chạy trong 1 cái máy mount vào ổ cứng mà không có biện pháp phòng ngừa nào.
+  - Backup file CA và Quay config: Việc này tương đối hiển nhiên, ta sẽ phải backup các file config cho Quay và cả file CA. Backup file config để khi có vấn đề ta sẽ start Quay lên nhanh nhất có thể, backup file CA - như đã đề cập - để tránh việc phải generate ra CA mới rồi đi trust lại khắp nơi.
 
 # Tổng kết
 
