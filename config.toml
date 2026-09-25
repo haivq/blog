@@ -1,6 +1,6 @@
 baseurl = "https://blog.haivq.com/"
 
-title = "Góc của Aperture"
+title = "Góc của HaiVQ"
 
 theme = "terminal"
 enableRobotsTXT = true
@@ -8,8 +8,8 @@ enableRobotsTXT = true
 locale = "vi-VN"
 defaultContentLanguage = "vi"
 
-enableGitInfo = true
-copyright = "© Aperture Prometheus :: 2018 - 2026"
+# enableGitInfo = true
+copyright = "Hai "Aperture Prometheus" Vu :: <a href=\"/license/\">Licensing details</a> :: 2018 - 2026"
 
 [pagination]
   pagerSize = 5
@@ -36,9 +36,9 @@ copyright = "© Aperture Prometheus :: 2018 - 2026"
 
   # set post to show the last updated
   # If you use git, you can set `enableGitInfo` to `true` and then post will automatically get the last updated
-  showLastUpdated = true
+  # showLastUpdated = true
   # Provide a string as a prefix for the last update date. By default, it looks like this: 2020-xx-xx [Updated: 2020-xx-xx] :: Author
-  updatedDatePrefix = "Cập nhật"
+  # updatedDatePrefix = "Cập nhật"
 
   readingTime = true
   autoCover = true
