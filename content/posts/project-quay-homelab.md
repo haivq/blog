@@ -352,8 +352,7 @@ SUPER_USERS:
   - quayadmin
 
 # Giảm số lượng worker để tiết kiệm RAM
-# NOTE: trong doc có nói WORKER_COUNT_REGISTRY min là 8, nhưng do tôi dùng ít nên để là 4 cho tiết kiệm
-WORKER_COUNT_REGISTRY: 4
+WORKER_COUNT_REGISTRY: 8
 WORKER_COUNT_WEB: 2
 WORKER_CONNECTION_COUNT_REGISTRY: 10
 WORKER_CONNECTION_COUNT_WEB: 5
