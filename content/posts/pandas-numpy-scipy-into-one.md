@@ -34,7 +34,7 @@ Việc review các breaking change xảy ra khá suôn sẻ, vì phần lớn c�
 
 # Vấn đề kích thước với NumPy, SciPy và Pandas
 
-Nghiệp vụ mà tôi gặp phải yêu cầu phải có cả 3 thư viện SciPy, NumPy và Pandas chạy cùng với nhau. Nếu bạn dùng SciPy, NumPy và Pandas thì cũng hiểu các kích thước các thư viện này rất nặng. Ngoài code ra, các thư viện trên còn chứa cả thư viện phụ trợ kèm theo, các thư viện `.so` đã build ra (`OpenBLAS` và `GFortran` cho NumPy và SciPy, mỗi thư viện dùng một phiên bản) nên tổng cả thư mục này có kích thước lên tới 278M, trong khi AWS Lambda chỉ cho phép tổng TẤT CẢ các layer lại trong một function là 250M, tức là tôi đã quá 28M so với giới hạn, đấy là chưa kể phải chừa chỗ cho các layer và code khác.
+Nghiệp vụ mà tôi gặp phải yêu cầu phải có cả 3 thư viện SciPy, NumPy và Pandas chạy cùng với nhau. Nếu bạn dùng SciPy, NumPy và Pandas thì cũng hiểu các kích thước các thư viện này rất nặng. Ngoài code ra, các thư viện trên còn chứa cả thư viện phụ trợ kèm theo, các thư viện `.so` đã build ra (`OpenBLAS` và `GFortran` cho NumPy và SciPy, mỗi thư viện dùng một phiên bản) nên tổng cả thư mục này có kích thước lên tới 278M, trong khi AWS Lambda chỉ cho phép tổng **TẤT CẢ dung lượng** code và các layer lại trong một function là 250M, tức là chỉ riêng layer thôi tôi đã vượt quá 28M so với giới hạn, đấy là chưa kể phải chừa chỗ cho các layer và code khác.
 
 Ở runtime Python 3.8, AWS cung cấp sẵn 2 layer sau:
 
@@ -62,7 +62,7 @@ Nhưng khi lên runtime Python 3.10, AWS chỉ cung cấp một layer `AWSSDKPan
 | 4 | Build lấy một bản NumPy, Pandas và SciPy riêng và optimize các thư viện OpenBLAS, GFortran cho họ                                       | Việc build khá khó và tốn nhiều thời gian, không hề có hướng dẫn gì trên mạng. Chạy bản build custom dễ xảy ra lỗi bí hiểm rất khó sửa.                                                                                                                                                                                                                                                                                                                                               |
 | 5 | Xoá bớt code trong các thư viện đi cho nhỏ hơn 230M _*(MA QUỶ 💀💀💀)*_                                                                     | Không rõ bên trong có những gì an toàn để xoá. Không nói cũng biết đây là bad practice.                                                                                                                                                                                                                                                                                                                                                                                   |
 
-Sau khi thử cả 4 phương án, tôi thấy phương án 4 là nhanh nhất và chưa xảy ra vấn đề gì cả. Câu chuyện cụ thể sẽ được đề cập ở dưới.
+Sau khi thử cả 5 phương án, tôi thấy phương án 5 là nhanh nhất và chưa xảy ra vấn đề gì cả. Câu chuyện cụ thể sẽ được đề cập ở dưới.
 
 # Con đường dẫn tới phương án ma quỷ
 
@@ -103,9 +103,6 @@ Vậy các bước để tạo ra một layer nhỏ có thể tóm gọn trong c
 ```bash
 # tải thư viện về, không tạo bytecode và chỉ tải bản CPython
 pip install numpy pandas scipy --no-compile --implementation cp -t python
-
-# Xoá hết các thư mục dist-info không cần đến
-rm -r *.dist-info
 
 # Xoá hết các thư mục lá (leaf directory) tests của tất cả các thư viện
 find . | grep -E "*/tests$" | xargs rm -rf
