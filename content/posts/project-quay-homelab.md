@@ -84,8 +84,8 @@ Vậy là sau khi chọn con đường hybrid, ta sẽ cần phải sizing tài 
 
   - OS: RHEL 10 (vì tôi đang sẵn có server RHEL 10, thực tế bạn có thể cài trên Fedora, CentOS hay Alma Linux, Rocky Linux, chúng đều có chung nguồn gốc là từ RHEL mà ra. Tôi chưa test trên các Linux Distro khác, hoan nghênh bạn đọc đóng góp ý kiến)
   - Container runtime: Podman (vì nó là sản phẩm mặc định trong server RHEL 10, chạy được rootless container, cũng không phải đương đầu với userland proxy của Docker)
-  - Disk: Trống 40G cho chắc ăn
-  - RAM: Trống 8G
+  - Disk: Trống 40G cho chắc ăn để làm nơi chứa container runtime
+  - RAM: Trống tối thiểu 8G cho Quay, PostgreSQL và Redis
   - CPU: 2 core cho Quay, Redis và PostgreSQL mỗi cái 1 core, tổng là 4 core
   - S3-compatible: MinIO đặt trên máy NAS
 
@@ -314,7 +314,13 @@ PREFERRED_URL_SCHEME: https
 SERVER_HOSTNAME: quay.haivq.local:8443
 SECRET_KEY: somesecretkey
 DATABASE_SECRET_KEY: somedbsecretkey
+
 DB_URI: postgresql://quayuser:quaypassword@postgresql:5432/quaydb
+# Giảm DB connection để giảm tiêu thụ RAM
+DB_CONNECTION_ARGS:
+  autorollback: true
+  threadlocals: true
+  max_connections: 5
 
 BUILDLOGS_REDIS:
   host: redis
@@ -332,7 +338,7 @@ DISTRIBUTED_STORAGE_CONFIG:
     - access_key: somes3accesskey # thay access key
       bucket_name: quay # thay bucket name
       hostname: miniohostname # thay hostname của s3
-      is_secure: false # Homelab only: traffic giữa Quay và S3 đang dùng HTTP không mã hóa
+      is_secure: false # Homelab only: traffic giữa Quay và S3 đang dùng HTTP không mã hóa, thay đổi nếu cần
       port: '9000'
       secret_key: somesecretkey # thay secret key
       storage_path: /datastorage/registry # đổi storage path thành cái khác nếu muốn, lưu ý đấy là storage path trong s3, không phải volume của Quay
@@ -623,20 +629,24 @@ services:
       - quay-net
     restart: unless-stopped
     stop_grace_period: 60s
+
     cpus: "1.0"
+    mem_limit: 512m
+    mem_reservation: 384m
+    
     healthcheck:
       test: ["CMD", "valkey-cli", "ping"]
       interval: 10s
       timeout: 3s
       retries: 5
       start_period: 10s
-    command:
-      - --protected-mode
-      - "no"
-      - --save
-      - ""
-      - --appendonly
-      - "no"
+    command: [
+      "--protected-mode", "no",
+      "--save", "\"\"",
+      "--appendonly", "no",
+      "--maxmemory", "384mb",
+      "--maxmemory-policy", "noeviction"
+    ]
 
   quay:
     depends_on:
@@ -697,6 +707,7 @@ Còn một số hạng mục sau mà tôi chưa đưa code backup vào trong bà
 
   - S3 phải thực sự HA: Thường khi nhắc tới S3 là người ta đã nghĩ đến một phương tiện lưu trữ có tính HA và không dễ dàng chết. Trong bài viết này tôi lưu nó trên NAS có RAID (cụ thể là SHR-1) nên phần nào ngăn chặn được việc 1 cái ổ đĩa lăn ra hẹo sẽ gây toang toàn bộ storage. Nói vậy nhưng ta vẫn phải đảm bảo rằng S3 phải thực sự HA, chứ không phải là 1 cái process MinIO chạy trong 1 cái máy mount vào ổ cứng mà không có biện pháp phòng ngừa nào.
   - Backup Quay: Việc này tương đối hiển nhiên, ta sẽ phải backup các file config cho Quay và cả file CA. Backup file config để khi có vấn đề ta sẽ start Quay lên nhanh nhất có thể, backup file CA - như đã đề cập - để tránh việc phải generate ra CA mới rồi đi trust lại khắp nơi. Tham khảo thêm các nội dung về backup tại [doc của Project Quay](https://docs.projectquay.io/manage_quay.html#backing-up-red-hat-quay-standalone)
+  - Theo dõi và limit tài nguyên memory của PostgreSQL và Quay: Như ở file compose tôi đang sử dụng, thì chỉ mình Valkey có giới hạn về memory. Sẽ cần thời gian để monitor để đưa ra được một con số ổn định.
 
 # Tổng kết
 
