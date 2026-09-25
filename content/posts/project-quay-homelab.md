@@ -80,7 +80,7 @@ Cả 2 phương pháp trên, cài kiểu Proof-of-Concept thì quá nhỏ, khôn
 
 ## Cấu hình của tôi
 
-Vậy là sau khi chọn con đường hybrid, ta sẽ cần phải sizing tài nguyên trước khi cài. Dựa vào [tài liệu sizing của Quay](https://docs.projectquay.io/quay_jtbd-plan.html#sizing-intro), tôi lựa chọn cấu hình deploy như sau:
+Vậy là sau khi chọn con đường hybrid, ta sẽ cần phải sizing tài nguyên trước khi cài. Dựa vào [tài liệu sizing của Quay](https://docs.projectquay.io/quay_jtbd-plan.html#sizing-intro), tôi lựa chọn cấu hình deploy như sau (tại thời điểm bài viết này được viết thì vẫn đang chạy bình thường):
 
   - OS: RHEL 10 (vì tôi đang sẵn có server RHEL 10, thực tế bạn có thể cài trên Fedora, CentOS hay Alma Linux, Rocky Linux, chúng đều có chung nguồn gốc là từ RHEL mà ra. Tôi chưa test trên các Linux Distro khác, hoan nghênh bạn đọc đóng góp ý kiến)
   - Container runtime: Podman (vì nó là sản phẩm mặc định trong server RHEL 10, chạy được rootless container, cũng không phải đương đầu với userland proxy của Docker)
@@ -98,7 +98,8 @@ Vì tất cả cài qua container, nên tôi cũng cài hết các component tr�
   - [Valkey 9.0.6 thay cho Redis](https://images.redhat.com/?search=valkey&name=valkey&version=9.0.6): registry.access.redhat.com/hi/valkey:9.0.6
 
 Bạn có thể sẽ có 3 câu hỏi sau, và tôi xin trả lời luôn:
-  1. Tại sao lại dùng Valkey thay vì Redis: Redis đã thay đổi license của mình từ BSD sang [SSPL](https://www.mongodb.com/legal/licensing/server-side-public-license)/[RSALv2](https://redis.io/legal/rsalv2-agreement/), tức là người dùng end-user có thể dùng miễn phí và contribute cho Redis như bình thường, nhưng sẽ là cú đấm cho các nền tảng khác dựng Redis lên và bán lại (như AWS ElastiCache). Bạn có thể đọc bài giải thích về sự kiện này trong [một bài viết của TechCrunch](https://techcrunch.com/2024/03/31/why-aws-google-and-oracle-are-backing-the-valkey-redis-fork/). Dù Redis 8 đã bổ sung giấy phép [AGPLv3](https://www.gnu.org/licenses/agpl-3.0.en.html), nhưng tôi đang muốn tìm hiểu tương thích giữa Valkey so với Redis, và trước mắt đang hoạt động ổn trong lab của tôi, nên tôi lựa chọn Valkey. Tuy nhiên, trong tài liệu của Project Quay không nói rõ ràng về việc Valkey đã được test và thay thế hoàn toàn cho Redis, nên hãy cân nhắc trước khi sử dụng Valkey trong môi trường prouction.
+
+  1. Tại sao lại dùng Valkey thay vì Redis: Redis đã thay đổi license của mình từ BSD sang [SSPL](https://www.mongodb.com/legal/licensing/server-side-public-license)/[RSALv2](https://redis.io/legal/rsalv2-agreement/), tức là người dùng end-user có thể dùng miễn phí và contribute cho Redis như bình thường, nhưng sẽ là cú đấm cho các nền tảng khác dựng Redis lên và bán lại (như AWS ElastiCache). Bạn có thể đọc bài giải thích về sự kiện này trong [một bài viết của TechCrunch](https://techcrunch.com/2024/03/31/why-aws-google-and-oracle-are-backing-the-valkey-redis-fork/). Dù Redis 8 đã [bổ sung giấy phép AGPLv3](https://redis.io/blog/agplv3), nhưng tôi đang muốn tìm hiểu tương thích giữa Valkey so với Redis, và trước mắt đang hoạt động ổn trong lab của tôi, nên tôi lựa chọn Valkey. Tuy nhiên, trong tài liệu của Project Quay không nói rõ ràng về việc Valkey đã được test và thay thế hoàn toàn cho Redis, nên hãy cân nhắc trước khi sử dụng Valkey trong môi trường prouction.
   2. Image của PostgreSQL và Valkey là gì trông lạ vậy, cái HI là gì thế: HI thực ra chính là Hardened Image của Red Hat, được thiết kế ra để giảm các vấn đề về Security đến mức tối thiểu, bắt nguồn từ dự án [Humming Bird](https://hummingbird-project.io/). Tôi đang tìm hiểu về Hardened Image nên sử dụng luôn. Thực tế tôi đã tìm image Redis thay vì Valkey, nhưng không tìm thấy trong [catalog Hardened Image của Red Hat](https://images.redhat.com/), nên đổi sang sử dụng thử Valkey.
   3. Dùng Valkey có ổn không: Valkey là một bản fork của Redis, giống như MariaDB và MySQL vậy. Nếu sử dụng một cách cơ bản bình thường thì theo tôi thấy không có gì khác so với Redis. Hơn nữa Redis/Valkey cũng chỉ là cache và không chứa thông tin gì quan trọng cả, nên khi cần ta có thể dựng một con Redis lên thay cho Valkey. 
 
@@ -695,14 +696,18 @@ Lưu ý rằng khi sử dụng phương pháp compose này, bạn vẫn sẽ c�
 Còn một số hạng mục sau mà tôi chưa đưa code backup vào trong bài blog vì bài viết đã quá dài, nhưng tôi thấy nên nêu bật ra:
 
   - S3 phải thực sự HA: Thường khi nhắc tới S3 là người ta đã nghĩ đến một phương tiện lưu trữ có tính HA và không dễ dàng chết. Trong bài viết này tôi lưu nó trên NAS có RAID (cụ thể là SHR-1) nên phần nào ngăn chặn được việc 1 cái ổ đĩa lăn ra hẹo sẽ gây toang toàn bộ storage. Nói vậy nhưng ta vẫn phải đảm bảo rằng S3 phải thực sự HA, chứ không phải là 1 cái process MinIO chạy trong 1 cái máy mount vào ổ cứng mà không có biện pháp phòng ngừa nào.
-  - Backup file CA và Quay config: Việc này tương đối hiển nhiên, ta sẽ phải backup các file config cho Quay và cả file CA. Backup file config để khi có vấn đề ta sẽ start Quay lên nhanh nhất có thể, backup file CA - như đã đề cập - để tránh việc phải generate ra CA mới rồi đi trust lại khắp nơi.
+  - Backup Quay: Việc này tương đối hiển nhiên, ta sẽ phải backup các file config cho Quay và cả file CA. Backup file config để khi có vấn đề ta sẽ start Quay lên nhanh nhất có thể, backup file CA - như đã đề cập - để tránh việc phải generate ra CA mới rồi đi trust lại khắp nơi. Tham khảo thêm các nội dung về backup tại [doc của Project Quay](https://docs.projectquay.io/manage_quay.html#backing-up-red-hat-quay-standalone)
 
 # Tổng kết
 
 Ở trên là kinh nghiệm của tôi trong việc cài Quay. Mong bạn đọc sẽ thấy bài viết hữu ích và giúp đỡ bạn làm quen nhanh chóng với Quay và xây dựng một registry trong homelab đơn giản và hiệu quả.
 
 # Nguồn tham khảo
-  - [Project Quay Documentation](https://docs.projectquay.io/welcome.html) / [archive](https://web.archive.org/web/20260919091034/https://docs.projectquay.io/welcome.html):
+  - [Project Quay Documentation](https://docs.projectquay.io/welcome.html) / [archive](https://web.archive.org/web/20260919091034/https://docs.projectquay.io/welcome.html)
+    * [Install Red Hat Quay proof of concept](https://docs.projectquay.io/quay_jtbd-install.html#install-red-hat-quay-proof-of-concept_install_red_hat_quay_on_openshift_container_platform)
+    * [Install Red Hat Quay in high availability](https://web.archive.org/web/20260919091158/https://docs.projectquay.io/quay_jtbd-install.html#install-red-hat-quay-in-high-availability_configure_ipv6_for_quay_proof_of_concept)
+    * [Backing up Project Quay on standalone deployments](https://docs.projectquay.io/manage_quay.html#backing-up-red-hat-quay-standalone) / [archive](https://web.archive.org/web/20260925113048/https://docs.projectquay.io/manage_quay.html#backing-up-red-hat-quay-standalone)
+    * [Restoring Project Quay on standalone deployments](https://docs.projectquay.io/manage_quay.html#restoring-red-hat-quay-standalone) / [archive](https://web.archive.org/web/20260925113048/https://docs.projectquay.io/manage_quay.html#restoring-red-hat-quay-standalone)
   - [Red Hat Quay Documentation](https://docs.redhat.com/en/documentation/red_hat_quay/3.18) / [archive](https://web.archive.org/web/20260919091907/https://docs.redhat.com/en/documentation/red_hat_quay/3.18)
   - [Red Hat Hardened Images](https://www.redhat.com/en/products/hardened-images) / [archive](https://web.archive.org/save/https://www.redhat.com/en/products/hardened-images)
   - [TechCrunch - Why AWS, Google and Oracle are backing the Valkey Redis fork](https://techcrunch.com/2024/03/31/why-aws-google-and-oracle-are-backing-the-valkey-redis-fork/) / [archive](https://web.archive.org/web/20260120044327/https://techcrunch.com/2024/03/31/why-aws-google-and-oracle-are-backing-the-valkey-redis-fork/)
