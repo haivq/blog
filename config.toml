@@ -9,7 +9,7 @@ locale = "vi-VN"
 defaultContentLanguage = "vi"
 
 # enableGitInfo = true
-copyright = "Hai "Aperture Prometheus" Vu :: <a href=\"/license/\">Licensing details</a> :: 2018 - 2026"
+copyright = "Hai \"Aperture\" Vu :: <a href=\"/license/\">Licensing details</a> :: 2018 - 2026"
 
 [pagination]
   pagerSize = 5

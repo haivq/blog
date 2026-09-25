@@ -454,7 +454,11 @@ Như đã đề cập ở trên, PostgreSQL cần phải được backup định
 > Script này được viết dựa theo gợi ý của [Bash Coding Standard (BCS)](https://github.com/Open-Technology-Foundation/bash-coding-standard), mục [Atomic file write](https://github.com/Open-Technology-Foundation/bash-coding-standard/blob/main/docs/BCS-Bash-Ref/12_Signals-and-Traps/15_Atomic-file-write.md)
 
 ```bash
+
 #!/usr/bin/env bash
+# SPDX-License-Identifier: MIT
+# Copyright (c) 2026 Hai Vu
+# quay-postgresql-backup - Back up the Quay PostgreSQL database to NFS.
 set -Eeuo pipefail
 
 log() {
@@ -466,7 +470,7 @@ log_error() {
 }
 
 # Đảm bảo không có 2 backup job chạy cùng một lúc
-LOCK_FILE="/run/user/$(id -u)/quay-postgresql-backup.lock"
+LOCK_FILE="/run/user/$UID/quay-postgresql-backup.lock"
 exec 9>"$LOCK_FILE"
 if ! flock -n 9; then
   log_error "Another backup is already running."
@@ -488,7 +492,7 @@ BACKUP_NAME="quaydb-$TIMESTAMP.dump"
 # Thay đổi local backup dir nếu cần
 TMP_BACKUP_DIR="/tmp"
 TMP_BACKUP_PATH="$TMP_BACKUP_DIR/$BACKUP_NAME"
-TMP_PARTIAL_BACKUP_PATH="$(mktemp "$TMP_BACKUP_PATH.XXXXXX.partial")"
+TMP_PARTIAL_BACKUP_PATH="$(mktemp -- "$TMP_BACKUP_PATH.XXXXXX.partial")"
 
 # Thay đổi NFS backup dir cho phù hợp với môi trường thật
 NFS_MOUNTPOINT="/mnt/backup"
@@ -508,7 +512,7 @@ cleanup_partials() {
 }
 
 # Chạy cleanup sau khi script exit
-trap cleanup_partials EXIT
+trap cleanup_partials SIGINT SIGTERM EXIT
 
 log "Backing up PostgreSQL to $TMP_BACKUP_PATH..."
 
@@ -523,7 +527,7 @@ if podman run --rm \
     -Fc \
     > "$TMP_PARTIAL_BACKUP_PATH"
 then
-  mv "$TMP_PARTIAL_BACKUP_PATH" "$TMP_BACKUP_PATH"
+  mv -- "$TMP_PARTIAL_BACKUP_PATH" "$TMP_BACKUP_PATH"
 else
   rm -f -- "$TMP_PARTIAL_BACKUP_PATH"
   log_error "Backup failed, please check again!"
@@ -544,11 +548,9 @@ fi
 
 echo "Copying backup to NFS at $NFS_BACKUP_PATH..."
 
-NFS_PARTIAL_BACKUP_PATH="$(
-  mktemp "$NFS_BACKUP_PATH.XXXXXX.partial"
-)"
+NFS_PARTIAL_BACKUP_PATH="$(mktemp -- "$NFS_BACKUP_PATH.XXXXXX.partial")"
 
-if ! cp "$TMP_BACKUP_PATH" "$NFS_PARTIAL_BACKUP_PATH"; then
+if ! cp -- "$TMP_BACKUP_PATH" "$NFS_PARTIAL_BACKUP_PATH"; then
   log_error "Failed to copy backup to NFS."
   log_error "Local backup preserved at $TMP_BACKUP_PATH"
   exit 1
@@ -583,6 +585,9 @@ Như vậy là job này sẽ luôn chạy lúc 2h sáng theo đúng giờ Việt
 Để đơn giản hoá việc quản lý Quay, ta có thể sử dụng file `docker-compose.yml` để quản trị Quay đơn giản hơn. Config healthcheck, thời gian chờ start/stop container và đợi các container sử dụng compose file nhàn hơn rất nhiều là ngồi truy lại cái command `podman`. Tôi sẽ lấy một ví dụ file compose mà tôi đang sử dụng ở đây, file này được đặt trong directory `~/quay` cho dễ quản lý, vui lòng sửa lại theo nhu cầu của mỗi người:
 
 ```yaml
+# SPDX-License-Identifier: MIT
+# Copyright (c) 2026 Hai Vu
+
 services:
   postgresql:
     image: registry.access.redhat.com/hi/postgresql:18.6
