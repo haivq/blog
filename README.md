@@ -11,4 +11,4 @@ Technology used:
 
 Visit my blog at [https://blog.haivq.com](https://blog.haivq.com)
 
-License: 
+[License info](./LICENSE.md)
