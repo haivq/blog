@@ -52,6 +52,8 @@ copyright = "Hai \"Aperture\" Vu :: <a href=\"/license/\">Giấy phép nội dun
     email = "me@haivq.com"
 
 [languages]
+  [languages.en]
+    locale = "en-US"
   [languages.vi.params]
     languageName = "Tiếng Việt"
     title = "Góc của HaiVQ"

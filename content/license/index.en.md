@@ -1,6 +1,6 @@
 ---
 title: "License"
-author: "Aperture"
+author: "Hai Vu"
 date: "2018-01-01T00:00:00+07:00"
 categories:
     - License
@@ -13,11 +13,11 @@ Except where otherwise noted, original articles, diagrams, illustrations, and ot
 
 Under this license, you may copy, redistribute, remix, transform, and build upon the content for any purpose, including commercial use, provided that you:
 
-1. give appropriate credit;
-2. link to the original work where possible;
-3. link to the CC BY-SA 4.0 license;
-4. indicate whether changes were made; and
-5. distribute adaptations under the same or a compatible license.
+1. Give appropriate credit;
+2. Link to the original work where possible;
+3. Link to the CC BY-SA 4.0 license;
+4. Indicate whether changes were made;
+5. Distribute adaptations under the same or a compatible license.
 
 ## Attribution
 
