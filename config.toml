@@ -9,7 +9,7 @@ locale = "vi-VN"
 defaultContentLanguage = "vi"
 
 # enableGitInfo = true
-copyright = "Hai \"Aperture\" Vu :: <a href=\"/license/\">Licensing details</a> :: 2018 - 2026"
+copyright = "Hai \"Aperture\" Vu :: <a href=\"/license/\">Giấy phép nội dung</a> :: 2018 - 2026"
 
 [pagination]
   pagerSize = 5
@@ -87,6 +87,10 @@ copyright = "Hai \"Aperture\" Vu :: <a href=\"/license/\">Licensing details</a> 
         identifier = "rss"
         name = "RSS"
         url = "/index.xml"
+      [[languages.vi.menu.main]]
+        identifier = "license"
+        name = "Giấy phép nội dung"
+        url = "/license"
       
 
 [markup.goldmark.renderer]
