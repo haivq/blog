@@ -9,7 +9,7 @@ tags:
 hideComments: true
 ---
 
-> [Read English version](/license/en)
+> [Read English version](/en/license)
 
 Trừ khi có ghi chú khác, các bài viết, sơ đồ, hình minh họa và nội dung biên tập khác do tác giả tự tạo và đăng tải trên website này được cấp phép theo **[Giấy phép Commons Attribution-ShareAlike 4.0 International License (CC BY-SA 4.0)](https://creativecommons.org/licenses/by-sa/4.0/)**.
 
