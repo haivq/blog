@@ -7,6 +7,7 @@ enableRobotsTXT = true
 
 locale = "vi-VN"
 defaultContentLanguage = "vi"
+timeZone = "Asia/Ho_Chi_Minh"
 
 # enableGitInfo = true
 copyright = "Hai \"Aperture\" Vu :: <a href=\"/license/\">Giấy phép nội dung</a> :: 2018 - 2026"
@@ -20,7 +21,7 @@ copyright = "Hai \"Aperture\" Vu :: <a href=\"/license/\">Giấy phép nội dun
   contentTypeName = "posts"
 
   # if you set this to 0, only submenu trigger will be visible
-  showMenuItems = 4
+  showMenuItems = 3
 
   # show selector to switch language
   showLanguageSelector = false
@@ -46,13 +47,17 @@ copyright = "Hai \"Aperture\" Vu :: <a href=\"/license/\">Giấy phép nội dun
   # it's set to `true` by default
   # oneHeadingSize = false
 
+  [params.author]
+    name = "HaiVQ"
+    email = "me@haivq.com"
+
 [languages]
   [languages.vi.params]
     languageName = "Tiếng Việt"
     title = "Góc của HaiVQ"
-    subtitle = "Nơi ghi chép kinh nghiệm làm việc của tôi"
+    subtitle = "Nơi ghi chép kinh nghiệm làm việc và các thử nghiệm làm việc của tôi"
     owner = "HaiVQ"
-    keywords = "tam,redhat,devops,coding,resume,experience"
+    keywords = "tam,redhat,devops,coding,resume,experience,homelab,docker,k8s,openshift"
     copyright = "HaiVQ"
     menuMore = "Xem thêm"
     readMore = "Đọc tiếp"
@@ -75,26 +80,36 @@ copyright = "Hai \"Aperture\" Vu :: <a href=\"/license/\">Giấy phép nội dun
         identifier = "about"
         name = "Thông tin"
         url = "/about"
+        weight = 10
       [[languages.vi.menu.main]]
         identifier = "categories"
         name = "Danh mục"
         url = "/categories"
-      [[languages.vi.menu.main]]
-        identifier = "thoughts"
-        name = "Suy nghĩ của tôi"
-        url = "https://thoughts.haivq.com"
+        weight = 20
       [[languages.vi.menu.main]]
         identifier = "rss"
         name = "RSS"
         url = "/index.xml"
+        weight = 30
+      [[languages.vi.menu.main]]
+        identifier = "thoughts"
+        name = "Suy nghĩ của tôi"
+        url = "https://thoughts.haivq.com"
+        weight = 40
       [[languages.vi.menu.main]]
         identifier = "license"
         name = "Giấy phép nội dung"
         url = "/license"
+        weight = 50
       
+[markup]
+  [markup.highlight]
+    # Dùng CSS class cho syntax highlighting của Terminal.
+    noClasses = false
 
-[markup.goldmark.renderer]
-  unsafe = true
+  [markup.goldmark.renderer]
+    # Cho phép HTML nhúng trực tiếp trong Markdown.
+    unsafe = true
 
 [services]
   [services.disqus]
