@@ -9,6 +9,8 @@ tags:
 hideComments: true
 ---
 
+> [Read English version](/license/en)
+
 Trừ khi có ghi chú khác, các bài viết, sơ đồ, hình minh họa và nội dung biên tập khác do tác giả tự tạo và đăng tải trên website này được cấp phép theo **[Giấy phép Commons Attribution-ShareAlike 4.0 International License (CC BY-SA 4.0)](https://creativecommons.org/licenses/by-sa/4.0/)**.
 
 Theo giấy phép này, bạn được phép sao chép, phân phối lại, phối lại, chỉnh sửa và phát triển nội dung cho bất kỳ mục đích nào, kể cả mục đích thương mại, với điều kiện:

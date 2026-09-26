@@ -9,6 +9,8 @@ tags:
 hideComments: true
 ---
 
+> [Đọc bản tiếng Việt](/license/)
+
 Except where otherwise noted, original articles, diagrams, illustrations, and other editorial content published on this website are licensed under the **[Creative Commons Attribution-ShareAlike 4.0 International License (CC BY-SA 4.0)](https://creativecommons.org/licenses/by-sa/4.0/deed.en)**.
 
 Under this license, you may copy, redistribute, remix, transform, and build upon the content for any purpose, including commercial use, provided that you:
