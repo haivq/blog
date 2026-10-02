@@ -402,12 +402,12 @@ openssl rand -hex 32
 
 3. Copy các certificate đã tạo vào trong thư mục `config` của Quay
 
-Để quay có thể sử dụng certificate đã sinh ra, bắt buộc phải để các file certificate này vào thư mục config của Quay với đúng tên `ssl.key` và `ssl.crt`. Ta phải copy đúng 2 file này vào đúng vị trí cạnh file `config.yaml` ở trên thì Quay mới nhận certificate và hoạt động:
+Để quay có thể sử dụng certificate đã sinh ra, bắt buộc phải để các file certificate này vào thư mục config của Quay với đúng tên `ssl.key` và `ssl.cert`. Ta phải copy đúng 2 file này với tên **GIỐNG HỆT** vào đúng vị trí cạnh file `config.yaml` ở trên thì Quay mới nhận certificate và hoạt động:
 
 
 ```bash
 cp ~/quay/certs/quay.key ssl.key
-cp ~/quay/certs/quay.crt ssl.crt
+cp ~/quay/certs/quay.crt ssl.cert
 ```
 
 Giờ trong thư mục `config` sẽ chứa:
@@ -415,7 +415,7 @@ Giờ trong thư mục `config` sẽ chứa:
 ```
 config.yaml
 ssl.key
-ssl.crt
+ssl.cert
 ```
 
 ### Bật Quay và khởi tạo user
