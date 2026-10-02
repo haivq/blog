@@ -462,7 +462,6 @@ Như đã đề cập ở trên, PostgreSQL cần phải được backup định
 > Script này được viết dựa theo gợi ý của [Bash Coding Standard (BCS)](https://github.com/Open-Technology-Foundation/bash-coding-standard), mục [Atomic file write](https://github.com/Open-Technology-Foundation/bash-coding-standard/blob/main/docs/BCS-Bash-Ref/12_Signals-and-Traps/15_Atomic-file-write.md)
 
 ```bash
-
 #!/usr/bin/env bash
 # SPDX-License-Identifier: MIT
 # Copyright (c) 2026 Hai Vu
@@ -589,6 +588,8 @@ Như vậy là job này sẽ luôn chạy lúc 2h sáng theo đúng giờ Việt
 
 
 # Quản lý deployment bằng compose file
+
+> Lưu ý: Repo chính thức của Red Hat không cung cấp [`podman-compose` hay `docker-compose`](https://docs.podman.io/en/v5.6.2/markdown/podman-compose.1.html). Package này được cung cấp thông qua [EPEL](https://docs.fedoraproject.org/en-US/epel/), không được hỗ trợ chính thức bởi Red Hat mà được hỗ trợ qua [cộng đồng Fedora](https://fedoraproject.org/workstation/community/). Để sử dụng repository này, vui lòng xem [tài liệu cài đặt](https://docs.fedoraproject.org/en-US/epel/getting-started/). Nếu máy RHEL của bạn được register qua Satellite, tham khảo [bài viết này](https://www.redhat.com/en/blog/epel-8-repo-satellite-6) để biết thêm thông tin.
 
 Để đơn giản hoá việc quản lý Quay, ta có thể sử dụng file `docker-compose.yml` để quản trị Quay đơn giản hơn. Config healthcheck, thời gian chờ start/stop container và đợi các container sử dụng compose file nhàn hơn rất nhiều là ngồi truy lại cái command `podman`. Tôi sẽ lấy một ví dụ file compose mà tôi đang sử dụng ở đây, file này được đặt trong directory `~/quay` cho dễ quản lý, vui lòng sửa lại theo nhu cầu của mỗi người:
 
