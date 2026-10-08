@@ -47,9 +47,11 @@ Sau khi tham khảo tài liệu [tạo image Windows trong tài liệu của RHO
     - ISO VirtIO Driver (bạn tự chuẩn bị hoặc tải [từ đây](https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/))
     - File cài Cloudbase-Init, có thể tải trên web của [Cloudbase Solution](https://cloudbase.it/cloudbase-init/)
 
-# Bắt đầu cài đặt
+# Hướng dẫn cài đặt
 
-Trước tiên ta vào màn hình screen
+Vui lòng xem video sau:
+
+{{< youtube id=uIt3QT-P1_0 caption="Ví dụ tạo Golden Image Windows Server 2025 định dạng QCOW trên Fedora" >}}
 
 # Tham khảo
   - [Red Hat OpenStack Services on OpenShift](https://docs.redhat.com/en/documentation/red_hat_openstack_services_on_openshift/18.0)
