@@ -35,6 +35,12 @@ Gần đây tôi vừa gặp một trường hợp khách gặp trục trặc v�
 
 Khi boot ISO Windows Server lên, thay vì giao diện chọn ngôn ngữ hiện lên, thì installer sẽ đòi driver. Nhiều người sẽ thấy bỡ ngỡ khi họ không gặp phải vấn đề này trên VMWare. Vấn đề này không chỉ xuất hiện trên OpenStack, mà sẽ gặp trên mọi platform sử dụng KVM và chọn VirtIO device thay vì giả lập SATA controller.
 
+{{< figure 
+    src="/posts/windows-qcow-image/driver-asking.png"
+    position="center"
+    alt="Installer kẹt lại ở đoạn đòi driver"
+    caption="Installer kẹt lại ở đoạn đòi driver" >}}
+
 Lý do là vì Microsoft thường đính kèm driver của VMWare trong bộ cài Windows nhưng không cung cấp driver [VirtIO](https://github.com/virtio-win/kvm-guest-drivers-windows), khiến cho việc cài đặt bị kẹt lại ở đoạn tìm driver. Cách xử lý cho vấn đề này là mount thêm ISO chứa driver của VirtIO vào máy ảo và để Windows tự detect các driver còn thiếu.
 
 Tuy nhiên, kể cả khi đã mount ISO VirtIO vào máy ảo thì installer vẫn hiện màn hình đòi driver thay vì tự nhận. Việc này xảy ra khi người dùng mount ISO dưới dạng bus SCSI. Để khắc phục, người dùng bắt buộc phải mount lại ISO dưới định dạng SATA CD-ROM. Việc này đã được đề cập trong documentation của [OpenShift Virtualization](https://docs.redhat.com/en/documentation/openshift_container_platform/4.20/html/virtualization/managing-vms#virt-installing-virtio-drivers-existing-windows_virt-install-virtio-drivers-on-windows-vms). Chỉ đến khi mount lại xong thì Windows mới tự quét và nhận driver như bình thường.
