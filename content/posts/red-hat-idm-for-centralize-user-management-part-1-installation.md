@@ -141,7 +141,7 @@ Cấu hình DNS server tới DNS tập trung đã nêu ở trên. Có rất nhi�
 
 > Lưu ý rằng sửa trực tiếp trong `/etc/resolv.conf` không được khuyến khích vì file này được quản lý bởi `NetworkManager` nên nếu có thay đổi về `NetworkManager` thì nó sẽ ghi đè file `/etc/resolv.conf`.
 
-Cài đặt hostname của IdM server cho trùng với hostname của server hostname đã chọn ở trên. Tương tự, hãy chọn cách sửa hostname mà bạn thấy dễ nhất. Tôi dedicate luôn con máy hiện tại để làm IdM server nên sửa luôn hostname máy đó cho dễ phân biệt. Trong trường hợp bạn muốn kết hợp 1 server homelab làm nhiều việc thì có thể giữ nguyên tên cũ như `home-server-1` cũng được, không nhất thiết phải sửa lịa hostname.
+Cài đặt hostname của IdM server cho trùng với hostname của server hostname đã chọn ở trên. Tương tự, hãy chọn cách sửa hostname mà bạn thấy dễ nhất. Tôi dedicate luôn con máy hiện tại để làm IdM server nên sửa luôn hostname máy đó cho dễ phân biệt. Trong trường hợp bạn muốn kết hợp 1 server homelab làm nhiều việc thì có thể giữ nguyên tên cũ ví dụ như `home-server-1.haivq.local` cũng được, không nhất thiết phải sửa lịa hostname.
 
 ### Bước 4: Cài đặt IdM
 
