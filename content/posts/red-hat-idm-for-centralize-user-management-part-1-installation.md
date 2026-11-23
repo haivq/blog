@@ -265,8 +265,12 @@ ipa-compat-manage disable
 - Cấu hình các ứng dụng khác kết nối với IdM thông qua LDAP để lấy danh sách user
 
 # Tài liệu tham khảo
+- [7 features of Red Hat Identity Management you need to know for the modern enterprise | Red Hat Blog](https://www.redhat.com/en/blog/7-features-red-hat-identity-management-you-need-know-modern-enterprise) / [archive](https://web.archive.org/web/20261123063022/https://www.redhat.com/en/blog/7-features-red-hat-identity-management-you-need-know-modern-enterprise)
+- [FreeIPA - Identity, Policy, Audit](https://www.freeipa.org)
+- [Identity Management in Red Hat Enterprise Linux | Red Hat Documentation](https://access.redhat.com/products/red-hat-identity-management/) / [archive](https://web.archive.org/web/20261123063159/https://docs.redhat.com/en/documentation/identity_management_in_red_hat_enterprise_linux/10/plan-overview_of_idm_and_access_control_in_rhel)
+  - [Overview of IdM and access control in RHEL](https://docs.redhat.com/en/documentation/identity_management_in_red_hat_enterprise_linux/10/plan-overview_of_idm_and_access_control_in_rhel) 
+  - [Install an IdM server: Without integrated DNS, with an integrated CA as the root CA](https://docs.redhat.com/en/documentation/identity_management_in_red_hat_enterprise_linux/10/install-installing_an_idm_server_without_integrated_dns_with_an_integrated_ca_as_the_root_ca) / [archive](https://web.archive.org/web/20261123063320/https://docs.redhat.com/en/documentation/identity_management_in_red_hat_enterprise_linux/10/install-installing_an_idm_server_without_integrated_dns_with_an_integrated_ca_as_the_root_ca)
+  - [Deploy and manage the ACME service in IdM](https://docs.redhat.com/en/documentation/identity_management_in_red_hat_enterprise_linux/10/install-deploying_and_managing_the_acme_service_in_idm_lightweight_sub_ca#the-acme-service-in-idm) / [archive](https://web.archive.org/web/20261123063428/https://docs.redhat.com/en/documentation/identity_management_in_red_hat_enterprise_linux/10/install-deploying_and_managing_the_acme_service_in_idm_lightweight_sub_ca#the-acme-service-in-idm)
+  - [IdM security hardening implementation phases](https://docs.redhat.com/en/documentation/identity_management_in_red_hat_enterprise_linux/10/secure-idm_security_hardening_implementation_phases) / [archive](https://web.archive.org/web/20261123063535/https://docs.redhat.com/en/documentation/identity_management_in_red_hat_enterprise_linux/10/secure-idm_security_hardening_implementation_phases)
 
-...Đang add
-
-<!-- Preparing https://docs.redhat.com/en/documentation/identity_management_in_red_hat_enterprise_linux/10/install-preparing_the_system_for_idm_server_installation -->
 
