@@ -19,9 +19,9 @@ tags:
   - redhat
   - rhel
   - installation
-# cover: "/posts/windows-qcow-image/cover.png"
-# images:
-#   - "/posts/windows-qcow-image/cover.png"
+cover: "/posts/red-hat-idm-for-centralize-user-management-part-1-installation/cover.png"
+images:
+  - "/posts/red-hat-idm-for-centralize-user-management-part-1-installation/cover.png"
 ---
 
 # Mở đầu câu chuyện
