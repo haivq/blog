@@ -1,5 +1,5 @@
 ---
-title: "Sử dụng Red Hat Identity Management để trong môi trường Homelab - Phần 1: Cài đặt"
+title: "Red Hat Identity Management trong môi trường Homelab - Phần 1: Cài đặt"
 author: "Aperture"
 date: 2026-11-20T15:00:00+07:00
 categories:
@@ -67,7 +67,7 @@ Vậy nên tôi sẽ lựa chọn cách cài đặt [IdM không kèm DNS nhưng 
 
 Dựa vào [tài liệu của hãng](https://docs.redhat.com/en/documentation/identity_management_in_red_hat_enterprise_linux/10/install-preparing_the_system_for_idm_server_installation) và thông tin đang có của homelab, tôi có thể liệt kê các yêu cầu hạ tầng như sau:
 
-  - Chạy RHEL 7, 8, 9 và 10 (nếu bạn sử dụng FreeIPA và cài trên Fedora hay CentOS thì thực tế yêu cầu về OS sẽ ít chặt hơn)
+  - Chạy RHEL 7, 8, 9 và 10 (nếu bạn sử dụng FreeIPA và cài trên Fedora hay CentOS thì thực tế yêu cầu về OS sẽ ít chặt hơn). Bài viết này được thực hiện trên máy RHEL 10.
   - Máy RHEL đã cập nhật repo RPM `BaseOS` và `AppStream` mới nhất, nguồn repo có thể từ chính Red Hat hoặc lấy về từ Satellite
   - Trống khoảng 4G RAM và 4G swap, tuy nhiên, trong môi trường homelab ta có thể bỏ qua yêu cầu này
   - DNS server tập trung hỗ trợ các record: `A`, `TXT`, `SRV`. Nếu hỗ trợ thêm `URI` nữa thì càng tốt.
@@ -93,6 +93,8 @@ Yêu cầu về phía client sẽ không nhiều như phía server (dựa theo [
 Theo tài liệu ta có thể [sử dụng Ansible](https://docs.redhat.com/en/documentation/identity_management_in_red_hat_enterprise_linux/10/install-installing_an_idm_server_with_an_integrated_ca_using_an_ansible_playbook) để cài đặt. Nhưng tôi sẽ theo phương pháp CLI truyền thống để cài đặt.
 
 ### Bước 1: Chọn realm và domain phù hợp
+
+> Lưu ý: Trong bài viết này, tôi sẽ lấy domain của tôi là `haivq.local`. Vui lòng thay đổi domain này thành domain thực tế của bạn.
 
 Chọn 1 domain, realm và server hostname mà bạn muốn sử dụng cho IdM như tôi sẽ chọn như sau:
 
@@ -131,7 +133,7 @@ dnf install ipa-server ipa-healthcheck
 Mở toàn bộ port cần thiết cho `ipa-server`:
 
 ```bash
-firewall-cmd --permanent --add-service={freeipa-4,dns}
+firewall-cmd --permanent --add-service=freeipa-4
 firewall-cmd --reload
 ```
 
@@ -148,7 +150,7 @@ Sử dụng command sau để cài đặt IdM (Thay đổi directory server pass
 ipa-server-install \
   --domain haivq.local \
   --realm HAIVQ.LOCAL \
-  --hostname=idm01.haivq.local \
+  --hostname=idm.haivq.local \
   --ds-password SomeDirectoryServerAdminPassword \
   --admin-password SomeIdMAdminUserPassword \
   --unattended
