@@ -10,6 +10,9 @@ categories:
   - FreeIPA
   - Installation
   - Experience
+  - Infrastructure
+  - Day 1
+  - Homelab
 tags:
   - ldap
   - idm
@@ -19,6 +22,10 @@ tags:
   - redhat
   - rhel
   - installation
+  - infra
+  - infrastructure
+  - day-1
+  - homelab
 cover: "/posts/red-hat-idm-for-centralize-user-management-part-1-installation/cover.png"
 images:
   - "/posts/red-hat-idm-for-centralize-user-management-part-1-installation/cover.png"
@@ -205,6 +212,8 @@ Các best practice ở đây đều không bắt buộc, nhưng khi đã tích h
 ## Tắt `allow_all` HBAC rule
 
 Mặc định IdM có một rule HBAC default là `allow_all`, cho phép TẤT CẢ user truy cập vào TẤT CẢ các host đã đăng kí vào. Dù rule `allow_all` này không cho phép người dùng có quyền `sudo`, nhưng vẫn khá nguy hiểm nếu cho phép user có thể login được tất cả các máy.
+
+> Lưu ý rằng sau khi bạn tắt HBAC rule `allow_all` này mà không tạo HBAC rule khác thì không user nào có quyền truy cập bất kì máy chủ nào trong hệ thống. Nếu bạn muốn thử, hãy giữ nguyên HBAC rule này và tắt nó đi ở sau khi bạn đã tạo HBAC rule ở phần 2.
 
 ## Chặn anonymous LDAP bind
 
