@@ -37,7 +37,7 @@ Câu chuyện bắt đầu từ việc một khách hàng yêu cầu quản lý 
 
 - Quản lý user tập trung: Admin tạo user 1 lần, người dùng có thể sử dụng user đó để đăng các máy RHEL đã đăng kí tới IdM server.
 - Quản lý quyền hạn truy cập của user và quyền `sudo` tới từng RHEL host: Admin phân quyền người dùng hoặc một nhóm người dùng truy cập tới từng máy hoặc một nhóm máy, cho phép họ tương tác giới hạn với `sudo`, ví dụ như chỉ cho `sudo systemctl restart posgresql` chẳng hạn.
-- Cho phép các ứng dụng khác sử dụng IdM làm user database qua LDAP protocol: LDAP khá thông dụng rồi, nên các ứng dụng khác có thể chọc vào IdM để lấy ra list user và auth trên list user đó luôn.
+- Cho phép các ứng dụng khác sử dụng IdM làm user database qua [LDAP](https://docs.redhat.com/en/documentation/red_hat_directory_server/13/html/planning_and_designing_directory_server/introduction-to-directory-services#about-ldap): LDAP khá thông dụng rồi, nên các ứng dụng khác có thể chọc vào IdM để lấy ra list user và auth trên list user đó luôn.
 - Cung cấp tính năng cấp certificate và quản lý vòng đời của certificate thông qua Dogtag PKI. Ngoài ra Dogtag còn hỗ trợ [ACME](https://www.rfc-editor.org/info/rfc8555/), tức nếu bạn có [`certbot`](https://certbot.eff.org/) hoặc [`cert-manager`](https://cert-manager.io/) thì có thể tự động issue ra certificate từ IdM mà không cần phải thủ công ngồi renew và cấp lại cert hàng năm nữa.
 - (và nhiều tính năng khác mà chúng ta sẽ không đề cập đến... vui lòng đọc thêm tại [link này](https://docs.redhat.com/en/documentation/identity_management_in_red_hat_enterprise_linux/10/plan-overview_of_idm_and_access_control_in_rhel#introduction-to-idm))
 
@@ -276,6 +276,7 @@ ipa-compat-manage disable
 - Cấu hình các ứng dụng khác kết nối với IdM thông qua LDAP để lấy danh sách user
 
 # Tài liệu tham khảo
+- [About LDAP | Red Hat Documentatuib](https://docs.redhat.com/en/documentation/red_hat_directory_server/13/html/planning_and_designing_directory_server/introduction-to-directory-services#about-ldap) / [archive](https://web.archive.org/web/20261124165851/https://docs.redhat.com/en/documentation/red_hat_directory_server/13/html/planning_and_designing_directory_server/introduction-to-directory-services#about-ldap)
 - [7 features of Red Hat Identity Management you need to know for the modern enterprise | Red Hat Blog](https://www.redhat.com/en/blog/7-features-red-hat-identity-management-you-need-know-modern-enterprise) / [archive](https://web.archive.org/web/20261123063022/https://www.redhat.com/en/blog/7-features-red-hat-identity-management-you-need-know-modern-enterprise)
 - [FreeIPA - Identity, Policy, Audit](https://www.freeipa.org)
 - [Identity Management in Red Hat Enterprise Linux | Red Hat Documentation](https://access.redhat.com/products/red-hat-identity-management/) / [archive](https://web.archive.org/web/20261123063159/https://docs.redhat.com/en/documentation/identity_management_in_red_hat_enterprise_linux/10/plan-overview_of_idm_and_access_control_in_rhel)
