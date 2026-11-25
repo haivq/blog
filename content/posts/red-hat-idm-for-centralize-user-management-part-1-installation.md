@@ -70,30 +70,18 @@ Vậy nên tôi sẽ lựa chọn cách cài đặt [IdM không kèm DNS nhưng 
 
 ## Cấu hình trước khi cài
 
-<!-- ### Về phía server -->
-
 Dựa vào [tài liệu của hãng](https://docs.redhat.com/en/documentation/identity_management_in_red_hat_enterprise_linux/10/install-preparing_the_system_for_idm_server_installation) và thông tin đang có của homelab, tôi có thể liệt kê các yêu cầu hạ tầng như sau:
 
   - Chạy RHEL 7, 8, 9 và 10 (nếu bạn sử dụng FreeIPA và cài trên Fedora hay CentOS thì thực tế yêu cầu về OS sẽ ít chặt hơn). Bài viết này được thực hiện trên máy RHEL 10.
   - Máy RHEL đã cập nhật repo RPM `BaseOS` và `AppStream` mới nhất, nguồn repo có thể từ chính Red Hat hoặc lấy về từ Satellite
   - Trống khoảng 4G RAM và 4G swap, tuy nhiên, trong môi trường homelab ta có thể bỏ qua yêu cầu này
   - DNS server tập trung hỗ trợ các record: `A`, `TXT`, `SRV`. Nếu hỗ trợ thêm `URI` nữa thì càng tốt.
-  - Máy còn cần phải còn trống các cổng (và mở cổng trên `firewalld`):
+  - Máy còn cần phải còn trống các cổng (và mở cổng trên `firewalld`) để nhận request từ client:
     - 80, 443 - TCP: Để cung cấp UI và API cho IdM
     - 389, 636 - TCP: Cấp cổng cho dịch vụ LDAP hoạt động
     - 88, 464 - TCP/UDP: Cấp cổng cho dịch vụ [Kerberos](https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/4/html/reference_guide/ch-kerberos)
-  - Kết nối tới DNS server tập trung đã nêu
-
-<!-- ### Về phía client
-
-Yêu cầu về phía client sẽ không nhiều như phía server (dựa theo [tài liệu của hãng](https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/9/html-single/installing_identity_management/index?utm_source=chatgpt.com#preparing-the-system-for-ipa-client-installation_installing-identity-management)), tóm lại sẽ chỉ có yêu cầu sau:
-
-  - Bất kì bản Linux nào cài đặt được `ipa-client`, tức không chỉ RHEL hay Fedora mà có cả gồm [Ubuntu](https://manpages.ubuntu.com/manpages/jammy/man1/ipa-client-install.1.html) hay [Debian](https://manpages.debian.org/unstable/freeipa-client/ipa-client-install.1.en.html).
-  - Kết nối tới DNS server tập trung, cùng DNS server mà IdM server đã kết nối tới
-  - Mở các cổng để kết nối tới IdM server, tương ứng với các port đã mở của IdM Server
-    - 80, 443 - TCP: Để cung cấp UI và API cho IdM
-    - 389, 636 - TCP: Cấp cổng cho dịch vụ LDAP hoạt động
-    - 88, 464 - TCP/UDP: Cấp cổng cho dịch vụ [Kerberos](https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/4/html/reference_guide/ch-kerberos) -->
+  - Kết nối tới DNS server tập trung đã nêu, vì toàn bộ hệ thống IdM sẽ được discover thông qua 
+  - Có một subdomain trên domain đã chọn để cấu hình làm hostname cho server IdM. Trỏ sẵn IP của IdM server vào hostname đó theo dạng record `A`.
 
 ## Bắt đầu cài đặt
 
@@ -148,7 +136,15 @@ Cấu hình DNS server tới DNS tập trung đã nêu ở trên. Có rất nhi�
 
 > Lưu ý rằng sửa trực tiếp trong `/etc/resolv.conf` không được khuyến khích vì file này được quản lý bởi `NetworkManager` nên nếu có thay đổi về `NetworkManager` thì nó sẽ ghi đè file `/etc/resolv.conf`.
 
-Cài đặt hostname của IdM server cho trùng với hostname của server hostname đã chọn ở trên. Tương tự, hãy chọn cách sửa hostname mà bạn thấy dễ nhất. Tôi dedicate luôn con máy hiện tại để làm IdM server nên sửa luôn hostname máy đó cho dễ phân biệt. Trong trường hợp bạn muốn kết hợp 1 server homelab làm nhiều việc thì có thể giữ nguyên tên cũ ví dụ như `home-server-1.haivq.local` cũng được, không nhất thiết phải sửa lịa hostname.
+Cài đặt hostname của IdM server cho trùng với hostname của server hostname đã chọn ở trên. Tương tự, hãy chọn cách sửa hostname mà bạn thấy dễ nhất (dùng `nmcli`, `hostnamectl`, `nmtui`). Tôi dedicate luôn con máy hiện tại để làm IdM server nên sửa luôn hostname máy đó cho dễ phân biệt. Trong trường hợp bạn muốn kết hợp 1 server homelab làm nhiều việc thì có thể giữ nguyên tên cũ ví dụ như `home-server-1.haivq.local` cũng được, không nhất thiết phải sửa lại hostname.
+
+> **Lưu ý về hostname của server**:
+> Nhiều người cài đặt máy không quan tâm tới hostname, nhưng việc có một hostname có ý nghĩa sẽ giúp bạn quản trị hạ tầng dễ hơn rất nhiều. Có một common practice mà tôi hay áp dụng, là sẽ tạo luôn record `A` trỏ IP tới hostname của host và record [`PTR` để reverse DNS query ngược từ IP ra hostname](https://datatracker.ietf.org/doc/html/rfc1035#section-3.5). Trong case này, tôi đã đặt hostname của máy là `idm.haivq.local` ở IP `192.168.1.38`, lúc này tôi sẽ tạo 2 record `A` và `PTR` như sau:
+>
+>```
+>home-server-2.haivq.local A 192.168.1.38
+>38s.1.168.192.in-addr.arpa PTR home-server-2.haivq.local
+>```
 
 ### Bước 4: Cài đặt IdM
 
@@ -166,6 +162,7 @@ ipa-server-install \
 Đợi một lúc cho để installer làm việc của mình. Khi cài xong thì installer cho bạn 1 file các record DNS ở địa chỉ `/tmp/ipa.system.records.<random_characters>.db` mà bận cần phải add vào DNS server. Add tất cả các record đó vào DNS server.
 
 Một ví dụ nội dung của file DNS record:
+
 ```
 _kerberos-master._tcp.haivq.local. 3600 IN SRV 0 100 88 idm.haivq.local.
 _kerberos-master._udp.haivq.local. 3600 IN SRV 0 100 88 idm.haivq.local.
